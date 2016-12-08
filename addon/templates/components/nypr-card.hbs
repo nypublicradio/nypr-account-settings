@@ -1,0 +1,11 @@
+<div class="card-title">
+  {{title}}
+  
+  {{#if edit}}
+  <button {{action (action edit)}} data-test-selector="edit-button">
+    Edit info
+  </button>
+  {{/if}}
+</div> 
+
+{{yield}}
