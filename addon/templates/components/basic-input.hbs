@@ -1,0 +1,27 @@
+<label for="{{fieldname}}" class="basic-input">{{label}}</label>
+{{input
+  name=fieldname
+  placeholder=placeholder
+  type=type
+  class="basic-input"
+  value=value
+  disabled=disabled
+  focus-out="setTouched"}}
+<div class="basic-input-footer">
+  {{#if hasError}}
+    <span class="basic-input-error">
+      {{#each errors as |error|}}
+        {{error}}<br>
+      {{/each}}
+    </span>
+  {{else}}
+    {{#if clue}}
+      <span class="basic-input-advice">{{clue}}</span>
+    {{/if}}
+  {{/if}}
+  {{#if helplinkUrl}}
+    <span class="basic-input-helplink">
+      <a href={{helplinkUrl}}>{{helplinkText}}</a>
+    </span>
+  {{/if}}
+</div>
