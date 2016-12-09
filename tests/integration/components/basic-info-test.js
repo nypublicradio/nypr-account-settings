@@ -96,9 +96,9 @@ test('displays error states', function(assert) {
   this.$('button[data-test-selector=save]').click();
   
   return wait().then(() => {
-    assert.equal(this.$('.nypr-swap-error').length, 4);
+    assert.equal(this.$('.basic-input-error').length, 4);
     ['firstName', 'lastName', 'email', 'username'].forEach(name => {
-      assert.ok(this.$(`[name=${name}] + .basic-input-footer > .nypr-swap-error`).length, `${name} has an error`);
+      assert.ok(this.$(`[name=${name}] + .basic-input-footer > .basic-input-error`).length, `${name} has an error`);
       
     });
   }).then(() => {
@@ -110,9 +110,9 @@ test('displays error states', function(assert) {
     this.$('button[data-test-selector=save]').click();
     
     return wait().then(() => {
-      assert.equal(this.$('.nypr-swap-error').length, 6);
+      assert.equal(this.$('.basic-input-error').length, 6);
       ['firstName', 'lastName', 'email', 'username', 'oldPassword', 'newPassword'].forEach(name => {
-        assert.ok(this.$(`[name=${name}] + .basic-input-footer > .nypr-swap-error`).length, `${name} has an error`);
+        assert.ok(this.$(`[name=${name}] + .basic-input-footer > .basic-input-error`).length, `${name} has an error`);
       });
     });
   });
