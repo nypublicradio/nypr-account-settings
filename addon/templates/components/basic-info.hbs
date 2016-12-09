@@ -1,0 +1,81 @@
+{{#unless isEditing}}
+  {{basic-input
+    label='Name'
+    fieldname='fullName'
+    value=(concat basicChangeset.firstName ' ' basicChangeset.lastName)
+    disabled=true
+  }}
+{{else}}
+  {{basic-input
+    label='First Name'
+    placeholder='Jane'
+    fieldname='firstName'
+    value=basicChangeset.firstName
+    errors=basicChangeset.error.firstName.validation
+    disabled=false
+  }}
+  {{basic-input
+    label='Last Name'
+    placeholder='Doe'
+    fieldname='lastName'
+    value=basicChangeset.lastName
+    errors=basicChangeset.error.lastName.validation
+    disabled=false
+  }}
+{{/unless}}
+
+{{basic-input
+  label='Username'
+  fieldname='username'
+  value=basicChangeset.username
+  errors=basicChangeset.error.username.validation
+  disabled=(not isEditing)
+}}
+
+{{basic-input
+  label='Emails'
+  placeholder='you@mail.com'
+  fieldname='email'
+  value=basicChangeset.email
+  errors=basicChangeset.error.email.validation
+  disabled=(not isEditing)
+}}
+
+{{#unless isEditing}}
+  {{basic-input
+    label='Password'
+    fieldname='password'
+    value='******'
+    disabled=true
+  }}
+{{else}}
+  {{#unless isEditingPassword}}
+    <button
+      data-test-selector="change-pw"
+      {{action (action (mut isEditingPassword) true)}}>
+        Change Password
+    </button>
+  {{else}}
+    {{basic-input
+      label='Old Password'
+      fieldname='oldPassword'
+      placeholder='Enter your current password'
+      value=pwChangeset.oldPassword
+      errors=pwChangeset.error.oldPassword.validation
+      disabled=false
+    }}
+    {{basic-input
+      label='New Password'
+      fieldname='newPassword'
+      placeholder='Enter your new password'
+      value=pwChangeset.newPassword
+      errors=pwChangeset.error.newPassword.validation
+      disabled=false
+    }}
+  {{/unless}}
+{{/unless}}
+
+{{#if isEditing}}
+<button data-test-selector="rollback" {{action 'rollback' basicChangeset pwChangeset}}>Cancel</button>
+<button data-test-selector="save" {{action 'save' basicChangeset pwChangeset}}>Save</button>
+{{/if}}
