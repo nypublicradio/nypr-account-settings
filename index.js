@@ -2,5 +2,6 @@
 'use strict';
 
 module.exports = {
-  name: 'nypr-account-settings'
+  name: 'nypr-account-settings',
+  isDevelopingAddon: () => true
 };
