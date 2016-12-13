@@ -17,8 +17,8 @@ moduleForComponent('basic-info', 'Integration | Component | basic info', {
 
 const { keys } = Object;
 const userFields = () => ({
-  firstName: 'foo',
-  lastName: 'bar',
+  name: 'foo',
+  familyName: 'bar',
   username: 'foobar',
   email: 'foo@bar.com'
 });
@@ -80,8 +80,8 @@ test('switches to inputs when in editing state', function(assert) {
 
 test('displays error states', function(assert) {
   this.set('user', {
-    firstName: '',
-    lastName: '',
+    name: '',
+    familyName: '',
     username: '',
     email: ''
   });
@@ -97,7 +97,7 @@ test('displays error states', function(assert) {
   
   return wait().then(() => {
     assert.equal(this.$('.basic-input-error').length, 4);
-    ['firstName', 'lastName', 'email', 'username'].forEach(name => {
+    ['name', 'familyName', 'email', 'username'].forEach(name => {
       assert.ok(this.$(`[name=${name}] + .basic-input-footer > .basic-input-error`).length, `${name} has an error`);
       
     });
@@ -111,7 +111,7 @@ test('displays error states', function(assert) {
     
     return wait().then(() => {
       assert.equal(this.$('.basic-input-error').length, 6);
-      ['firstName', 'lastName', 'email', 'username', 'oldPassword', 'newPassword'].forEach(name => {
+      ['name', 'familyName', 'email', 'username', 'oldPassword', 'newPassword'].forEach(name => {
         assert.ok(this.$(`[name=${name}] + .basic-input-footer > .basic-input-error`).length, `${name} has an error`);
       });
     });
@@ -133,10 +133,10 @@ test('changes to fields are not persisted after a rollback', function(assert) {
       basicChangeset=(changeset user BasicInfoValidations)}}`);
   this.$('button[data-test-selector=change-pw]').click();
   
-  this.$('input[name=firstName]').val('zzzz');
-  this.$('input[name=firstName]').change();
-  this.$('input[name=lasttName]').val('xxxxx');
-  this.$('input[name=lasttName]').change();
+  this.$('input[name=name]').val('zzzz');
+  this.$('input[name=name]').change();
+  this.$('input[name=familyName]').val('xxxxx');
+  this.$('input[name=familyName]').change();
   this.$('input[name=username]').val('yyyyyy');
   this.$('input[name=username]').change();
   this.$('input[name=email]').val('wwwwww');
@@ -174,10 +174,10 @@ test('can save changes to passed in user object', function(assert) {
       isEditing=true
       pwChangeset=(changeset password PasswordValidations)
       basicChangeset=(changeset user BasicInfoValidations)}}`);
-  this.$('input[name=firstName]').val(FIRST_NAME);
-  this.$('input[name=firstName]').change();
-  this.$('input[name=lastName]').val(LAST_NAME);
-  this.$('input[name=lastName]').change();
+  this.$('input[name=name]').val(FIRST_NAME);
+  this.$('input[name=name]').change();
+  this.$('input[name=familyName]').val(LAST_NAME);
+  this.$('input[name=familyName]').change();
   this.$('input[name=username]').val(USERNAME);
   this.$('input[name=username]').change();
   this.$('input[name=email]').val(EMAIL);

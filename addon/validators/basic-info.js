@@ -5,8 +5,8 @@ import {
 import validateRemote from './remote';
 
 export default {
-  firstName:  validatePresence(true),
-  lastName:   validatePresence(true),
+  name:       validatePresence(true),
+  familyName: validatePresence(true),
   username:   [
     validatePresence(true),
     validateRemote({path: '/api/v1/user'})
