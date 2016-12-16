@@ -1,6 +1,7 @@
 import {
   validatePresence,
-  validateFormat
+  validateFormat,
+  validateConfirmation
 } from 'ember-changeset-validations/validators';
 import validateRemote from './remote';
 
@@ -11,5 +12,12 @@ export default {
     validatePresence(true),
     validateRemote({path: '/api/v1/user'})
   ],
-  email:      validateFormat({ type: 'email' }),
+  email: [
+    validatePresence(true),
+    validateFormat({ type: 'email' }),
+  ],
+  confirmEmail: [
+    validatePresence(true),  
+    validateConfirmation({ on: 'email' })
+  ]
 };

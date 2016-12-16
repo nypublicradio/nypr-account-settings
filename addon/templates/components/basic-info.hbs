@@ -32,14 +32,37 @@
   disabled=(not isEditing)
 }}
 
-{{basic-input
-  label='Emails'
-  placeholder='you@mail.com'
-  fieldname='email'
-  value=basicChangeset.email
-  errors=basicChangeset.error.email.validation
-  disabled=(not isEditing)
-}}
+{{#unless isEditingEmail}}
+  {{basic-input
+    label='Email'
+    placeholder='you@mail.com'
+    fieldname='email'
+    value=basicChangeset.email
+    errors=basicChangeset.error.email.validation
+    disabled=true
+  }}
+  <button
+    data-test-selector="change-email"
+    {{action (action (mut isEditingEmail) true)}}>
+      Change Email
+  </button>
+{{else}}
+  {{basic-input
+    label='Email'
+    fieldname='email'
+    value=basicChangeset.email
+    errors=basicChangeset.error.email.validation
+    disabled=false
+  }}
+  {{basic-input
+    label='Confirm Email'
+    fieldname='confirmEmail'
+    placeholder='Type email again'
+    value=basicChangeset.confirmEmail
+    errors=basicChangeset.error.confirmEmail.validation
+    disabled=false
+  }}
+{{/unless}}
 
 {{#unless isEditing}}
   {{basic-input

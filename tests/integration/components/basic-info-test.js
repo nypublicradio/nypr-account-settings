@@ -4,6 +4,8 @@ import BasicInfoValidations from 'nypr-account-settings/validators/basic-info';
 import PasswordValidations from 'nypr-account-settings/validators/password';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 import wait from 'ember-test-helpers/wait';
+import rsvp from 'rsvp';
+const { Promise } = rsvp;
 
 moduleForComponent('basic-info', 'Integration | Component | basic info', {
   integration: true,
@@ -50,7 +52,8 @@ test('renders default values of passed in model', function(assert) {
   
   assert.equal(this.$('input[disabled]').length, keys(userFields()).length, 'all fields should be disabled');
   
-  assert.notOk(this.$('button').length, 'cancel/save buttons should not be visible in default state');
+  assert.notOk(this.$('button[data-test-selector=rollback]').length, 'cancel button should not be visible in default state');
+  assert.notOk(this.$('button[data-test-selector=save]').length, 'save button should not be visible in default state');
 });
 
 test('switches to inputs when in editing state', function(assert) {
@@ -72,6 +75,10 @@ test('switches to inputs when in editing state', function(assert) {
   this.$('button[data-test-selector=change-pw]').click();
   assert.notOk(this.$('input[name=oldPassword]').attr('disabled'), 'old pw should be editable');
   assert.notOk(this.$('input[name=newPassword]').attr('disabled'), 'new pw should be editable');
+  
+  this.$('button[data-test-selector=change-email]').click();
+  assert.notOk(this.$('input[name=email]').attr('disabled'), 'email should be editable');
+  assert.notOk(this.$('input[name=confirmEmail]').attr('disabled'), 'confirm email should be editable');
 });
 
 test('displays error states', function(assert) {
@@ -127,6 +134,7 @@ test('changes to fields are not persisted after a rollback', function(assert) {
       pwChangeset=(changeset password PasswordValidations)
       basicChangeset=(changeset user BasicInfoValidations)}}`);
   this.$('button[data-test-selector=change-pw]').click();
+  this.$('button[data-test-selector=change-email]').click();
   
   this.$('input[name=name]').val('zzzz');
   this.$('input[name=name]').change();
@@ -136,6 +144,8 @@ test('changes to fields are not persisted after a rollback', function(assert) {
   this.$('input[name=username]').change();
   this.$('input[name=email]').val('wwwwww');
   this.$('input[name=email]').change();
+  this.$('input[name=confirmEmail]').val('wwwwww');
+  this.$('input[name=confirmEmail]').change();
   this.$('input[name=oldPassword]').val('vvvvvvv');
   this.$('input[name=oldPassword]').change();
   this.$('input[name=newPassword]').val('uuuuuuu');
@@ -151,14 +161,13 @@ test('changes to fields are not persisted after a rollback', function(assert) {
   let inputs = this.$('input').map((i, e) => e.name).get();
   assert.deepEqual(inputs, keys(userFields()), 'original values are shown');
   assert.ok(this.$('[data-test-selector=change-pw]').length, 'password edit is reset after a rollback');
-  
+  assert.ok(this.$('[data-test-selector=change-email]').length, 'email edit is reset after a rollback');
 });
 
-test('can save changes to passed in user object', function(assert) {
+test('can update non-email attrs', function(assert) {
   const FIRST_NAME = 'john';
   const LAST_NAME = 'doe';
   const USERNAME = 'johndoe';
-  const EMAIL = 'john@doe.com';
   
   this.set('user', userFields());
   this.set('BasicInfoValidations', BasicInfoValidations);
@@ -176,9 +185,124 @@ test('can save changes to passed in user object', function(assert) {
   this.$('input[name=familyName]').change();
   this.$('input[name=preferredUsername]').val(USERNAME);
   this.$('input[name=preferredUsername]').change();
+  
+  return wait().then(() => {
+    this.$('button[data-test-selector=save]').click();
+  }).then(() => {
+    return wait().then(() => {
+      assert.equal(this.$('input[disabled]').length, keys(userFields()).length, 'all fields should be disabled');
+      assert.equal(this.$('input[name=fullName]').val(), `${FIRST_NAME} ${LAST_NAME}`, 'displays new fullname');
+      assert.equal(this.$('input[name=preferredUsername]').val(), USERNAME, 'displays new username');
+      assert.equal(this.$('input[name=password]').val(), '******', 'displays password asterisks');
+    });
+  });
+});
+
+test('can update email', function(assert) {
+  assert.expect(2);
+  const EMAIL = 'john@doe.com';
+  
+  this.set('user', userFields());
+  this.set('BasicInfoValidations', BasicInfoValidations);
+  this.set('password', pwFields());
+  this.set('PasswordValidations', PasswordValidations);
+  this.set('emailRequirement', function() {
+    assert.ok('emailRequirement called');
+    return Promise.resolve();
+  });
+  
+  this.render(hbs`{{basic-info
+    isEditing=true
+    emailRequirement=emailRequirement
+    pwChangeset=(changeset password PasswordValidations)
+    basicChangeset=(changeset user BasicInfoValidations)}}`);
+  this.$('[data-test-selector=change-email]').click();
+  
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').change();
+  this.$('input[name=confirmEmail]').val(EMAIL);
+  this.$('input[name=confirmEmail]').change();
   
+  return wait().then(() => {
+    this.$('[data-test-selector=save]').click();
+  }).then(() => {
+    return wait().then(() => {
+      assert.equal(this.$('input[name=email]').val(), EMAIL, 'displays new email');
+    });
+  });
+});
+
+test('resets email value if emailRequirement is rejected', function(assert) {
+  assert.expect(4);
+  const EMAIL = 'john@doe.com';
+  const FIRST_NAME = 'john';
+  const LAST_NAME = 'doe';
+  
+  this.set('user', userFields());
+  this.set('BasicInfoValidations', BasicInfoValidations);
+  this.set('password', pwFields());
+  this.set('PasswordValidations', PasswordValidations);
+  this.set('emailRequirement', function() {
+    assert.ok('emailRequirement called');
+    return Promise.reject();
+  });
+  
+  this.render(hbs`{{basic-info
+    isEditing=true
+    emailRequirement=emailRequirement
+    pwChangeset=(changeset password PasswordValidations)
+    basicChangeset=(changeset user BasicInfoValidations)}}`);
+  this.$('[data-test-selector=change-email]').click();
+  
+  this.$('input[name=givenName]').val(FIRST_NAME);
+  this.$('input[name=givenName]').change();
+  this.$('input[name=familyName]').val(LAST_NAME);
+  this.$('input[name=familyName]').change();
+  this.$('input[name=email]').val(EMAIL);
+  this.$('input[name=email]').change();
+  this.$('input[name=confirmEmail]').val(EMAIL);
+  this.$('input[name=confirmEmail]').change();
+  
+  return wait().then(() => {
+    this.$('[data-test-selector=save]').click();
+  }).then(() => {
+    return wait().then(() => {
+      assert.equal(this.$('input[name=email]').val(), userFields()['email'], 'displays old email');
+      assert.equal(this.$('input[name=givenName]').val(), FIRST_NAME, 'first name still updated value');
+      assert.equal(this.$('input[name=familyName]').val(), LAST_NAME, 'last name still updated value');
+    });
+  });
+});
+
+test('can update them all', function(assert) {
+  const FIRST_NAME = 'john';
+  const LAST_NAME = 'doe';
+  const USERNAME = 'johndoe';
+  const EMAIL = 'john@doe.com';
+  
+  this.set('user', userFields());
+  this.set('BasicInfoValidations', BasicInfoValidations);
+  this.set('password', pwFields());
+  this.set('PasswordValidations', PasswordValidations);
+  this.set('emailRequirement', () => Promise.resolve());
+  
+  this.render(hbs`{{basic-info
+    isEditing=true
+    emailRequirement=emailRequirement
+    pwChangeset=(changeset password PasswordValidations)
+    basicChangeset=(changeset user BasicInfoValidations)}}`);
+  this.$('[data-test-selector=change-email]').click();
+  
+  this.$('input[name=givenName]').val(FIRST_NAME);
+  this.$('input[name=givenName]').change();
+  this.$('input[name=familyName]').val(LAST_NAME);
+  this.$('input[name=familyName]').change();
+  this.$('input[name=preferredUsername]').val(USERNAME);
+  this.$('input[name=preferredUsername]').change();
+  this.$('input[name=email]').val(EMAIL);
+  this.$('input[name=email]').change();
+  this.$('input[name=confirmEmail]').val(EMAIL);
+  this.$('input[name=confirmEmail]').change();
   
   return wait().then(() => {
     this.$('button[data-test-selector=save]').click();
