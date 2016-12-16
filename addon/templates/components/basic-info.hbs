@@ -2,16 +2,16 @@
   {{basic-input
     label='Name'
     fieldname='fullName'
-    value=(concat basicChangeset.name ' ' basicChangeset.familyName)
+    value=(concat basicChangeset.givenName ' ' basicChangeset.familyName)
     disabled=true
   }}
 {{else}}
   {{basic-input
     label='First Name'
     placeholder='Jane'
-    fieldname='name'
-    value=basicChangeset.name
-    errors=basicChangeset.error.name.validation
+    fieldname='givenName'
+    value=basicChangeset.givenName
+    errors=basicChangeset.error.givenName.validation
     disabled=false
   }}
   {{basic-input
@@ -26,9 +26,9 @@
 
 {{basic-input
   label='Username'
-  fieldname='username'
-  value=basicChangeset.username
-  errors=basicChangeset.error.username.validation
+  fieldname='preferredUsername'
+  value=basicChangeset.preferredUsername
+  errors=basicChangeset.error.preferredUsername.validation
   disabled=(not isEditing)
 }}
 

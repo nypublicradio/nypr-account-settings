@@ -17,10 +17,10 @@ moduleForComponent('basic-info', 'Integration | Component | basic info', {
 
 const { keys } = Object;
 const userFields = () => ({
-  name: 'foo',
+  givenName: 'foo',
   familyName: 'bar',
-  username: 'foobar',
-  email: 'foo@bar.com'
+  preferredUsername: 'foobar',
+  email: 'foo@bar.com',
 });
 const pwFields = () => ({
   oldPassword: '',
@@ -28,10 +28,6 @@ const pwFields = () => ({
 });
 
 test('it renders', function(assert) {
-
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-
   this.render(hbs`{{basic-info}}`);
 
   assert.ok(this.$('input').length);
@@ -48,7 +44,7 @@ test('renders default values of passed in model', function(assert) {
       basicChangeset=(changeset user BasicInfoValidations)}}`);
       
   assert.equal(this.$('input[name=fullName]').val(), 'foo bar', 'displays fullname');
-  assert.equal(this.$('input[name=username]').val(), 'foobar', 'displays username');
+  assert.equal(this.$('input[name=preferredUsername]').val(), 'foobar', 'displays username');
   assert.equal(this.$('input[name=email]').val(), 'foo@bar.com', 'displays email');
   assert.equal(this.$('input[name=password]').val(), '******', 'displays password asterisks');
   
@@ -68,10 +64,10 @@ test('switches to inputs when in editing state', function(assert) {
       pwChangeset=(changeset password PasswordValidations)
       basicChangeset=(changeset user BasicInfoValidations)}}`);
       
-  assert.equal(this.$('input:not([disabled])').length, keys(userFields()).length, 'all fields should not be disabled');
+  assert.equal(this.$('input:not([disabled])').length, 3, 'all fields should not be disabled');
   
-  let inputs = this.$('input').map((i, e) => e.name).get();
-  assert.deepEqual(inputs, keys(userFields()));
+  let inputs = this.$('input:not([disabled])').map((i, e) => e.name).get();
+  assert.deepEqual(inputs, ['givenName', 'familyName', 'preferredUsername']);
   
   this.$('button[data-test-selector=change-pw]').click();
   assert.notOk(this.$('input[name=oldPassword]').attr('disabled'), 'old pw should be editable');
@@ -80,10 +76,10 @@ test('switches to inputs when in editing state', function(assert) {
 
 test('displays error states', function(assert) {
   this.set('user', {
-    name: '',
+    givenName: '',
     familyName: '',
-    username: '',
-    email: ''
+    preferredUsername: '',
+    email: '',
   });
   this.set('BasicInfoValidations', BasicInfoValidations);
   this.set('password', pwFields());
@@ -97,9 +93,8 @@ test('displays error states', function(assert) {
   
   return wait().then(() => {
     assert.equal(this.$('.basic-input-error').length, 4);
-    ['name', 'familyName', 'email', 'username'].forEach(name => {
+    keys(userFields()).forEach(name => {
       assert.ok(this.$(`[name=${name}] + .basic-input-footer > .basic-input-error`).length, `${name} has an error`);
-      
     });
   }).then(() => {
     this.render(hbs`{{basic-info
@@ -107,16 +102,16 @@ test('displays error states', function(assert) {
         pwChangeset=(changeset password PasswordValidations)
         basicChangeset=(changeset user BasicInfoValidations)}}`);
     this.$('button[data-test-selector=change-pw]').click();
+    this.$('button[data-test-selector=change-email]').click();
     this.$('button[data-test-selector=save]').click();
     
     return wait().then(() => {
-      assert.equal(this.$('.basic-input-error').length, 6);
-      ['name', 'familyName', 'email', 'username', 'oldPassword', 'newPassword'].forEach(name => {
+      assert.equal(this.$('.basic-input-error').length, 7);
+      ['givenName', 'familyName', 'preferredUsername', 'email', 'confirmEmail', 'oldPassword', 'newPassword'].forEach(name => {
         assert.ok(this.$(`[name=${name}] + .basic-input-footer > .basic-input-error`).length, `${name} has an error`);
       });
     });
   });
-  
 });
 
 test('changes to fields are not persisted after a rollback', function(assert) {
@@ -148,7 +143,7 @@ test('changes to fields are not persisted after a rollback', function(assert) {
   
   this.$('button[data-test-selector=rollback]').click();
   assert.equal(this.$('input[name=fullName]').val(), 'foo bar', 'displays fullname');
-  assert.equal(this.$('input[name=username]').val(), 'foobar', 'displays username');
+  assert.equal(this.$('input[name=preferredUsername]').val(), 'foobar', 'displays username');
   assert.equal(this.$('input[name=email]').val(), 'foo@bar.com', 'displays email');
   assert.equal(this.$('input[name=password]').val(), '******', 'displays password asterisks');
   
@@ -174,12 +169,13 @@ test('can save changes to passed in user object', function(assert) {
       isEditing=true
       pwChangeset=(changeset password PasswordValidations)
       basicChangeset=(changeset user BasicInfoValidations)}}`);
-  this.$('input[name=name]').val(FIRST_NAME);
-  this.$('input[name=name]').change();
+  
+  this.$('input[name=givenName]').val(FIRST_NAME);
+  this.$('input[name=givenName]').change();
   this.$('input[name=familyName]').val(LAST_NAME);
   this.$('input[name=familyName]').change();
-  this.$('input[name=username]').val(USERNAME);
-  this.$('input[name=username]').change();
+  this.$('input[name=preferredUsername]').val(USERNAME);
+  this.$('input[name=preferredUsername]').change();
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').change();
   
@@ -190,7 +186,7 @@ test('can save changes to passed in user object', function(assert) {
     return wait().then(() => {
       assert.equal(this.$('input[disabled]').length, keys(userFields()).length, 'all fields should be disabled');
       assert.equal(this.$('input[name=fullName]').val(), `${FIRST_NAME} ${LAST_NAME}`, 'displays new fullname');
-      assert.equal(this.$('input[name=username]').val(), USERNAME, 'displays new username');
+      assert.equal(this.$('input[name=preferredUsername]').val(), USERNAME, 'displays new username');
       assert.equal(this.$('input[name=email]').val(), EMAIL, 'displays new email');
       assert.equal(this.$('input[name=password]').val(), '******', 'displays password asterisks');
     });
