@@ -61,10 +61,17 @@ test('editing states', function(assert) {
   assert.ok(this.$('[data-test-selector=rollback]').length, 'cancel button should be visible in editing state');
   assert.ok(this.$('[data-test-selector=save]').length, 'save button should be visible in editing state');
   
+  this.$('input[name=email]').val('baz@boo.com');
+  this.$('input[name=email]').change();
   
-  this.$('button[data-test-selector=change-email]').click();
-  assert.notOk(this.$('input[name=email]').attr('disabled'), 'email should be editable');
-  assert.notOk(this.$('input[name=confirmEmail]').attr('disabled'), 'confirm email should be editable');
+  assert.ok(this.$('input[name=confirmEmail]').length, 'confirm email should appear in dirty state');
+  assert.equal(this.$('input').length, 5, 'should see 5 fields');
+  
+  // this.$('input[name=email]').val(userFields()['email']);
+  // this.$('input[name=email]').change();
+  // 
+  // assert.notOk(this.$('input[name=confirmEmail]').length, 'confirm email should disappear in pristine state');
+  // assert.equal(this.$('input').length, 4, 'should see 4 fields again');
 });
 
 test('displays error states', function(assert) {
@@ -166,7 +173,6 @@ test('can update email', function(assert) {
     isEditing=true
     emailRequirement=emailRequirement
     basicChangeset=(changeset user BasicInfoValidations)}}`);
-  this.$('[data-test-selector=change-email]').click();
   
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').change();
