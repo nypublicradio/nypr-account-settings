@@ -54,12 +54,15 @@ test('displays error states', function(assert) {
   this.render(hbs`{{password-card
     isEditing=true
     changeset=(changeset password PasswordValidations)}}`);
+  
+  // trigger error state
+  this.$('input').get().forEach(i => $(i).focusout());
   this.$('button[data-test-selector=save]').click();
   
   return wait().then(() => {
-    assert.equal(this.$('.basic-input-error').length, 2);
+    assert.equal(this.$('.nypr-input-error').length, 2);
     ['currentPassword', 'newPassword'].forEach(name => {
-      assert.ok(this.$(`[name=${name}] + .basic-input-footer > .basic-input-error`).length, `${name} has an error`);
+      assert.ok(this.$(`[name=${name}] + .nypr-input-footer > .nypr-input-error`).length, `${name} has an error`);
     });
   });
 });

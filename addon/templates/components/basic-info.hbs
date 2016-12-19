@@ -1,19 +1,19 @@
 {{#unless isEditing}}
-  {{basic-input
+  {{nypr-input
     label='Name'
     fieldname='fullName'
     value=(concat changeset.givenName ' ' changeset.familyName)
     disabled=true
   }}
 {{else}}
-  {{basic-input
+  {{nypr-input
     label='First Name'
     placeholder='Jane'
     fieldname='givenName'
     value=changeset.givenName
     errors=changeset.error.givenName.validation
   }}
-  {{basic-input
+  {{nypr-input
     label='Last Name'
     placeholder='Doe'
     fieldname='familyName'
@@ -22,7 +22,7 @@
   }}
 {{/unless}}
 
-{{basic-input
+{{nypr-input
   label='Public Handle (visible when you comment on the site)'
   fieldname='preferredUsername'
   value=changeset.preferredUsername
@@ -30,7 +30,7 @@
   disabled=(not isEditing)
 }}
 
-{{basic-input
+{{nypr-input
   label='Email'
   placeholder='you@mail.com'
   fieldname='email'
@@ -39,7 +39,7 @@
   disabled=(not isEditing)
 }}
 {{#if changeset.change.email}}
-  {{basic-input
+  {{nypr-input
     label='Confirm Email'
     fieldname='confirmEmail'
     placeholder='Type your new email again'

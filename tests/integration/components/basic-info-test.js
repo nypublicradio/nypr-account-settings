@@ -41,7 +41,7 @@ test('renders default values of passed in model', function(assert) {
   assert.equal(this.$('input[name=email]').val(), 'foo@bar.com', 'displays email');
   
   assert.equal(this.$('input').length, 3, 'should see 3 fields');
-  assert.ok(this.$('input').get().every(i => i.disabled), 'all inputs should be disabled');
+  this.$('input').get().forEach(i => assert.ok(i.disabled, `${i.name} should be disabled`));
   
   assert.notOk(this.$('[data-test-selector=rollback]').length, 'cancel button should not be visible in default state');
   assert.notOk(this.$('[data-test-selector=save]').length, 'save button should not be visible in default state');
@@ -56,7 +56,7 @@ test('editing states', function(assert) {
     changeset=(changeset user BasicInfoValidations)}}`);
       
   assert.equal(this.$('input').length, 4, 'should see 4 fields');
-  assert.ok(this.$('input').get().every(i => !i.disabled), 'all inputs should be editable');
+  this.$('input').get().forEach(i => assert.notOk(i.disabled, `${i.name} should be editable`));
   
   assert.ok(this.$('[data-test-selector=rollback]').length, 'cancel button should be visible in editing state');
   assert.ok(this.$('[data-test-selector=save]').length, 'save button should be visible in editing state');
@@ -86,12 +86,15 @@ test('displays error states', function(assert) {
   this.render(hbs`{{basic-info
     isEditing=true
     changeset=(changeset user BasicInfoValidations)}}`);
+    
+  // trigger error state
+  this.$('input').get().forEach(i => $(i).focusout());
   this.$('button[data-test-selector=save]').click();
   
   return wait().then(() => {
-    assert.equal(this.$('.basic-input-error').length, 4);
+    assert.equal(this.$('.nypr-input-error').length, 4);
     keys(userFields()).forEach(name => {
-      assert.ok(this.$(`[name=${name}] + .basic-input-footer > .basic-input-error`).length, `${name} has an error`);
+      assert.ok(this.$(`[name=${name}] + .nypr-input-footer > .nypr-input-error`).length, `${name} has an error`);
     });
   });
 });
