@@ -1,9 +1,13 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
-@import "compass/css3/flexbox";
+
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+}
 
 body {
   font-family: 'Open Sans', sans-serif;
 }
 
 @import "layout";
-@import "nypr-card";
