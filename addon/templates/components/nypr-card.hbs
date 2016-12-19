@@ -1,8 +1,8 @@
-<div class="card-title">
-  {{title}}
+<div class="nypr-card-header">
+  <span class="nypr-title">{{title}}</span>
   
   {{#if edit}}
-  <button {{action (action edit)}} data-test-selector="edit-button">
+  <button class="nypr-edit-btn" {{action (action edit)}} data-test-selector="edit-button">
     Edit info
   </button>
   {{/if}}
