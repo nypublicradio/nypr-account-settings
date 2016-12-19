@@ -2,7 +2,7 @@
   {{basic-input
     label='Name'
     fieldname='fullName'
-    value=(concat basicChangeset.givenName ' ' basicChangeset.familyName)
+    value=(concat changeset.givenName ' ' changeset.familyName)
     disabled=true
   }}
 {{else}}
@@ -10,23 +10,23 @@
     label='First Name'
     placeholder='Jane'
     fieldname='givenName'
-    value=basicChangeset.givenName
-    errors=basicChangeset.error.givenName.validation
+    value=changeset.givenName
+    errors=changeset.error.givenName.validation
   }}
   {{basic-input
     label='Last Name'
     placeholder='Doe'
     fieldname='familyName'
-    value=basicChangeset.familyName
-    errors=basicChangeset.error.familyName.validation
+    value=changeset.familyName
+    errors=changeset.error.familyName.validation
   }}
 {{/unless}}
 
 {{basic-input
   label='Public Handle (visible when you comment on the site)'
   fieldname='preferredUsername'
-  value=basicChangeset.preferredUsername
-  errors=basicChangeset.error.preferredUsername.validation
+  value=changeset.preferredUsername
+  errors=changeset.error.preferredUsername.validation
   disabled=(not isEditing)
 }}
 
@@ -34,21 +34,21 @@
   label='Email'
   placeholder='you@mail.com'
   fieldname='email'
-  value=basicChangeset.email
-  errors=basicChangeset.error.email.validation
+  value=changeset.email
+  errors=changeset.error.email.validation
   disabled=(not isEditing)
 }}
-{{#if basicChangeset.change.email}}
+{{#if changeset.change.email}}
   {{basic-input
     label='Confirm Email'
     fieldname='confirmEmail'
     placeholder='Type your new email again'
-    value=basicChangeset.confirmEmail
-    errors=basicChangeset.error.confirmEmail.validation
+    value=changeset.confirmEmail
+    errors=changeset.error.confirmEmail.validation
   }}
 {{/if}}
 
 {{#if isEditing}}
-<button data-test-selector="rollback" {{action 'rollback' basicChangeset}}>Cancel</button>
-<button data-test-selector="save" {{action 'save' basicChangeset}}>Save</button>
+<button data-test-selector="rollback" {{action 'rollback' changeset}}>Cancel</button>
+<button data-test-selector="save" {{action 'save' changeset}}>Save</button>
 {{/if}}

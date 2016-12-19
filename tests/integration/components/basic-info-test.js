@@ -34,7 +34,7 @@ test('renders default values of passed in model', function(assert) {
   this.set('user', userFields());
   this.set('BasicInfoValidations', BasicInfoValidations);
   
-  this.render(hbs`{{basic-info basicChangeset=(changeset user BasicInfoValidations)}}`);
+  this.render(hbs`{{basic-info changeset=(changeset user BasicInfoValidations)}}`);
       
   assert.equal(this.$('input[name=fullName]').val(), 'foo bar', 'displays fullname');
   assert.equal(this.$('input[name=preferredUsername]').val(), 'foobar', 'displays username');
@@ -53,7 +53,7 @@ test('editing states', function(assert) {
   
   this.render(hbs`{{basic-info
     isEditing=true
-    basicChangeset=(changeset user BasicInfoValidations)}}`);
+    changeset=(changeset user BasicInfoValidations)}}`);
       
   assert.equal(this.$('input').length, 4, 'should see 4 fields');
   assert.ok(this.$('input').get().every(i => !i.disabled), 'all inputs should be editable');
@@ -85,7 +85,7 @@ test('displays error states', function(assert) {
   
   this.render(hbs`{{basic-info
     isEditing=true
-    basicChangeset=(changeset user BasicInfoValidations)}}`);
+    changeset=(changeset user BasicInfoValidations)}}`);
   this.$('button[data-test-selector=save]').click();
   
   return wait().then(() => {
@@ -104,7 +104,7 @@ test('changes to fields are not persisted after a rollback', function(assert) {
   
   this.render(hbs`{{basic-info
     isEditing=isEditing
-    basicChangeset=(changeset user BasicInfoValidations)}}`);
+    changeset=(changeset user BasicInfoValidations)}}`);
   
   this.$('input[name=givenName]').val('zzzz');
   this.$('input[name=givenName]').change();
@@ -136,7 +136,7 @@ test('can update non-email attrs', function(assert) {
   
   this.render(hbs`{{basic-info
     isEditing=true
-    basicChangeset=(changeset user BasicInfoValidations)}}`);
+    changeset=(changeset user BasicInfoValidations)}}`);
   
   this.$('input[name=givenName]').val(FIRST_NAME);
   this.$('input[name=givenName]').change();
@@ -172,7 +172,7 @@ test('can update email', function(assert) {
   this.render(hbs`{{basic-info
     isEditing=true
     emailRequirement=emailRequirement
-    basicChangeset=(changeset user BasicInfoValidations)}}`);
+    changeset=(changeset user BasicInfoValidations)}}`);
   
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').change();
@@ -204,7 +204,7 @@ test('resets email value if emailRequirement is rejected', function(assert) {
   this.render(hbs`{{basic-info
     isEditing=true
     emailRequirement=emailRequirement
-    basicChangeset=(changeset user BasicInfoValidations)}}`);
+    changeset=(changeset user BasicInfoValidations)}}`);
   this.$('[data-test-selector=change-email]').click();
   
   this.$('input[name=givenName]').val(FIRST_NAME);
@@ -240,7 +240,7 @@ test('can update them all', function(assert) {
   this.render(hbs`{{basic-info
     isEditing=true
     emailRequirement=emailRequirement
-    basicChangeset=(changeset user BasicInfoValidations)}}`);
+    changeset=(changeset user BasicInfoValidations)}}`);
   this.$('[data-test-selector=change-email]').click();
   
   this.$('input[name=givenName]').val(FIRST_NAME);
