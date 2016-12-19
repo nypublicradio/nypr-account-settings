@@ -12,7 +12,6 @@
     fieldname='givenName'
     value=basicChangeset.givenName
     errors=basicChangeset.error.givenName.validation
-    disabled=false
   }}
   {{basic-input
     label='Last Name'
@@ -20,12 +19,11 @@
     fieldname='familyName'
     value=basicChangeset.familyName
     errors=basicChangeset.error.familyName.validation
-    disabled=false
   }}
 {{/unless}}
 
 {{basic-input
-  label='Username'
+  label='Public Handle (visible when you comment on the site)'
   fieldname='preferredUsername'
   value=basicChangeset.preferredUsername
   errors=basicChangeset.error.preferredUsername.validation
@@ -60,7 +58,6 @@
     placeholder='Type email again'
     value=basicChangeset.confirmEmail
     errors=basicChangeset.error.confirmEmail.validation
-    disabled=false
   }}
 {{/if}}
 
