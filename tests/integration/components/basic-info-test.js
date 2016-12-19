@@ -1,7 +1,6 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import BasicInfoValidations from 'nypr-account-settings/validators/basic-info';
-import PasswordValidations from 'nypr-account-settings/validators/password';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 import wait from 'ember-test-helpers/wait';
 import rsvp from 'rsvp';
@@ -24,10 +23,6 @@ const userFields = () => ({
   preferredUsername: 'foobar',
   email: 'foo@bar.com',
 });
-const pwFields = () => ({
-  oldPassword: '',
-  newPassword: ''
-});
 
 test('it renders', function(assert) {
   this.render(hbs`{{basic-info}}`);
@@ -38,19 +33,15 @@ test('it renders', function(assert) {
 test('renders default values of passed in model', function(assert) {
   this.set('user', userFields());
   this.set('BasicInfoValidations', BasicInfoValidations);
-  this.set('password', pwFields());
-  this.set('PasswordValidations', PasswordValidations);
   
-  this.render(hbs`{{basic-info
-      pwChangeset=(changeset password PasswordValidations)
-      basicChangeset=(changeset user BasicInfoValidations)}}`);
+  this.render(hbs`{{basic-info basicChangeset=(changeset user BasicInfoValidations)}}`);
       
   assert.equal(this.$('input[name=fullName]').val(), 'foo bar', 'displays fullname');
   assert.equal(this.$('input[name=preferredUsername]').val(), 'foobar', 'displays username');
   assert.equal(this.$('input[name=email]').val(), 'foo@bar.com', 'displays email');
-  assert.equal(this.$('input[name=password]').val(), '******', 'displays password asterisks');
   
-  assert.equal(this.$('input[disabled]').length, keys(userFields()).length, 'all fields should be disabled');
+  assert.equal(this.$('input').length, 3, 'should see 3 fields');
+  assert.ok(this.$('input').get().every(i => i.disabled), 'all inputs should be disabled');
   
   assert.notOk(this.$('button[data-test-selector=rollback]').length, 'cancel button should not be visible in default state');
   assert.notOk(this.$('button[data-test-selector=save]').length, 'save button should not be visible in default state');
@@ -59,22 +50,16 @@ test('renders default values of passed in model', function(assert) {
 test('switches to inputs when in editing state', function(assert) {
   this.set('user', userFields());
   this.set('BasicInfoValidations', BasicInfoValidations);
-  this.set('password', pwFields());
-  this.set('PasswordValidations', PasswordValidations);
   
   this.render(hbs`{{basic-info
-      isEditing=true
-      pwChangeset=(changeset password PasswordValidations)
-      basicChangeset=(changeset user BasicInfoValidations)}}`);
+    isEditing=true
+    basicChangeset=(changeset user BasicInfoValidations)}}`);
       
-  assert.equal(this.$('input:not([disabled])').length, 3, 'all fields should not be disabled');
+  assert.equal(this.$('input').length, 4, 'should see 4 fields');
   
   let inputs = this.$('input:not([disabled])').map((i, e) => e.name).get();
   assert.deepEqual(inputs, ['givenName', 'familyName', 'preferredUsername']);
   
-  this.$('button[data-test-selector=change-pw]').click();
-  assert.notOk(this.$('input[name=oldPassword]').attr('disabled'), 'old pw should be editable');
-  assert.notOk(this.$('input[name=newPassword]').attr('disabled'), 'new pw should be editable');
   
   this.$('button[data-test-selector=change-email]').click();
   assert.notOk(this.$('input[name=email]').attr('disabled'), 'email should be editable');
@@ -89,13 +74,10 @@ test('displays error states', function(assert) {
     email: '',
   });
   this.set('BasicInfoValidations', BasicInfoValidations);
-  this.set('password', pwFields());
-  this.set('PasswordValidations', PasswordValidations);
   
   this.render(hbs`{{basic-info
-      isEditing=true
-      pwChangeset=(changeset password PasswordValidations)
-      basicChangeset=(changeset user BasicInfoValidations)}}`);
+    isEditing=true
+    basicChangeset=(changeset user BasicInfoValidations)}}`);
   this.$('button[data-test-selector=save]').click();
   
   return wait().then(() => {
@@ -103,38 +85,18 @@ test('displays error states', function(assert) {
     keys(userFields()).forEach(name => {
       assert.ok(this.$(`[name=${name}] + .basic-input-footer > .basic-input-error`).length, `${name} has an error`);
     });
-  }).then(() => {
-    this.render(hbs`{{basic-info
-        isEditing=true
-        pwChangeset=(changeset password PasswordValidations)
-        basicChangeset=(changeset user BasicInfoValidations)}}`);
-    this.$('button[data-test-selector=change-pw]').click();
-    this.$('button[data-test-selector=change-email]').click();
-    this.$('button[data-test-selector=save]').click();
-    
-    return wait().then(() => {
-      assert.equal(this.$('.basic-input-error').length, 7);
-      ['givenName', 'familyName', 'preferredUsername', 'email', 'confirmEmail', 'oldPassword', 'newPassword'].forEach(name => {
-        assert.ok(this.$(`[name=${name}] + .basic-input-footer > .basic-input-error`).length, `${name} has an error`);
-      });
-    });
   });
 });
 
 test('changes to fields are not persisted after a rollback', function(assert) {
   this.set('user', userFields());
   this.set('BasicInfoValidations', BasicInfoValidations);
-  this.set('password', pwFields());
-  this.set('PasswordValidations', PasswordValidations);
   
   this.set('isEditing', true);
   
   this.render(hbs`{{basic-info
-      isEditing=isEditing
-      pwChangeset=(changeset password PasswordValidations)
-      basicChangeset=(changeset user BasicInfoValidations)}}`);
-  this.$('button[data-test-selector=change-pw]').click();
-  this.$('button[data-test-selector=change-email]').click();
+    isEditing=isEditing
+    basicChangeset=(changeset user BasicInfoValidations)}}`);
   
   this.$('input[name=name]').val('zzzz');
   this.$('input[name=name]').change();
@@ -146,16 +108,11 @@ test('changes to fields are not persisted after a rollback', function(assert) {
   this.$('input[name=email]').change();
   this.$('input[name=confirmEmail]').val('wwwwww');
   this.$('input[name=confirmEmail]').change();
-  this.$('input[name=oldPassword]').val('vvvvvvv');
-  this.$('input[name=oldPassword]').change();
-  this.$('input[name=newPassword]').val('uuuuuuu');
-  this.$('input[name=newPassword]').change();
   
   this.$('button[data-test-selector=rollback]').click();
   assert.equal(this.$('input[name=fullName]').val(), 'foo bar', 'displays fullname');
   assert.equal(this.$('input[name=preferredUsername]').val(), 'foobar', 'displays username');
   assert.equal(this.$('input[name=email]').val(), 'foo@bar.com', 'displays email');
-  assert.equal(this.$('input[name=password]').val(), '******', 'displays password asterisks');
   
   this.set('isEditing', true);
   let inputs = this.$('input').map((i, e) => e.name).get();
@@ -171,13 +128,10 @@ test('can update non-email attrs', function(assert) {
   
   this.set('user', userFields());
   this.set('BasicInfoValidations', BasicInfoValidations);
-  this.set('password', pwFields());
-  this.set('PasswordValidations', PasswordValidations);
   
   this.render(hbs`{{basic-info
-      isEditing=true
-      pwChangeset=(changeset password PasswordValidations)
-      basicChangeset=(changeset user BasicInfoValidations)}}`);
+    isEditing=true
+    basicChangeset=(changeset user BasicInfoValidations)}}`);
   
   this.$('input[name=givenName]').val(FIRST_NAME);
   this.$('input[name=givenName]').change();
@@ -190,10 +144,11 @@ test('can update non-email attrs', function(assert) {
     this.$('button[data-test-selector=save]').click();
   }).then(() => {
     return wait().then(() => {
-      assert.equal(this.$('input[disabled]').length, keys(userFields()).length, 'all fields should be disabled');
+      assert.equal(this.$('input').length, 3, 'should see 3 fields');
+      assert.ok(this.$('input').get().every(i => i.disabled), 'all inputs should be disabled');
+      
       assert.equal(this.$('input[name=fullName]').val(), `${FIRST_NAME} ${LAST_NAME}`, 'displays new fullname');
       assert.equal(this.$('input[name=preferredUsername]').val(), USERNAME, 'displays new username');
-      assert.equal(this.$('input[name=password]').val(), '******', 'displays password asterisks');
     });
   });
 });
@@ -204,8 +159,6 @@ test('can update email', function(assert) {
   
   this.set('user', userFields());
   this.set('BasicInfoValidations', BasicInfoValidations);
-  this.set('password', pwFields());
-  this.set('PasswordValidations', PasswordValidations);
   this.set('emailRequirement', function() {
     assert.ok('emailRequirement called');
     return Promise.resolve();
@@ -214,7 +167,6 @@ test('can update email', function(assert) {
   this.render(hbs`{{basic-info
     isEditing=true
     emailRequirement=emailRequirement
-    pwChangeset=(changeset password PasswordValidations)
     basicChangeset=(changeset user BasicInfoValidations)}}`);
   this.$('[data-test-selector=change-email]').click();
   
@@ -240,8 +192,6 @@ test('resets email value if emailRequirement is rejected', function(assert) {
   
   this.set('user', userFields());
   this.set('BasicInfoValidations', BasicInfoValidations);
-  this.set('password', pwFields());
-  this.set('PasswordValidations', PasswordValidations);
   this.set('emailRequirement', function() {
     assert.ok('emailRequirement called');
     return Promise.reject();
@@ -250,7 +200,6 @@ test('resets email value if emailRequirement is rejected', function(assert) {
   this.render(hbs`{{basic-info
     isEditing=true
     emailRequirement=emailRequirement
-    pwChangeset=(changeset password PasswordValidations)
     basicChangeset=(changeset user BasicInfoValidations)}}`);
   this.$('[data-test-selector=change-email]').click();
   
@@ -282,14 +231,11 @@ test('can update them all', function(assert) {
   
   this.set('user', userFields());
   this.set('BasicInfoValidations', BasicInfoValidations);
-  this.set('password', pwFields());
-  this.set('PasswordValidations', PasswordValidations);
   this.set('emailRequirement', () => Promise.resolve());
   
   this.render(hbs`{{basic-info
     isEditing=true
     emailRequirement=emailRequirement
-    pwChangeset=(changeset password PasswordValidations)
     basicChangeset=(changeset user BasicInfoValidations)}}`);
   this.$('[data-test-selector=change-email]').click();
   
@@ -308,11 +254,12 @@ test('can update them all', function(assert) {
     this.$('button[data-test-selector=save]').click();
   }).then(() => {
     return wait().then(() => {
-      assert.equal(this.$('input[disabled]').length, keys(userFields()).length, 'all fields should be disabled');
+      assert.equal(this.$('input').length, 3, 'should see 3 fields');
+      assert.ok(this.$('input').get().every(i => i.disabled), 'all inputs should be disabled');
+      
       assert.equal(this.$('input[name=fullName]').val(), `${FIRST_NAME} ${LAST_NAME}`, 'displays new fullname');
       assert.equal(this.$('input[name=preferredUsername]').val(), USERNAME, 'displays new username');
       assert.equal(this.$('input[name=email]').val(), EMAIL, 'displays new email');
-      assert.equal(this.$('input[name=password]').val(), '******', 'displays password asterisks');
     });
   });
 });

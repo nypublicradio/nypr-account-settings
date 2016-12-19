@@ -62,43 +62,9 @@
     errors=basicChangeset.error.confirmEmail.validation
     disabled=false
   }}
-{{/unless}}
-
-{{#unless isEditing}}
-  {{basic-input
-    label='Password'
-    fieldname='password'
-    value='******'
-    disabled=true
-  }}
-{{else}}
-  {{#unless isEditingPassword}}
-    <button
-      data-test-selector="change-pw"
-      {{action (action (mut isEditingPassword) true)}}>
-        Change Password
-    </button>
-  {{else}}
-    {{basic-input
-      label='Old Password'
-      fieldname='oldPassword'
-      placeholder='Enter your current password'
-      value=pwChangeset.oldPassword
-      errors=pwChangeset.error.oldPassword.validation
-      disabled=false
-    }}
-    {{basic-input
-      label='New Password'
-      fieldname='newPassword'
-      placeholder='Enter your new password'
-      value=pwChangeset.newPassword
-      errors=pwChangeset.error.newPassword.validation
-      disabled=false
-    }}
-  {{/unless}}
-{{/unless}}
+{{/if}}
 
 {{#if isEditing}}
-<button data-test-selector="rollback" {{action 'rollback' basicChangeset pwChangeset}}>Cancel</button>
-<button data-test-selector="save" {{action 'save' basicChangeset pwChangeset}}>Save</button>
+<button data-test-selector="rollback" {{action 'rollback' basicChangeset}}>Cancel</button>
+<button data-test-selector="save" {{action 'save' basicChangeset}}>Save</button>
 {{/if}}
