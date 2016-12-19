@@ -43,11 +43,11 @@ test('renders default values of passed in model', function(assert) {
   assert.equal(this.$('input').length, 3, 'should see 3 fields');
   assert.ok(this.$('input').get().every(i => i.disabled), 'all inputs should be disabled');
   
-  assert.notOk(this.$('button[data-test-selector=rollback]').length, 'cancel button should not be visible in default state');
-  assert.notOk(this.$('button[data-test-selector=save]').length, 'save button should not be visible in default state');
+  assert.notOk(this.$('[data-test-selector=rollback]').length, 'cancel button should not be visible in default state');
+  assert.notOk(this.$('[data-test-selector=save]').length, 'save button should not be visible in default state');
 });
 
-test('switches to inputs when in editing state', function(assert) {
+test('editing states', function(assert) {
   this.set('user', userFields());
   this.set('BasicInfoValidations', BasicInfoValidations);
   
@@ -56,9 +56,10 @@ test('switches to inputs when in editing state', function(assert) {
     basicChangeset=(changeset user BasicInfoValidations)}}`);
       
   assert.equal(this.$('input').length, 4, 'should see 4 fields');
+  assert.ok(this.$('input').get().every(i => !i.disabled), 'all inputs should be editable');
   
-  let inputs = this.$('input:not([disabled])').map((i, e) => e.name).get();
-  assert.deepEqual(inputs, ['givenName', 'familyName', 'preferredUsername']);
+  assert.ok(this.$('[data-test-selector=rollback]').length, 'cancel button should be visible in editing state');
+  assert.ok(this.$('[data-test-selector=save]').length, 'save button should be visible in editing state');
   
   
   this.$('button[data-test-selector=change-email]').click();
@@ -98,12 +99,12 @@ test('changes to fields are not persisted after a rollback', function(assert) {
     isEditing=isEditing
     basicChangeset=(changeset user BasicInfoValidations)}}`);
   
-  this.$('input[name=name]').val('zzzz');
-  this.$('input[name=name]').change();
+  this.$('input[name=givenName]').val('zzzz');
+  this.$('input[name=givenName]').change();
   this.$('input[name=familyName]').val('xxxxx');
   this.$('input[name=familyName]').change();
-  this.$('input[name=username]').val('yyyyyy');
-  this.$('input[name=username]').change();
+  this.$('input[name=preferredUsername]').val('yyyyyy');
+  this.$('input[name=preferredUsername]').change();
   this.$('input[name=email]').val('wwwwww');
   this.$('input[name=email]').change();
   this.$('input[name=confirmEmail]').val('wwwwww');
@@ -115,10 +116,7 @@ test('changes to fields are not persisted after a rollback', function(assert) {
   assert.equal(this.$('input[name=email]').val(), 'foo@bar.com', 'displays email');
   
   this.set('isEditing', true);
-  let inputs = this.$('input').map((i, e) => e.name).get();
-  assert.deepEqual(inputs, keys(userFields()), 'original values are shown');
-  assert.ok(this.$('[data-test-selector=change-pw]').length, 'password edit is reset after a rollback');
-  assert.ok(this.$('[data-test-selector=change-email]').length, 'email edit is reset after a rollback');
+  this.$('input').each((i, e) => assert.equal(e.value, userFields()[e.name], 'original values are shown'));
 });
 
 test('can update non-email attrs', function(assert) {
