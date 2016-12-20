@@ -1,9 +1,9 @@
 <div class="l-gray">
   <div class="l-constrained">
-    <h1>Hi {{user.givenName}}!</h1>
+    <h1>Hi {{model.givenName}}!</h1>
     <h2>Account Settings</h2>
 
-    {{basic-info user=model}}
+    {{basic-info user=model checkPassword=checkPassword}}
     {{password-card}}
     
   </div>

@@ -25,4 +25,9 @@ export default function() {
   */
   
   this.get('/api/v1/user', {username: ''});
+  this.post('/users', {data: {
+    type: 'user', 
+    id: 'current',
+    attributes: {}
+  }});
 }
