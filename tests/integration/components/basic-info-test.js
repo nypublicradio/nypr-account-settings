@@ -171,7 +171,17 @@ test('can update email', function(assert) {
     this.$('[data-test-selector=save]').click();
   }).then(() => {
     return wait().then(() => {
-      assert.equal(this.$('input[name=email]').val(), EMAIL, 'displays new email');
+      let modal = this.$().siblings('.ember-modal-wrapper');
+      modal
+        .find('input')
+        .val(PASSWORD)
+        .change();
+      modal
+        .find('[data-test-selector=check-pw]')
+        .click();
+      return wait().then(() => {
+        assert.equal(this.$('input[name=email]').val(), EMAIL, 'displays new email');
+      });
     });
   });
 });
