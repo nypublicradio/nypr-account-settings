@@ -71,7 +71,18 @@ export default Component.extend({
       changeset.rollback();
       this.set('isEditing', false);
     },
-    
+
+    verifyPassword(password) {
+      this.get('checkPassword')(password)
+        .then(this.get('resolveModal'))
+        .catch(this.get('rejectModal'))
+        .finally(() => {
+          this.setProperties({
+            resolveModal: null,
+            rejectModal: null
+          });
+        });
+    },
     closeModal() {
       this.get('rejectModal')();
       this.setProperties({
