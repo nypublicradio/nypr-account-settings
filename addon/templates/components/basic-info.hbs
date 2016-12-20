@@ -56,9 +56,27 @@
 {{/nypr-card}}
 
 {{#if isShowingModal}}
-  {{#modal-dialog}}
-    <button {{action 'closeModal'}}>Close</button>
-    Enter your password:
-    {{input value=password enter='checkPassword'}}
-  {{/modal-dialog}}
+  {{#account-modal title="Re-enter Your Password" closeAction=(action 'closeModal') as |m|}}
+    {{#m.body}}
+    <p>
+      You must re-enter your password to make changes to your email. The email you are changing is the one you use to log into the site.
+    </p>
+    {{nypr-input
+      label='Password'
+      fieldname='passwordForEmailChange'
+      placeholder='Enter your password'
+      value=password
+      helplinkUrl="/accounts/forgot"
+      helplinkText="Forgot Password?"
+    }}
+    {{/m.body}}
+    
+    {{#m.footer}}
+      <button
+        class="nypr-account-confirm"
+        data-test-selector="check-pw"
+        {{action 'verifyPassword' password}}>Submit</button>
+    {{/m.footer}}
+  {{/account-modal}}
 {{/if}}
+  
