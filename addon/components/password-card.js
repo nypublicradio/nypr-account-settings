@@ -3,7 +3,7 @@ import layout from '../templates/components/password-card';
 
 export default Ember.Component.extend({
   layout,
-  classNames: ['nypr-password-card'],
+  tagName: '',
   
   actions: {
     save(changeset) {

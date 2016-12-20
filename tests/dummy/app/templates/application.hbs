@@ -3,17 +3,8 @@
     <h1>Hi {{user.givenName}}!</h1>
     <h2>Account Settings</h2>
 
-    {{#nypr-card title="Basic Info" edit=(action (mut editInfo) true)}}
-
-      {{basic-info
-        isEditing=editInfo
-        changeset=(changeset model BasicInfoValidations)
-      }}
-
-    {{/nypr-card}}
-
-    {{#nypr-card title="Password" edit=(action (mut editPassword))}}
-
-    {{/nypr-card}}
+    {{basic-info user=model}}
+    {{password-card}}
+    
   </div>
 </div>  
