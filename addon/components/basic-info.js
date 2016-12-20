@@ -1,11 +1,21 @@
 import Component from 'ember-component';
 import layout from '../templates/components/basic-info';
+import Changeset from 'ember-changeset';
+import lookupValidator from 'ember-changeset-validations';
+import validations from 'nypr-account-settings/validators/basic-info';
 
 export default Component.extend({
   layout,
   tagName: '',
   user: {},
   
+  init() {
+    this._super(...arguments);
+    let user = this.get('user');
+    let changeset = new Changeset(user, lookupValidator(validations), validations);
+    this.changeset = changeset;
+  },
+
   rollbackEmailField(changeset) {
     // work around to rollback specific fields
     let snapshot = changeset.snapshot();
