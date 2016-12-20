@@ -1,0 +1,13 @@
+@import "nypr-ui/vars";
+
+.nypr-password-card,
+.nypr-basic-info {
+  .nypr-input {
+    color: $darkergray;
+    height: auto;
+  }
+  .nypr-input[disabled] {
+    padding: 0;
+    border: none;
+  }
+}
