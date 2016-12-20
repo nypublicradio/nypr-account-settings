@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 
-import validateRemote from 'nypr-account-settings/validators/remote';
+import validateRemote from 'nypr-account-settings/validators/nypr-accounts/remote';
 
 module('Unit | Validator | remote', {
   beforeEach() {

@@ -1,10 +1,10 @@
 import Component from 'ember-component';
 import { bool } from 'ember-computed';
-import layout from '../templates/components/basic-info';
+import layout from '../../templates/components/nypr-accounts/basic-card';
 import RSVP from 'rsvp';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
-import validations from 'nypr-account-settings/validators/basic-info';
+import validations from 'nypr-account-settings/validators/nypr-accounts/basic-card';
 
 export default Component.extend({
   layout,

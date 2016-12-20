@@ -5,7 +5,7 @@ import wait from 'ember-test-helpers/wait';
 import rsvp from 'rsvp';
 const { Promise } = rsvp;
 
-moduleForComponent('basic-info', 'Integration | Component | basic info', {
+moduleForComponent('nypr-accounts/basic-card', 'Integration | Component | nypr-accounts/basic card', {
   integration: true,
   beforeEach() {
     this.server = startMirage();
@@ -24,7 +24,7 @@ const userFields = () => ({
 });
 
 test('it renders', function(assert) {
-  this.render(hbs`{{basic-info}}`);
+  this.render(hbs`{{nypr-accounts/basic-card}}`);
 
   assert.ok(this.$('input').length);
 });
@@ -32,7 +32,7 @@ test('it renders', function(assert) {
 test('renders default values of passed in model', function(assert) {
   this.set('user', userFields());
   
-  this.render(hbs`{{basic-info user=user}}`);
+  this.render(hbs`{{nypr-accounts/basic-card user=user}}`);
       
   assert.equal(this.$('input[name=fullName]').val(), 'foo bar', 'displays fullname');
   assert.equal(this.$('input[name=preferredUsername]').val(), 'foobar', 'displays username');
@@ -48,7 +48,7 @@ test('renders default values of passed in model', function(assert) {
 test('editing states', function(assert) {
   this.set('user', userFields());
   
-  this.render(hbs`{{basic-info isEditing=true user=user}}`);
+  this.render(hbs`{{nypr-accounts/basic-card isEditing=true user=user}}`);
       
   assert.equal(this.$('input').length, 4, 'should see 4 fields');
   this.$('input').get().forEach(i => assert.notOk(i.disabled, `${i.name} should be editable`));
@@ -76,7 +76,7 @@ test('displays error states', function(assert) {
     preferredUsername: '',
     email: '',
   });
-  this.render(hbs`{{basic-info isEditing=true user=user}}`);
+  this.render(hbs`{{nypr-accounts/basic-card isEditing=true user=user}}`);
     
   // trigger error state
   this.$('input').get().forEach(i => $(i).focusout());
@@ -95,7 +95,7 @@ test('changes to fields are not persisted after a rollback', function(assert) {
   
   this.set('isEditing', true);
   
-  this.render(hbs`{{basic-info isEditing=isEditing user=user}}`);
+  this.render(hbs`{{nypr-accounts/basic-card isEditing=isEditing user=user}}`);
   
   this.$('input[name=givenName]').val('zzzz');
   this.$('input[name=givenName]').change();
@@ -123,7 +123,7 @@ test('can update non-email attrs', function(assert) {
   const USERNAME = 'johndoe';
   
   this.set('user', userFields());
-  this.render(hbs`{{basic-info isEditing=true user=user}}`);
+  this.render(hbs`{{nypr-accounts/basic-card isEditing=true user=user}}`);
       
   
   this.$('input[name=givenName]').val(FIRST_NAME);
@@ -157,7 +157,7 @@ test('can update email', function(assert) {
     return Promise.resolve();
   });
   
-  this.render(hbs`{{basic-info
+  this.render(hbs`{{nypr-accounts/basic-card
     checkPassword=checkPassword
     isEditing=true
     user=user}}`);
@@ -198,7 +198,7 @@ test('resets email value if emailRequirement is rejected', function(assert) {
     return Promise.reject();
   });
   
-  this.render(hbs`{{basic-info emailRequirement=emailRequirement isEditing=true user=user}}`);
+  this.render(hbs`{{nypr-accounts/basic-card emailRequirement=emailRequirement isEditing=true user=user}}`);
   this.$('[data-test-selector=change-email]').click();
   
   this.$('input[name=givenName]').val(FIRST_NAME);
@@ -230,7 +230,7 @@ test('can update them all', function(assert) {
   this.set('user', userFields());
   this.set('emailRequirement', () => Promise.resolve());
   
-  this.render(hbs`{{basic-info emailRequirement=emailRequirement isEditing=true user=user}}`);
+  this.render(hbs`{{nypr-accounts/basic-card emailRequirement=emailRequirement isEditing=true user=user}}`);
       
   this.$('[data-test-selector=change-email]').click();
   

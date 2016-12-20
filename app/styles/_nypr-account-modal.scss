@@ -1,11 +1,11 @@
-.account-container {
+.nypr-account-container {
   padding: 0;
   border-radius: 3px;
   overflow: hidden;
   max-width: 457px;
 }
 
-.account-modal-title {
+.nypr-account-modal-title {
   background-color: $nearwhite;
   padding: 25px;
   @include fontsize(24);
@@ -17,15 +17,15 @@
   ));
 }
 
-.account-modal-body {
+.nypr-account-modal-body {
   padding: 0 27px;
 }
 
-.account-modal-footer {
+.nypr-account-modal-footer {
   text-align: center;
   margin-bottom: 27px;
 }
 
-.account-modal-close {
+.nypr-account-modal-close {
   @include blank-button;
 }

@@ -1,0 +1,19 @@
+{{#modal-dialog
+  wrapper-class="nypr-account-wrapper"
+  container-class="nypr-account-container"
+  overlay-class="nypr-account-overlay"
+  translucentOverlay=true
+  targetAttachment="center"}}
+  {{#if title}}
+  <div class="nypr-account-modal-title">
+    <span>{{title}}</span>
+    
+    <button class="nypr-account-modal-close" {{action closeAction}}>{{nypr-svg icon='close'}}</button>
+  </div>
+  {{/if}}
+  
+  {{yield (hash
+    body=(component 'nypr-account-modal/body')
+    footer=(component 'nypr-account-modal/footer')
+  )}}
+{{/modal-dialog}}

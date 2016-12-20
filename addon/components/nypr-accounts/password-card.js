@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import layout from '../templates/components/password-card';
+import layout from '../../templates/components/nypr-accounts/password-card';
 
 export default Ember.Component.extend({
   layout,
