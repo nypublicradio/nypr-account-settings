@@ -8,6 +8,7 @@ import validations from 'nypr-account-settings/validators/basic-info';
 export default Component.extend({
   layout,
   tagName: '',
+  isShowingModal: false,
   user: {},
   
   init() {

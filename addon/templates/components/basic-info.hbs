@@ -55,4 +55,10 @@
   {{/if}}
 {{/nypr-card}}
 
+{{#if isShowingModal}}
+  {{#modal-dialog}}
+    <button {{action 'closeModal'}}>Close</button>
+    Enter your password:
+    {{input value=password enter='checkPassword'}}
+  {{/modal-dialog}}
 {{/if}}
