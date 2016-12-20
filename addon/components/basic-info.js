@@ -19,9 +19,9 @@ export default Component.extend({
     this.changeset = changeset;
   },
 
-  emailRequirement(component) {
+  emailRequirement() {
     return new RSVP.Promise((resolve, reject) => {
-      component.setProperties({
+      this.setProperties({
         resolveModal: resolve,
         rejectModal: reject
       });
@@ -39,25 +39,31 @@ export default Component.extend({
 
   actions: {
     save(changeset) {
+      let stepOne;
       let verifyEmail = changeset.get('change.email');
 
       if (!verifyEmail) {
         // if we're not editing email, manually confirm it so changeset passes
         changeset.set('confirmEmail', changeset.get('email'));
+        stepOne = changeset.validate();
+      } else {
+        // otherwise do the email requirement first before moving onto the rest
+        // of the validations. this lets us show the modal w/o incurring the delay
+        // of doing the username remote validation.
+        stepOne = this.emailRequirement();
+        stepOne.then(() => changeset.validate());
+        stepOne.catch(() => {
+          this._canceled = true;
+          this.rollbackEmailField(changeset);
+        });
       }
-      return changeset.validate().then(() => {
-        if (changeset.get('isValid') && verifyEmail) {
-          return this.get('emailRequirement')(this)
-            .then(() => {
-              return changeset.save().then(() => this.set('isEditing', false));
-            })
-            .catch(() => {
-              this.rollbackEmailField(changeset);
-            });
-        } else if (changeset.get('isValid')) {
+      return stepOne.then(() => {
+        if (changeset.get('isValid')) {
           return changeset.save().then(() => this.set('isEditing', false));
-        } else {
+        } else if (!this._canceled){
           return changeset.get('errors');
+        } else if (this._canceled){
+          this._canceled = null;
         }
       });
     },
