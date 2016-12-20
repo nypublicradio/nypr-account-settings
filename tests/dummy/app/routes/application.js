@@ -5,6 +5,7 @@ export default Route.extend({
     return this.store.createRecord('user', {
       givenName: "Jane",
       familyName: "Doe",
+      preferredUsername: "janedoe",
       email: "jane@email.com"
     });
   }
