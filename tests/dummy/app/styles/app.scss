@@ -10,6 +10,9 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
+@import "ember-modal-dialog/ember-modal-structure";
+@import "ember-modal-dialog/ember-modal-appearance";
+
 @import "nypr-ui";
 @import "nypr-account-settings";
 @import "layout";
