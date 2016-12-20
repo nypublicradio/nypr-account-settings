@@ -1,0 +1,19 @@
+{{#modal-dialog
+  wrapper-class="account-wrapper"
+  container-class="account-container"
+  overlay-class="account-overlay"
+  translucentOverlay=true
+  targetAttachment="center"}}
+  {{#if title}}
+  <div class="account-modal-title">
+    <span>{{title}}</span>
+    
+    <button class="account-modal-close" {{action closeAction}}>{{nypr-svg icon='close'}}</button>
+  </div>
+  {{/if}}
+  
+  {{yield (hash
+    body=(component 'account-modal.body')
+    footer=(component 'account-modal.footer')
+  )}}
+{{/modal-dialog}}
