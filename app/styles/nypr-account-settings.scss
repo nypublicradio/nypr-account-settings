@@ -1,4 +1,9 @@
+@import "compass/css3/flexbox";
+
 @import "nypr-ui/vars";
+@import "nypr-ui/buttons";
+
+@import "account-modal";
 
 .nypr-password-card,
 .nypr-basic-info {
@@ -10,4 +15,39 @@
     padding: 0;
     border: none;
   }
+}
+
+.nypr-account-confirm {
+  @include btn;
+  @include btn--blue;
+  @include btn--large;
+}
+
+.nypr-account-cancel {
+  @include blank-button;
+  color: $blue;
+}
+
+.nypr-account-footer {
+  @include flexbox((
+    display: flex,
+    justify-content: center
+  ));
+  
+  @include mq($medium-and-up) {
+    @include justify-content(flex-end);
+  }
+}
+
+.nypr-account-footer-wrapper {
+  @include flexbox((
+    display: flex,
+    justify-content: space-between,
+    flex-basis: 150px
+  ));
+}
+
+.nypr-account-link {
+  text-decoration: none;
+  color: $blue;
 }

@@ -50,8 +50,19 @@
   {{/if}}
 
   {{#if isEditing}}
-  <button data-test-selector="rollback" {{action 'rollback' changeset}}>Cancel</button>
-  <button data-test-selector="save" {{action 'save' changeset}}>Save</button>
+  <div class="nypr-account-footer">
+    <div class="nypr-account-footer-wrapper">
+      <button
+        class="nypr-account-cancel"
+        data-test-selector="rollback"
+        {{action 'rollback' changeset}}>Cancel</button>
+        
+      <button
+        class="nypr-account-confirm"
+        data-test-selector="save"
+        {{action 'save' changeset}}>Save</button>
+    </div>
+  </div>
   {{/if}}
 {{/nypr-card}}
 
