@@ -3,6 +3,7 @@ import layout from '../templates/components/basic-info';
 
 export default Component.extend({
   layout,
+  classNames: ['nypr-basic-info'],
   
   rollbackEmailField(changeset) {
     // work around to rollback specific fields
