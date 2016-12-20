@@ -149,15 +149,18 @@ test('can update non-email attrs', function(assert) {
 test('can update email', function(assert) {
   assert.expect(2);
   const EMAIL = 'john@doe.com';
+  const PASSWORD = '1234567890';
   
   this.set('user', userFields());
-  this.set('emailRequirement', function() {
-    assert.ok('emailRequirement called');
+  this.set('checkPassword', pw => {
+    assert.equal(pw, PASSWORD, 'checkPassword was called with correct pw');
     return Promise.resolve();
   });
   
-  this.render(hbs`{{basic-info emailRequirement=emailRequirement isEditing=true user=user}}`);
-      
+  this.render(hbs`{{basic-info
+    checkPassword=checkPassword
+    isEditing=true
+    user=user}}`);
   
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').change();
