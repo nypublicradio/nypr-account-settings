@@ -1,4 +1,5 @@
 import Component from 'ember-component';
+import { bool } from 'ember-computed';
 import layout from '../templates/components/basic-info';
 import RSVP from 'rsvp';
 import Changeset from 'ember-changeset';
@@ -8,7 +9,7 @@ import validations from 'nypr-account-settings/validators/basic-info';
 export default Component.extend({
   layout,
   tagName: '',
-  isShowingModal: false,
+  isShowingModal: bool('resolveModal'),
   user: {},
   
   init() {
@@ -19,7 +20,6 @@ export default Component.extend({
   },
 
   emailRequirement(component) {
-    component.set('isShowingModal', true);
     return new RSVP.Promise((resolve, reject) => {
       component.setProperties({
         resolveModal: resolve,
@@ -67,9 +67,11 @@ export default Component.extend({
     },
     
     closeModal() {
-      this.set('isShowingModal', false);
-      this.set('resolveModal', null);
       this.get('rejectModal')();
+      this.setProperties({
+        resolveModal: null,
+        rejectModal: null
+      });
     }
   }
 });
