@@ -130,7 +130,6 @@ test('can update non-email attrs', function(assert) {
   
   return wait().then(() => {
     this.$('button[data-test-selector=save]').click();
-  }).then(() => {
     return wait().then(() => {
       assert.equal(this.$('input').length, 3, 'should see 3 fields');
       assert.ok(this.$('input').get().every(i => i.disabled), 'all inputs should be disabled');
@@ -165,7 +164,6 @@ test('can update email', function(assert) {
   
   return wait().then(() => {
     this.$('[data-test-selector=save]').click();
-  }).then(() => {
     return wait().then(() => {
       let modal = this.$().siblings('.ember-modal-wrapper');
       modal
@@ -209,7 +207,6 @@ test('resets email value if emailRequirement is rejected', function(assert) {
   
   return wait().then(() => {
     this.$('[data-test-selector=save]').click();
-  }).then(() => {
     return wait().then(() => {
       assert.equal(this.$('input[name=email]').val(), userFields()['email'], 'displays old email');
       assert.equal(this.$('input[name=givenName]').val(), FIRST_NAME, 'first name still updated value');
