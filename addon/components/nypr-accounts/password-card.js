@@ -24,7 +24,7 @@ export default Ember.Component.extend({
           if (changeset.get('isValid')) {
             this.set('isEditing', false);
             changeset.save();
-            this.get('changePassword')(changeset);
+            this.attrs.changePassword(changeset);
           } else {
             return changeset.get('errors');
           }

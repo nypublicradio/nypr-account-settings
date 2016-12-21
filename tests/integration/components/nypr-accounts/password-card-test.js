@@ -1,14 +1,9 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import PasswordValidations from 'nypr-account-settings/validators/nypr-accounts/password';
 import wait from 'ember-test-helpers/wait';
 
 moduleForComponent('nypr-accounts/password-card', 'Integration | Component | password card', {
   integration: true
-});
-const pwFields = () => ({
-  currentPassword: '',
-  newPassword: ''
 });
 
 test('it renders', function(assert) {
@@ -19,9 +14,7 @@ test('it renders', function(assert) {
 });
 
 test('renders default values', function(assert) {
-  this.set('password', pwFields());
-  this.set('PasswordValidations', PasswordValidations);
-  this.render(hbs`{{nypr-accounts/password-card changeset=(changeset password PasswordValidations)}}`);
+  this.render(hbs`{{nypr-accounts/password-card}}`);
   
   assert.equal(this.$('input[name=password]').val(), '********', 'displays password asterisks');
   assert.ok(this.$('input[name=password]').attr('disabled'), 'input is disabled');
@@ -31,11 +24,7 @@ test('renders default values', function(assert) {
 });
 
 test('editing states', function(assert) {
-  this.set('password', pwFields());
-  this.set('PasswordValidations', PasswordValidations);
-  this.render(hbs`{{nypr-accounts/password-card
-    isEditing=true
-    changeset=(changeset password PasswordValidations)}}`);
+  this.render(hbs`{{nypr-accounts/password-card isEditing=true}}`);
   
   assert.equal(this.$('input').length, 2, 'should see 2 fields');
   assert.notOk(this.$('input[name=currentPassword]').attr('disabled'), 'old pw should be editable');
@@ -46,14 +35,7 @@ test('editing states', function(assert) {
 });
 
 test('displays error states', function(assert) {
-  this.set('password', {
-    currentPassword: '',
-    newPassword: ''
-  });
-  this.set('PasswordValidations', PasswordValidations);
-  this.render(hbs`{{nypr-accounts/password-card
-    isEditing=true
-    changeset=(changeset password PasswordValidations)}}`);
+  this.render(hbs`{{nypr-accounts/password-card isEditing=true}}`);
   
   // trigger error state
   this.$('input').get().forEach(i => $(i).focusout());
@@ -68,11 +50,7 @@ test('displays error states', function(assert) {
 });
 
 test('changes to fields are not persisted after a rollback', function(assert) {
-  this.set('password', pwFields());
-  this.set('PasswordValidations', PasswordValidations);
-  this.render(hbs`{{nypr-accounts/password-card
-    isEditing=true
-    changeset=(changeset password PasswordValidations)}}`);
+  this.render(hbs`{{nypr-accounts/password-card isEditing=true}}`);
   
   this.$('input[name=currentPassword]').val('vvvvvvv');
   this.$('input[name=currentPassword]').change();
@@ -92,17 +70,14 @@ test('clicking save with a valid password calls changePassword', function(assert
   const NEW_PW = 'newvalidpassword';
   assert.expect(3);
 
-  this.set('password', pwFields());
-  this.set('PasswordValidations', PasswordValidations);
   this.set('changePassword', function(changeset) {
     assert.ok('changePassword was called');
     assert.equal(changeset.get('currentPassword'), OLD_PW);
     assert.equal(changeset.get('newPassword'), NEW_PW);
   });
   this.render(hbs`{{nypr-accounts/password-card
-    changePassword=changePassword
-    isEditing=true
-    changeset=(changeset password PasswordValidations)}}`);
+    changePassword=(action changePassword)
+    isEditing=true}}`);
   
   this.$('input[name=currentPassword]').val(OLD_PW);
   this.$('input[name=currentPassword]').change();
