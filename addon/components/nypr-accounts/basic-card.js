@@ -100,7 +100,8 @@ export default Component.extend({
       this.set('isEditing', false);
     },
 
-    verifyPassword(password) {
+    verifyPassword() {
+      let password = this.get('password');
       this.attrs.authenticate(password)
         .then(this.get('resolveModal'))
         .catch(this.get('rejectModal'))
