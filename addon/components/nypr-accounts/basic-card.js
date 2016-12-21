@@ -43,19 +43,24 @@ export default Component.extend({
       let verifyEmail = changeset.get('change.email');
 
       if (!verifyEmail) {
-        // if we're not editing email, manually confirm it so changeset passes
-        changeset.set('confirmEmail', changeset.get('email'));
-        stepOne = changeset.validate();
+        // skip email field validations
+        stepOne = RSVP.all([
+          changeset.validate('givenName'),
+          changeset.validate('familyName'),
+          changeset.validate('preferredUsername'),
+        ]);
       } else {
         // otherwise do the email requirement first before moving onto the rest
         // of the validations. this lets us show the modal w/o incurring the delay
-        // of doing the username remote validation.
-        stepOne = this.emailRequirement();
-        stepOne.then(() => changeset.validate());
-        stepOne.catch(() => {
-          this._canceled = true;
-          this.rollbackEmailField(changeset);
+        // of doing the remote username validation.
+        stepOne = changeset.validate('confirmEmail');
+        stepOne.then(() => {
+          if (changeset.get('isValid')) {
+            return this.emailRequirement();
+          }
         });
+        stepOne.then(() => changeset.validate());
+        stepOne.catch(() => this.rollbackEmailField(changeset));
       }
       return stepOne.then(() => {
         if (changeset.get('isValid')) {
@@ -65,10 +70,6 @@ export default Component.extend({
               this.attrs.emailUpdated();
             }
           });
-        } else if (!this._canceled){
-          return changeset.get('errors');
-        } else if (this._canceled){
-          this._canceled = null;
         }
       });
     },

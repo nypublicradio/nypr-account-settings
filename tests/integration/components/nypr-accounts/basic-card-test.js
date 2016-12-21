@@ -70,13 +70,7 @@ test('editing states', function(assert) {
 });
 
 test('displays error states', function(assert) {
-  this.set('user', {
-    givenName: '',
-    familyName: '',
-    preferredUsername: '',
-    email: '',
-  });
-  this.render(hbs`{{nypr-accounts/basic-card isEditing=true user=user}}`);
+  this.render(hbs`{{nypr-accounts/basic-card isEditing=true}}`);
     
   // trigger error state
   this.$('input').get().forEach(i => $(i).focusout());
