@@ -152,13 +152,13 @@ test('can update email', function(assert) {
   const PASSWORD = '1234567890';
   
   this.set('user', userFields());
-  this.set('checkPassword', pw => {
-    assert.equal(pw, PASSWORD, 'checkPassword was called with correct pw');
+  this.set('authenticate', pw => {
+    assert.equal(pw, PASSWORD, 'authenticate was called with correct pw');
     return Promise.resolve();
   });
   
   this.render(hbs`{{nypr-accounts/basic-card
-    checkPassword=checkPassword
+    authenticate=(action authenticate)
     isEditing=true
     user=user}}`);
   
@@ -228,9 +228,15 @@ test('can update them all', function(assert) {
   const EMAIL = 'john@doe.com';
   
   this.set('user', userFields());
+  this.set('authenticate', () => Promise.resolve());
+  // skip filling in the modal
   this.set('emailRequirement', () => Promise.resolve());
   
-  this.render(hbs`{{nypr-accounts/basic-card emailRequirement=emailRequirement isEditing=true user=user}}`);
+  this.render(hbs`{{nypr-accounts/basic-card
+    user=user
+    authenticate=(action authenticate)
+    isEditing=true
+    emailRequirement=emailRequirement}}`);
       
   this.$('[data-test-selector=change-email]').click();
   

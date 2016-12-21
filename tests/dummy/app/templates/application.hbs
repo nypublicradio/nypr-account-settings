@@ -3,7 +3,7 @@
     <h1>Hi {{model.givenName}}!</h1>
     <h2>Account Settings</h2>
 
-    {{nypr-accounts.basic-card user=model checkPassword=checkPassword}}
+    {{nypr-accounts.basic-card user=model authenticate=authenticate}}
     {{nypr-accounts.password-card}}
     
   </div>

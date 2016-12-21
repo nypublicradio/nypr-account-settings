@@ -73,7 +73,7 @@ export default Component.extend({
     },
 
     verifyPassword(password) {
-      this.get('checkPassword')(password)
+      this.attrs.authenticate(password)
         .then(this.get('resolveModal'))
         .catch(this.get('rejectModal'))
         .finally(() => {
