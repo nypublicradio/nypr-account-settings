@@ -59,7 +59,12 @@ export default Component.extend({
       }
       return stepOne.then(() => {
         if (changeset.get('isValid')) {
-          return changeset.save().then(() => this.set('isEditing', false));
+          return changeset.save().then(() => {
+            this.set('isEditing', false);
+            if (verifyEmail && this.attrs.emailUpdated) {
+              this.attrs.emailUpdated();
+            }
+          });
         } else if (!this._canceled){
           return changeset.get('errors');
         } else if (this._canceled){

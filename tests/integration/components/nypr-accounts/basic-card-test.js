@@ -222,6 +222,8 @@ test('resets email value if emailRequirement is rejected', function(assert) {
 });
 
 test('can update them all', function(assert) {
+  assert.expect(6);
+  
   const FIRST_NAME = 'john';
   const LAST_NAME = 'doe';
   const USERNAME = 'johndoe';
@@ -232,9 +234,12 @@ test('can update them all', function(assert) {
   // skip filling in the modal
   this.set('emailRequirement', () => Promise.resolve());
   
+  this.set('emailUpdated', () => assert.ok('emailUpdated called'));
+  
   this.render(hbs`{{nypr-accounts/basic-card
     user=user
     authenticate=(action authenticate)
+    emailUpdated=(action emailUpdated)
     isEditing=true
     emailRequirement=emailRequirement}}`);
       
