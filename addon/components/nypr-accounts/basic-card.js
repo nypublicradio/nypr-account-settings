@@ -21,6 +21,7 @@ export default Component.extend({
 
   emailRequirement() {
     return new RSVP.Promise((resolve, reject) => {
+      // resolved by verifyPassword
       this.setProperties({
         resolveModal: resolve,
         rejectModal: reject
