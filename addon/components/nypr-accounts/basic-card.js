@@ -22,6 +22,7 @@ export default Component.extend({
   emailRequirement() {
     return new RSVP.Promise((resolve, reject) => {
       // resolved by verifyPassword
+      // setting resolveModal shows the modal
       this.setProperties({
         resolveModal: resolve,
         rejectModal: reject
@@ -37,43 +38,63 @@ export default Component.extend({
     delete snapshot.changes.confirmEmail;
     changeset.restore(snapshot);
   },
+  
+  commit(changeset) {
+    let notifyEmail = changeset.get('change.email');
+    return changeset.save().then(() => {
+      this.set('isEditing', false);
+      if (notifyEmail && this.attrs.emailUpdated) {
+        this.attrs.emailUpdated();
+      }
+    });
+  },
 
   actions: {
     save(changeset) {
       let stepOne;
       let verifyEmail = changeset.get('change.email');
 
-      if (!verifyEmail) {
-        // skip email field validations
+      if (verifyEmail) {
+        // defer validating preferredUsername b/c it incurs a UI delay due to 
+        // waiting on a network call
+        stepOne = RSVP.all([
+          changeset.validate('givenName'),
+          changeset.validate('familyName'),
+          changeset.validate('email'),
+          changeset.validate('confirmEmail'),
+        ]);
+      } else {
+        // if email hasn't changed, no point verifying it
         stepOne = RSVP.all([
           changeset.validate('givenName'),
           changeset.validate('familyName'),
           changeset.validate('preferredUsername'),
         ]);
-      } else {
-        // otherwise do the email requirement first before moving onto the rest
-        // of the validations. this lets us show the modal w/o incurring the delay
-        // of doing the remote username validation.
-        stepOne = changeset.validate('confirmEmail');
-        stepOne.then(() => {
-          if (changeset.get('isValid')) {
-            return this.emailRequirement();
-          }
-        });
-        stepOne.then(() => changeset.validate());
-        stepOne.catch(() => this.rollbackEmailField(changeset));
       }
+
       return stepOne.then(() => {
-        if (changeset.get('isValid')) {
-          return changeset.save().then(() => {
-            this.set('isEditing', false);
-            if (verifyEmail && this.attrs.emailUpdated) {
-              this.attrs.emailUpdated();
-            }
-          });
+        if (verifyEmail && changeset.get('isValid')) {
+          return this.emailRequirement()
+            .then(() => {
+              // now that the modal has passed, validate the username
+              return changeset.validate('preferredUsername')
+                .then(() => {
+                  if (changeset.get('isValid')) {
+                    return this.commit(changeset);
+                  } else {
+                    // something's wrong, probably the preferredUsername
+                    this.closeModal();
+                  }
+                });
+            })
+            .catch(() => this.rollbackEmailField(changeset));
+        } else if (changeset.get('isValid')) {
+          // if we're not doing the verify email, flow, just commit the changeset
+          return this.commit(changeset);
         }
       });
     },
+    
     rollback(changeset) {
       changeset.rollback();
       this.set('isEditing', false);

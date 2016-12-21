@@ -38,8 +38,9 @@
     value=changeset.email
     errors=changeset.error.email.validation
     disabled=(not isEditing)
+    click=(action (mut touchedEmail) true)
   }}
-  {{#if changeset.change.email}}
+  {{#if (and changeset.change.email touchedEmail)}}
     {{nypr-input
       label='Confirm Email'
       fieldname='confirmEmail'

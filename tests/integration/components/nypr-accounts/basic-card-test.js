@@ -58,6 +58,7 @@ test('editing states', function(assert) {
   
   this.$('input[name=email]').val('baz@boo.com');
   this.$('input[name=email]').change();
+  this.$('input[name=email]').click();
   
   assert.ok(this.$('input[name=confirmEmail]').length, 'confirm email should appear in dirty state');
   assert.equal(this.$('input').length, 5, 'should see 5 fields');
@@ -158,6 +159,7 @@ test('can update email', function(assert) {
   
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').change();
+  this.$('input[name=email]').click();
   this.$('input[name=confirmEmail]').val(EMAIL);
   this.$('input[name=confirmEmail]').change();
   
@@ -201,6 +203,7 @@ test('resets email value if emailRequirement is rejected', function(assert) {
   this.$('input[name=familyName]').change();
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').change();
+  this.$('input[name=email]').click();
   this.$('input[name=confirmEmail]').val(EMAIL);
   this.$('input[name=confirmEmail]').change();
   
@@ -247,12 +250,12 @@ test('can update them all', function(assert) {
   this.$('input[name=preferredUsername]').change();
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').change();
+  this.$('input[name=email]').click();
   this.$('input[name=confirmEmail]').val(EMAIL);
   this.$('input[name=confirmEmail]').change();
   
   return wait().then(() => {
     this.$('button[data-test-selector=save]').click();
-  }).then(() => {
     return wait().then(() => {
       assert.equal(this.$('input').length, 3, 'should see 3 fields');
       assert.ok(this.$('input').get().every(i => i.disabled), 'all inputs should be disabled');
