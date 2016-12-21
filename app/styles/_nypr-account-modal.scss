@@ -8,6 +8,7 @@
 .nypr-account-modal-title {
   background-color: $nearwhite;
   padding: 25px;
+  margin-bottom: 25px;
   @include fontsize(24);
   
   @include flexbox((
@@ -18,7 +19,11 @@
 }
 
 .nypr-account-modal-body {
-  padding: 0 27px;
+  padding: 27px 27px 0;
+}
+
+.nypr-account-modal-title + .nypr-account-modal-body {
+  padding-top: 0;
 }
 
 .nypr-account-modal-footer {
