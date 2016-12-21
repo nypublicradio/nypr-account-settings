@@ -79,7 +79,8 @@ export default Component.extend({
         .finally(() => {
           this.setProperties({
             resolveModal: null,
-            rejectModal: null
+            rejectModal: null,
+            password: null
           });
         });
     },
@@ -87,7 +88,8 @@ export default Component.extend({
       this.get('rejectModal')();
       this.setProperties({
         resolveModal: null,
-        rejectModal: null
+        rejectModal: null,
+        password: null
       });
     }
   }
