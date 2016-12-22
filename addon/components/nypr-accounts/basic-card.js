@@ -4,7 +4,8 @@ import layout from '../../templates/components/nypr-accounts/basic-card';
 import RSVP from 'rsvp';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
-import validations from 'nypr-account-settings/validators/nypr-accounts/basic-card';
+import makeValidations from 'nypr-account-settings/validators/nypr-accounts/basic-card';
+import getOwner from 'ember-owner/get';
 
 export default Component.extend({
   layout,
@@ -14,6 +15,9 @@ export default Component.extend({
   
   init() {
     this._super(...arguments);
+    let config = getOwner(this).resolveRegistration('config:environment');
+    let validations = makeValidations({usernamePath: config.wnycAuthAPI});
+    
     let user = this.get('user');
     let changeset = new Changeset(user, lookupValidator(validations), validations);
     this.changeset = changeset;
