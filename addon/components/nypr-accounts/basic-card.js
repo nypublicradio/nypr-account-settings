@@ -6,6 +6,8 @@ import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
 import makeValidations from 'nypr-account-settings/validators/nypr-accounts/basic-card';
 import getOwner from 'ember-owner/get';
+import get from 'ember-metal/get';
+import set from 'ember-metal/set';
 
 export default Component.extend({
   layout,
@@ -18,7 +20,7 @@ export default Component.extend({
     let config = getOwner(this).resolveRegistration('config:environment');
     let validations = makeValidations({usernamePath: config.wnycAuthAPI});
     
-    let user = this.get('user');
+    let user = get(this, 'user');
     let changeset = new Changeset(user, lookupValidator(validations), validations);
     this.changeset = changeset;
   },
@@ -44,11 +46,16 @@ export default Component.extend({
   },
   
   commit(changeset) {
-    let notifyEmail = changeset.get('change.email');
+    let notifyEmail = get(changeset, 'change.email');
     return changeset.save().then(() => {
-      this.set('isEditing', false);
+      set(this, 'isEditing', false);
       if (notifyEmail && this.attrs.emailUpdated) {
         this.attrs.emailUpdated();
+      }
+    })
+    .catch(({ errors }) => {
+      if (errors.values === 'preferred_username') {
+        changeset.pushErrors('preferredUsername', errors.message);
       }
     });
   },
@@ -56,7 +63,7 @@ export default Component.extend({
   actions: {
     save(changeset) {
       let stepOne;
-      let verifyEmail = changeset.get('change.email');
+      let verifyEmail = get(changeset, 'change.email');
 
       if (verifyEmail) {
         // defer validating preferredUsername b/c it incurs a UI delay due to 
@@ -77,13 +84,13 @@ export default Component.extend({
       }
 
       return stepOne.then(() => {
-        if (verifyEmail && changeset.get('isValid')) {
+        if (verifyEmail && get(changeset, 'isValid')) {
           return this.emailRequirement()
             .then(() => {
               // now that the modal has passed, validate the username
               return changeset.validate('preferredUsername')
                 .then(() => {
-                  if (changeset.get('isValid')) {
+                  if (get(changeset, 'isValid')) {
                     return this.commit(changeset);
                   } else {
                     // something's wrong, probably the preferredUsername
@@ -92,8 +99,8 @@ export default Component.extend({
                 });
             })
             .catch(() => this.rollbackEmailField(changeset));
-        } else if (changeset.get('isValid')) {
-          // if we're not doing the verify email, flow, just commit the changeset
+        } else if (get(changeset, 'isValid')) {
+          // if we're not doing the verify email flow, just commit the changeset
           return this.commit(changeset);
         }
       });
@@ -101,14 +108,14 @@ export default Component.extend({
     
     rollback(changeset) {
       changeset.rollback();
-      this.set('isEditing', false);
+      set(this, 'isEditing', false);
     },
 
     verifyPassword() {
-      let password = this.get('password');
+      let password = get(this, 'password');
       this.attrs.authenticate(password)
-        .then(this.get('resolveModal'))
-        .catch(this.get('rejectModal'))
+        .then(get(this, 'resolveModal'))
+        .catch(get(this, 'rejectModal'))
         .finally(() => {
           this.setProperties({
             resolveModal: null,
@@ -118,7 +125,7 @@ export default Component.extend({
         });
     },
     closeModal() {
-      this.get('rejectModal')();
+      get(this, 'rejectModal')();
       this.setProperties({
         resolveModal: null,
         rejectModal: null,
