@@ -6,6 +6,8 @@ import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
 import makeValidations from 'nypr-account-settings/validators/nypr-accounts/basic-card';
 import getOwner from 'ember-owner/get';
+import observer from 'ember-metal/observer';
+import { debounce } from 'ember-runloop';
 import get from 'ember-metal/get';
 import set from 'ember-metal/set';
 
@@ -15,6 +17,16 @@ export default Component.extend({
   isShowingModal: bool('resolveModal'),
   user: {},
   
+  // until ember-changeset can handle debounce validations
+  // https://github.com/DockYard/ember-changeset/issues/102
+  // observe updates and debounce updating the changeset
+  // so that validations are run less frequently
+  // otherwise we get very unpleasant UI hiccups
+  usernameObserver: observer('preferredUsername', function() {
+    let newName = get(this, 'preferredUsername');
+    debounce(this, prefName => set(this, 'changeset.preferredUsername', prefName), newName, 150);
+  }),
+  
   init() {
     this._super(...arguments);
     let config = getOwner(this).resolveRegistration('config:environment');
@@ -23,6 +35,11 @@ export default Component.extend({
     let user = get(this, 'user');
     let changeset = new Changeset(user, lookupValidator(validations), validations);
     this.changeset = changeset;
+    
+    // provide a temporary binding for preferred username on the template
+    // so we can do remote async validations before setting to the
+    // changeset
+    this.preferredUsername = get(user, 'preferredUsername');
   },
 
   emailRequirement() {
@@ -108,6 +125,9 @@ export default Component.extend({
     
     rollback(changeset) {
       changeset.rollback();
+      // manually reset preferredUsername b/c template binds to this
+      // value
+      set(this, 'preferredUsername', get(changeset, 'preferredUsername'));
       set(this, 'isEditing', false);
     },
 
