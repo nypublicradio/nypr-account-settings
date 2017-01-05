@@ -19,13 +19,13 @@ test('it exists', function(assert) {
 test('it works for non unique values', function(assert) {
   let done = assert.async();
   let key = 'username';
-  let options = {path: '/api/v1/user'};
+  let options = {path: '/api/v1/user', message: 'This username is taken'};
   let validator = validateRemote(options);
   
   // invalid response
   this.server.get(options.path, {username: 'foo'});
   validator(key, 'foo').then(msg => {
-    assert.equal(msg, 'This username is taken');
+    assert.equal(msg, options.message);
     done();
   });
 });

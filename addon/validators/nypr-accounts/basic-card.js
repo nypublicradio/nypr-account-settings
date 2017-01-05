@@ -13,7 +13,8 @@ export default function({usernamePath}) {
       validatePresence(true),
       validateRemote({
         path: `${usernamePath}/v1/user/exists-by-attribute`,
-        filterKey: 'preferred_username'
+        filterKey: 'preferred_username',
+        message: 'public handle already exists'
       })
     ],
     email: [
