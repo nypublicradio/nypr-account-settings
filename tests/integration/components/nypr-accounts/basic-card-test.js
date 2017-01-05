@@ -110,6 +110,7 @@ test('changes to fields are not persisted after a rollback', function(assert) {
   
   this.set('isEditing', true);
   this.$('input').each((i, e) => assert.equal(e.value, userFields()[e.name], 'original values are shown'));
+  return wait();
 });
 
 test('can update non-email attrs', function(assert) {
