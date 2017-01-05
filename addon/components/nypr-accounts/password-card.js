@@ -22,9 +22,14 @@ export default Ember.Component.extend({
         .validate()
         .then(() => {
           if (changeset.get('isValid')) {
-            this.set('isEditing', false);
-            changeset.save();
-            this.attrs.changePassword(changeset);
+            this.attrs.changePassword(changeset)
+            .then(() => {
+              this.set('isEditing', false);
+              changeset.save();
+            })
+            .catch(() => {
+              changeset.pushErrors('currentPassword', 'This password is incorrect.');
+            });
           } else {
             return changeset.get('errors');
           }

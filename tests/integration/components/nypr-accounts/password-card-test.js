@@ -1,6 +1,8 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
+import RSVP from 'rsvp';
+const { Promise } = RSVP;
 
 moduleForComponent('nypr-accounts/password-card', 'Integration | Component | password card', {
   integration: true
@@ -68,12 +70,14 @@ test('changes to fields are not persisted after a rollback', function(assert) {
 test('clicking save with a valid password calls changePassword', function(assert) {
   const OLD_PW = 'oldvalidpassword';
   const NEW_PW = 'newvalidpassword';
-  assert.expect(3);
+  assert.expect(5);
 
   this.set('changePassword', function(changeset) {
     assert.ok('changePassword was called');
     assert.equal(changeset.get('currentPassword'), OLD_PW);
     assert.equal(changeset.get('newPassword'), NEW_PW);
+    assert.equal(this.$('[data-test-selector=save]').length, 1, 'should still be in editing state');
+    return Promise.resolve();
   });
   this.render(hbs`{{nypr-accounts/password-card
     changePassword=(action changePassword)
@@ -85,4 +89,42 @@ test('clicking save with a valid password calls changePassword', function(assert
   this.$('input[name=newPassword]').change();
   
   this.$('button[data-test-selector=save]').click();
+  
+  return wait().then(() => {
+    assert.equal(this.$('[data-test-selector=save]').length, 0, 'form should be disabled');
+  });
+});
+
+test('if changePassword rejects, should show an error message', function(assert) {
+  const OLD_PW = 'oldvalidpassword';
+  const NEW_PW = 'newvalidpassword';
+
+  this.set('changePassword', function(changeset) {
+    assert.ok('changePassword was called');
+    assert.equal(changeset.get('currentPassword'), OLD_PW);
+    assert.equal(changeset.get('newPassword'), NEW_PW);
+    assert.equal(this.$('[data-test-selector=save]').length, 1, 'form should be in editing state');
+    return Promise.reject();
+  });
+  this.render(hbs`{{nypr-accounts/password-card
+    changePassword=(action changePassword)
+    helplinkUrl='/forgot'
+    helplinkText='Forgot password?'
+    isEditing=true}}`);
+  
+  this.$('input[name=currentPassword]').val(OLD_PW);
+  this.$('input[name=currentPassword]').focusout();
+  this.$('input[name=newPassword]').val(NEW_PW);
+  this.$('input[name=newPassword]').change();
+  
+  this.$('button[data-test-selector=save]').click();
+  
+  return wait().then(() => {
+    assert.equal(this.$('[data-test-selector=save]').length, 1, 'form should not be in editing state');
+    assert.equal(this.$('.nypr-input-error').text().trim(), 'This password is incorrect.');
+    assert.equal(this.$('.nypr-input-helplink').text().trim(), 'Forgot password?');
+    assert.equal(this.$('input[name=currentPassword]').val(), OLD_PW, 'old password should still be there');
+    assert.equal(this.$('input[name=newPassword]').val(), NEW_PW, 'new password should still be there');
+  });
+  
 });
