@@ -24,7 +24,7 @@ export default function() {
     http://www.ember-cli-mirage.com/docs/v0.2.x/shorthands/
   */
   
-  this.get('/api/v1/user', {username: ''});
+  this.get('/v1/user/exists-by-attribute', {username: ''});
   this.post('/users', {data: {
     type: 'user', 
     id: 'current',
