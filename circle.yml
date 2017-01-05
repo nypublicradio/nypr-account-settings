@@ -9,3 +9,6 @@ dependencies:
     - gem install compass --no-ri --no-rdoc
     - npm install -g bower
     - bower install
+  cache_directories:
+    - /opt/circleci/nodejs/v6.9.2/bin/
+    - /opt/circleci/nodejs/v6.9.2/lib/node_modules
