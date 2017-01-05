@@ -5,7 +5,7 @@ export default function validateRemote({path, filterKey} = {}) {
     return fetch(`${path}?${filterKey ? filterKey : key}=${newValue}`)
       .then(r => r.json())
       .then(j => {
-        if (!j[key]) {
+        if (!j[filterKey ? filterKey : key]) {
           return true;
         } else {
           return "This username is taken";
