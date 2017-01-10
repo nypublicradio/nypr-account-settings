@@ -24,8 +24,8 @@ export default Ember.Component.extend({
           if (changeset.get('isValid')) {
             this.attrs.changePassword(changeset)
             .then(() => {
+              changeset.rollback();
               this.set('isEditing', false);
-              changeset.save();
             })
             .catch(() => {
               changeset.pushErrors('currentPassword', 'This password is incorrect.');
