@@ -19,11 +19,8 @@ export default function({usernamePath}) {
     ],
     email: [
       validatePresence(true),
-      validateFormat({ type: 'email' }),
+      validateFormat({ type: 'email', allowBlank: true }),
     ],
-    confirmEmail: [
-      validatePresence(true),  
-      validateConfirmation({ on: 'email' })
-    ]
+    confirmEmail: validateConfirmation({ on: 'email' })
   };
 }
