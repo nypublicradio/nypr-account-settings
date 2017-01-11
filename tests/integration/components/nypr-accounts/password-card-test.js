@@ -68,8 +68,8 @@ test('changes to fields are not persisted after a rollback', function(assert) {
 });
 
 test('clicking save with a valid password calls changePassword', function(assert) {
-  const OLD_PW = 'oldvalidpassword';
-  const NEW_PW = 'newvalidpassword';
+  const OLD_PW = 'oldvalidpassword1';
+  const NEW_PW = 'newvalidpassword1';
   assert.expect(5);
 
   this.set('changePassword', function(changeset) {
@@ -96,8 +96,8 @@ test('clicking save with a valid password calls changePassword', function(assert
 });
 
 test('if changePassword rejects, should show an error message', function(assert) {
-  const OLD_PW = 'oldvalidpassword';
-  const NEW_PW = 'newvalidpassword';
+  const OLD_PW = 'oldvalidpassword1';
+  const NEW_PW = 'newvalidpassword1';
 
   this.set('changePassword', function(changeset) {
     assert.ok('changePassword was called');
