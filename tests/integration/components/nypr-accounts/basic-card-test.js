@@ -3,6 +3,7 @@ import hbs from 'htmlbars-inline-precompile';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 import wait from 'ember-test-helpers/wait';
 import rsvp from 'rsvp';
+import observer from 'ember-metal/observer';
 const { Promise } = rsvp;
 
 moduleForComponent('nypr-accounts/basic-card', 'Integration | Component | nypr-accounts/basic card', {
@@ -71,7 +72,13 @@ test('editing states', function(assert) {
 });
 
 test('displays error states', function(assert) {
-  this.render(hbs`{{nypr-accounts/basic-card isEditing=true}}`);
+  function dummyObserver() {
+    this.changeset.set('preferredUsername', this.get('preferredUsername'));
+  }
+  
+  this.set('usernameObserver', observer('preferredUsername', dummyObserver));
+  
+  this.render(hbs`{{nypr-accounts/basic-card isEditing=true usernameObserver=usernameObserver}}`);
     
   // trigger error state
   this.$('input').get().forEach(i => $(i).focusout());
