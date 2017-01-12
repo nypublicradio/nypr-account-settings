@@ -88,7 +88,7 @@ export default Component.extend({
   actions: {
     save(changeset) {
       let stepOne;
-      let verifyEmail = get(changeset, 'change.email');
+      let verifyEmail = (get(changeset, 'change.email') || get(changeset, 'error.email'));
 
       if (verifyEmail) {
         // defer validating preferredUsername b/c it incurs a UI delay due to 

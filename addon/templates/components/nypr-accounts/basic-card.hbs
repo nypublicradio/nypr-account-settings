@@ -42,7 +42,7 @@
     disabled=(not isEditing)
     click=(action (mut touchedEmail) true)
   }}
-  {{#if (and changeset.change.email touchedEmail)}}
+  {{#if (and touchedEmail (or changeset.change.email changeset.confirmEmail) (or changeset.isDirty changeset.error.email))}}
     {{nypr-input
       label='Confirm Email'
       fieldname='confirmEmail'
