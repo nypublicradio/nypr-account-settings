@@ -65,6 +65,8 @@ export default Component.extend({
     changeset.rollback();
     delete snapshot.changes.email;
     delete snapshot.changes.confirmEmail;
+    delete snapshot.errors.email;
+    delete snapshot.errors.confirmEmail;
     changeset.restore(snapshot);
   },
   
@@ -99,6 +101,8 @@ export default Component.extend({
         ]);
       } else {
         // if email hasn't changed, no point verifying it
+        // but roll back errors in case confirmEmail is showing an error
+        this.rollbackEmailField(changeset);
         stepOne = RSVP.all([
           changeset.validate('givenName'),
           changeset.validate('familyName'),
