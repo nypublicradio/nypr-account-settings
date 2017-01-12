@@ -27,6 +27,12 @@ export default Component.extend({
     debounce(this, prefName => set(this, 'changeset.preferredUsername', prefName), newName, 150);
   }),
   
+  emailObserver: observer('changeset.email', function() {
+    if (this.changeset.get('confirmEmail')) {
+      this.changeset.validate('confirmEmail');
+    }
+  }),
+  
   init() {
     this._super(...arguments);
     let config = getOwner(this).resolveRegistration('config:environment');
