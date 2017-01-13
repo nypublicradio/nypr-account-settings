@@ -82,7 +82,6 @@ test('displays error states', function(assert) {
     
   // trigger error state
   this.$('input').get().forEach(i => $(i).focusout());
-  this.$('button[data-test-selector=save]').click();
   
   return wait().then(() => {
     assert.equal(this.$('.nypr-input-error').length, 4);
