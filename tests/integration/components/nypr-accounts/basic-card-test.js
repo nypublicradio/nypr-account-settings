@@ -223,6 +223,43 @@ test('resets email value if emailRequirement is rejected', function(assert) {
   });
 });
 
+test('shows an error message if password is rejected', function(assert) {
+  const EMAIL = 'john@doe.com';
+  const BAD_PW = '1234567890';
+  
+  this.set('user', userFields());
+  this.set('authenticate', function() {
+    assert.ok('authenticate was called');
+    return Promise.reject({
+      "error": {
+        "code": "UnauthorizedAccess", 
+        "message": "Incorrect username or password."
+      }
+    });
+  });
+  
+  this.render(hbs`{{nypr-accounts/basic-card authenticate=(action authenticate) isEditing=true user=user}}`);
+  this.$('[data-test-selector=change-email]').click();
+  
+  this.$('input[name=email]').val(EMAIL);
+  this.$('input[name=email]').change();
+  this.$('input[name=email]').click();
+  this.$('input[name=confirmEmail]').val(EMAIL);
+  this.$('input[name=confirmEmail]').change();
+  
+  return wait().then(() => {
+    this.$('[data-test-selector=save]').click();
+    return wait().then(() => {
+      this.$().siblings('.ember-modal-wrapper').find('input[name=passwordForEmailChange]').val(BAD_PW);
+      this.$().siblings('.ember-modal-wrapper').find('input[name=passwordForEmailChange]').focusout();
+      this.$().siblings('.ember-modal-wrapper').find('[data-test-selector="check-pw"]').click();
+      return wait().then(() => {
+        assert.equal(this.$().siblings('.ember-modal-wrapper').find('.nypr-input-error').text().trim(), 'Incorrect username or password.');
+      });
+    });
+  });
+});
+
 test('can update them all', function(assert) {
   assert.expect(6);
   
