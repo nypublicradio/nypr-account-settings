@@ -145,7 +145,7 @@ export default Component.extend({
       let password = get(this, 'password');
       this.attrs.authenticate(password)
         .then(get(this, 'resolveModal'))
-        .catch(get(this, 'rejectModal'))
+        .catch(({error}) => set(this, 'passwordError', [error.message]));
         .finally(() => {
           this.setProperties({
             resolveModal: null,
