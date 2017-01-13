@@ -87,7 +87,8 @@ export default Component.extend({
       this.setProperties({
         resolveModal: null,
         rejectModal: null,
-        password: null
+        password: null,
+        passwordError: null
       });
     });
   },
@@ -150,9 +151,13 @@ export default Component.extend({
 
     verifyPassword() {
       let password = get(this, 'password');
-      this.attrs.authenticate(password)
-        .then(get(this, 'resolveModal'))
-        .catch(({error}) => set(this, 'passwordError', [error.message]));
+      if (!password) {
+        set(this, 'passwordError', ["Password can't be blank."]);
+      } else {
+        this.attrs.authenticate(password)
+          .then(get(this, 'resolveModal'))
+          .catch(({error}) => set(this, 'passwordError', [error.message]));
+      }
     },
     closeModal() {
       get(this, 'rejectModal')();
