@@ -82,6 +82,13 @@ export default Component.extend({
       if (errors.values === 'preferred_username') {
         changeset.pushErrors('preferredUsername', errors.message);
       }
+    })
+    .finally(() => {
+      this.setProperties({
+        resolveModal: null,
+        rejectModal: null,
+        password: null
+      });
     });
   },
 
@@ -146,13 +153,6 @@ export default Component.extend({
       this.attrs.authenticate(password)
         .then(get(this, 'resolveModal'))
         .catch(({error}) => set(this, 'passwordError', [error.message]));
-        .finally(() => {
-          this.setProperties({
-            resolveModal: null,
-            rejectModal: null,
-            password: null
-          });
-        });
     },
     closeModal() {
       get(this, 'rejectModal')();
