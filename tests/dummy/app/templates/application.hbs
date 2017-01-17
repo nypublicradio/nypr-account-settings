@@ -14,5 +14,11 @@
       {{nypr-accounts/membership-card/index pledges=model.pledge class='nypr-membership-info-body'}}
     </div>
 
+    {{nypr-accounts/basic-card
+      user=model
+      authenticate=(action authenticate)}}
+    {{nypr-accounts/password-card}}
+    {{nypr-accounts/membership-card}}
+
   </div>
 </div>
