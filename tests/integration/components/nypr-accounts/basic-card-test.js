@@ -9,10 +9,12 @@ const { Promise } = rsvp;
 moduleForComponent('nypr-accounts/basic-card', 'Integration | Component | nypr-accounts/basic card', {
   integration: true,
   beforeEach() {
+    if(typeof server !== 'undefined') { server.shutdown(); }
     this.server = startMirage();
   },
   afterEach() {
     this.server.shutdown();
+    if(typeof server !== 'undefined') { server.shutdown(); }
   }
 });
 

@@ -5,10 +5,12 @@ import validateRemote from 'nypr-account-settings/validators/nypr-accounts/remot
 
 module('Unit | Validator | remote', {
   beforeEach() {
+    if(typeof server !== 'undefined') { server.shutdown(); }
     this.server = startMirage();
   },
   afterEach() {
     this.server.shutdown();
+    if(typeof server !== 'undefined') { server.shutdown(); }
   }
 });
 
