@@ -101,7 +101,8 @@ export default Component.extend({
         resolveModal: null,
         rejectModal: null,
         password: null,
-        passwordError: null
+        passwordError: null,
+        'user.confirmEmail': null
       });
     });
   },
