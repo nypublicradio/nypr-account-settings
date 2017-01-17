@@ -37,4 +37,17 @@ export default function() {
     id: 'current',
     attributes: {}
   }});
+  this.patch('/users/:id', () => new Response(401, {}, {
+    "error": {
+      "code": "AccountExists", 
+      "message": "Account with email exists. Please try another."
+    }
+  }));
+  
+  this.post('/check-password', () => new Response(401, {}, {
+    "error": {
+      "code": "InvalidCredentials",
+      "message": "Incorrect username or password."
+    }
+  }));
 }
