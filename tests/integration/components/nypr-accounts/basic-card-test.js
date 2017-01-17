@@ -82,6 +82,7 @@ test('displays error states', function(assert) {
     
   // trigger error state
   this.$('input').get().forEach(i => $(i).focusout());
+  this.$('button[data-test-selector=save]').click();
   
   return wait().then(() => {
     assert.equal(this.$('.nypr-input-error').length, 4);
@@ -92,7 +93,10 @@ test('displays error states', function(assert) {
 });
 
 test('changes to fields are not persisted after a rollback', function(assert) {
-  this.set('user', userFields());
+  let user = userFields();
+  user.rollbackAttributes = function() {};
+
+  this.set('user', user);
   
   this.set('isEditing', true);
   
