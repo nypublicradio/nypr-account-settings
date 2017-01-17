@@ -10,12 +10,16 @@ import observer from 'ember-metal/observer';
 import { debounce } from 'ember-runloop';
 import get from 'ember-metal/get';
 import set from 'ember-metal/set';
+import computed from 'ember-computed';
 
 export default Component.extend({
   layout,
   tagName: '',
   isShowingModal: bool('resolveModal'),
   user: {},
+  verifyEmail: computed('user.email', 'changeset.email', function() {
+    return get(this, 'changeset.email') !== get(this, 'user.email');
+  }),
   
   // until ember-changeset can handle debounce validations
   // https://github.com/DockYard/ember-changeset/issues/102
@@ -96,7 +100,7 @@ export default Component.extend({
   actions: {
     save(changeset) {
       let stepOne;
-      let verifyEmail = (get(changeset, 'change.email') || get(changeset, 'error.email')) && get(changeset, 'isDirty');
+      let verifyEmail = get(this, 'verifyEmail');
 
       if (verifyEmail) {
         // defer validating preferredUsername b/c it incurs a UI delay due to 
