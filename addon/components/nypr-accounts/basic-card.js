@@ -82,9 +82,18 @@ export default Component.extend({
         this.attrs.emailUpdated();
       }
     })
-    .catch(({ errors }) => {
-      if (errors.values === 'preferred_username') {
-        changeset.pushErrors('preferredUsername', errors.message);
+    .catch(error => {
+      if (error.isAdapterError) {
+        error = error.errors;
+      }
+      let { code, message, values = [] } = error;
+      if (values.includes('preferred_username')) {
+        changeset.pushErrors('preferredUsername', error.message);
+      } else if (code === 'AccountExists') {
+        get(this, 'user').rollbackAttributes();
+        changeset.pushErrors('email', message);
+        changeset.set('confirmEmail', null);
+        changeset.set('error.confirmEmail', null);
       }
     })
     .finally(() => {
