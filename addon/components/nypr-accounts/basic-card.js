@@ -137,6 +137,7 @@ export default Component.extend({
           return this.emailRequirement()
             .then(() => {
               // now that the modal has passed, validate the username
+              // TODO: I think we can actually skip this
               return changeset.validate('preferredUsername')
                 .then(() => {
                   if (get(changeset, 'isValid')) {
