@@ -12,7 +12,7 @@ test('it renders', function(assert) {
 
   this.render(hbs`{{nypr-accounts/membership-card}}`);
 
-  assert.equal(this.$().text().trim(), '');
+  assert.equal(this.$().text().trim(), 'Membership Info');
 
   // Template block usage:
   this.render(hbs`
@@ -21,7 +21,7 @@ test('it renders', function(assert) {
     {{/nypr-accounts/membership-card}}
   `);
 
-  assert.equal(this.$().text().trim(), 'template block text');
+  assert.equal(this.$('.nypr-membership-info-body').text().trim(), 'template block text');
 });
 
 test('displays membership details if membership active', function(assert) {
