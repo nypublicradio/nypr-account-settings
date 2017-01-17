@@ -1,3 +1,5 @@
+import { Response } from 'ember-cli-mirage';
+
 export default function() {
 
   // These comments are here to help you get started. Feel free to delete them.
@@ -29,6 +31,7 @@ export default function() {
       preferred_username: queryParams.preferred_username === 'taken' ? 'taken' : ''
     };
   });
+  this.get('/users', schema => schema.users.first());
   this.post('/users', {data: {
     type: 'user', 
     id: 'current',
