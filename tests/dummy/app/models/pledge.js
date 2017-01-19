@@ -8,5 +8,5 @@ export default Model.extend({
   orderType: attr('string'),
   premium: attr('string'),
   creditCardType: attr('string'),
-  creditCardLast4Digits: attr('number'),
+  creditCardLast4Digits: attr('string'),
 });
