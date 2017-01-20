@@ -9,5 +9,5 @@ export default function(server) {
 
   // server.createList('post', 10);
   server.create('user');
-  server.createList('pledge', 11);
+  server.createList('pledge', 10);
 }
