@@ -25,7 +25,7 @@ export default function() {
 
     http://www.ember-cli-mirage.com/docs/v0.2.x/shorthands/
   */
-  
+
   this.get('/v1/user/exists-by-attribute', (schema, {queryParams}) => {
     return {
       preferred_username: queryParams.preferred_username === 'taken' ? 'taken' : ''
@@ -33,21 +33,22 @@ export default function() {
   });
   this.get('/users', schema => schema.users.first());
   this.post('/users', {data: {
-    type: 'user', 
+    type: 'user',
     id: 'current',
     attributes: {}
   }});
   this.patch('/users/:id', () => new Response(401, {}, {
     "error": {
-      "code": "AccountExists", 
+      "code": "AccountExists",
       "message": "Account with email exists. Please try another."
     }
   }));
-  
+
   this.post('/check-password', () => new Response(401, {}, {
     "error": {
       "code": "InvalidCredentials",
       "message": "Incorrect username or password."
     }
   }));
+  this.get('/pledges');
 }
