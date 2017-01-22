@@ -1,46 +1,13 @@
 {{#nypr-card classNames="nypr-membership-info" title="Membership Info"}}
-  <h2 class="active-donations-header">Active Donations</h2>
-
-  {{!--
-  Possible user states to handle:
-  1. One active pledge (hasSingleActivePledge)
-  2. Multiple pledges (hasMultipleActivePledges)
-  3. At least one non-active pledge (hasExpiredPledges)
-  4. No pledges whatsoever (default state)
-  --}}
-
-  {{#if hasMultipleActivePledges}}
-    {{#each activePledges as |pledge|}}
-      <div class="pledge-container">
-        <div class="pledge-info-container">
-          <div class="pledge-fund-name">
-            <div class="pledge-fund">{{pledge.fund}}</div>
-          </div>
-          <div class="pledge-info">
-            <div class="pledge-order-price">${{pledge.orderPrice}}{{if pledge.isSustainer '/month' }}</div>
-            <div class="pledge-order-date">{{moment-format pledge.orderDate 'MM/DD/YYYY'}}</div>
-            <div class="pledge-order-key">{{pledge.premium}}</div>
-          </div>
-        </div>
-        <div class="pledge-update-link">
-          <a href={{pledge.orderKey}}>Update</a>
-        </div>
-      </div>
+  <div class="nypr-membership-info-body">
+    <h2 class="active-donations-header">Active Donations</h2>
+    <h1>{{isItAThing}}</h1>
+    {{#each pledges as |pledge|}}
+      <div class="pledge-fund">{{pledge.fund}}</div>
+      <div class="pledge-order-price">{{pledge.orderPrice}}</div>
+      <div class="pledge-order-date">{{pledge.orderDate}}</div>
     {{/each}}
-
-  {{else if hasSingleActivePledge}}
-    <p>Single active</p>
-
-  {{else if hasExpiredPledges}}
-    <p>Expired member</p>
-
-  {{else}}
-    <p>Non-member</p>
-  {{/if}}
-
-  <div class="pledge-tools">
     <div class="pledge-payment-history">Payment History</div>
     <div class="pledge-tax-receipt">2016 Tax Receipt</div>
-    <div class="pledge-help-link">Help</div>
   </div>
 {{/nypr-card}}
