@@ -1,13 +1,11 @@
 {{#nypr-card classNames="nypr-membership-info" title="Membership Info"}}
-  <div class="nypr-membership-info-body">
-    <h2 class="active-donations-header">Active Donations</h2>
-    <h1>{{isItAThing}}</h1>
-    {{#each pledges as |pledge|}}
-      <div class="pledge-fund">{{pledge.fund}}</div>
-      <div class="pledge-order-price">{{pledge.orderPrice}}</div>
-      <div class="pledge-order-date">{{pledge.orderDate}}</div>
-    {{/each}}
-    <div class="pledge-payment-history">Payment History</div>
-    <div class="pledge-tax-receipt">2016 Tax Receipt</div>
-  </div>
+  <h2 class="active-donations-header">Active Donations</h2>
+  <h1>{{isItAThing}}</h1>
+  {{#each pledges as |pledge|}}
+    <div class="pledge-fund">{{pledge.fund}}</div>
+    <div class="pledge-order-price">{{pledge.orderPrice}}</div>
+    <div class="pledge-order-date">{{pledge.orderDate}}</div>
+  {{/each}}
+  <div class="pledge-payment-history">Payment History</div>
+  <div class="pledge-tax-receipt">2016 Tax Receipt</div>
 {{/nypr-card}}
