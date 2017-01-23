@@ -10,15 +10,15 @@ test('it renders', function(assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
-  this.render(hbs`{{nypr-accounts/membership-card}}`);
+  this.render(hbs`{{nypr-accounts/membership-card/index}}`);
 
   assert.equal(this.$().text().trim(), 'Membership Info');
 
   // Template block usage:
   this.render(hbs`
-    {{#nypr-accounts/membership-card}}
+    {{#nypr-accounts/membership-card/index}}
       template block text
-    {{/nypr-accounts/membership-card}}
+    {{/nypr-accounts/membership-card/index}}
   `);
 
   assert.equal(this.$('.nypr-membership-info-body').text().trim(), 'template block text');
