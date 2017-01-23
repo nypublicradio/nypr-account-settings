@@ -8,4 +8,5 @@ export default Factory.extend({
   premium: 'Brian Lehrer Animated Series',
   creditCardType: 'VISA',
   creditCardLast4Digits: '0302',
+  isActive: faker.random.boolean
 });

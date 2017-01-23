@@ -10,4 +10,5 @@ export default Model.extend({
   premium: attr('string'),
   creditCardType: attr('string'),
   creditCardLast4Digits: attr('string'),
+  isActive: attr('boolean'),
 });
