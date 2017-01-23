@@ -70,6 +70,12 @@
   color: $blue;
 }
 
+.nypr-account-settings-and-member-center {
+  @include display-flex();
+
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
 
 .account-form {
   max-width: 460px;
@@ -191,4 +197,11 @@
     color: $rouge;
     border-bottom: 1px solid $rouge;
   }
+}
+
+.nypr-account-settings-body,
+.nypr-membership-info-body {
+  padding: 0.5rem;
+  min-width: 50%;
+  @include flex-grow(1);
 }

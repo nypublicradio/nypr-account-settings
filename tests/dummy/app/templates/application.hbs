@@ -1,13 +1,18 @@
 <div class="l-gray">
   <div class="l-constrained">
-    <h1>Hi {{model.givenName}}!</h1>
-    <h2>Account Settings</h2>
-
-    {{nypr-accounts/basic-card
-      user=model.user
-      authenticate=(action authenticate)}}
-    {{nypr-accounts/password-card}}
-    {{nypr-accounts/membership-card/index pledges=model.pledge}}
+    <div class="nypr-account-settings-header">
+      <h1>Hi {{model.givenName}}!</h1>
+      <h2>Account Settings</h2>
+    </div>
+    <div class="nypr-account-settings-and-member-center">
+      <div class="nypr-account-settings-body">
+        {{nypr-accounts/basic-card
+          user=model.user
+          authenticate=(action authenticate)}}
+        {{nypr-accounts/password-card}}
+      </div>
+      {{nypr-accounts/membership-card/index pledges=model.pledge class='nypr-membership-info-body'}}
+    </div>
 
   </div>
 </div>
