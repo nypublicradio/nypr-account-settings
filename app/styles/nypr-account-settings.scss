@@ -23,6 +23,12 @@
   }
 }
 
+.nypr-input-label[for="preferredUsername"] > span {
+  @media only screen and (max-width: 378px) {
+    display: none;
+  }
+}
+
 .nypr-account-confirm {
   @include btn;
   @include btn--blue;
