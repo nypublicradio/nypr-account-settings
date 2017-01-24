@@ -17,6 +17,9 @@
   .nypr-input[disabled] {
     padding: 0;
     border: none;
+    // safari iOS compat for disabled inputs
+    -webkit-text-fill-color: $darkergray;
+    opacity: 1;
   }
 }
 
