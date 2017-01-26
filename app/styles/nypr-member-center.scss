@@ -1,0 +1,87 @@
+@import "compass/css3/flexbox";
+
+@import "ember-modal-dialog/ember-modal-structure";
+@import "ember-modal-dialog/ember-modal-appearance";
+
+@import "nypr-ui/vars";
+@import "nypr-ui/buttons";
+
+.nypr-account-settings-and-member-center {
+  @include display-flex();
+  @include flex-wrap(wrap);
+
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
+.nypr-account-settings-body,
+.nypr-membership-info-body {
+  @include flex-grow(1);
+  @include flex-shrink(0);
+  @include flex-basis(480px);
+
+  padding: 0.5rem;
+  min-width: 50%;
+}
+
+.pledge-container,
+.pledge-info,
+.pledge-tools {
+  @include display-flex;
+  @include flex-direction(row);
+}
+
+.pledge-info-container {
+  @include flex(1 0 200px);
+}
+
+.pledge-update-link {
+  @include flex(0 0 100px);
+}
+
+.pledge-info,
+.pledge-tools {
+  margin-left: -0.4rem;
+  margin-right: -0.4rem;
+
+  div {
+    margin: 0.4rem;
+  }
+}
+
+.pledge-container {
+  border-bottom: 1px solid #f1f1f1;
+  margin-bottom: 1rem;
+}
+
+.pledge-tools {
+  @include justify-content(flex-end);
+}
+
+.pledge-update-link {
+  @include display-flex();
+  @include justify-content(flex-end);
+  @include align-items(center);
+}
+
+.active-donations-header,
+.pledge-order-price,
+.pledge-order-date,
+.pledge-order-key,
+.pledge-update-link,
+.pledge-payment-history,
+.pledge-tax-receipt,
+.pledge-help-link {
+  font-size: 12px;
+  color: #888;
+  font-weight: 400;
+
+  a {
+    color: $blue;
+    text-decoration: none;
+  }
+}
+
+.pledge-fund {
+  font-size: 16px;
+}
