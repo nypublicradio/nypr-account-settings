@@ -20,7 +20,9 @@ RUN npm install && bower install --allow-root
 RUN mkdir -p /nypr-account-settings/dist
 RUN mkdir -p /nypr-account-settings/vendor
 
-VOLUME ["node_modules", "bower_components", "dist"]
+VOLUME ["/nypr-account-settings/node_modules", \
+        "/nypr-account-settings/bower_components", \
+        "/nypr-account-settings/dist"]
 
 EXPOSE 4200
 EXPOSE 49152

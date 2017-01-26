@@ -13,3 +13,4 @@ services:
     ports:
       - "4201:4200"
       - "49153:49152"
+    command: tail -f /dev/null
