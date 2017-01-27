@@ -8,6 +8,6 @@ export default {
   newPassword:      [ 
     validateLength({ min: 8, message: 'New password must be at least 8 characters.'}),
     validateFormat({ regex: /\d/, message: 'New password must have at least 1 number.' }),
-    validateFormat({ regex: /[\S]+/, message: 'New password must not have any blank spaces.' })
+    validateFormat({ regex: /^[\S]+$/, message: 'New password must not have any blank spaces.' })
   ]
 };
