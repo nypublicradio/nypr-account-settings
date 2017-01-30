@@ -1,16 +1,17 @@
 {{#nypr-card classNames="nypr-membership-info" title="Membership Info"}}
-  <h2 class="active-donations-header">Active Donations</h2>
 
   {{!--
   Possible user states to handle:
-  1. One active pledge (hasSingleActivePledge)
-  2. Multiple pledges (hasMultipleActivePledges)
-  3. At least one non-active pledge (hasExpiredPledges)
-  4. No pledges whatsoever (default state)
+  1. Active sustaining pledge (activeSustainingPledges)
+  2. Active one-time pledge, e.g. donated within last year (activeOneTimePledges)
+  3. Expired/declined sustaining pledge (isLapsedSustainer)
+  4. Expired/lapsed one-time pledge (isLapsedOneTimeMember)
+  5. Never pledged (isNonMember)
   --}}
 
-  {{#if hasMultipleActivePledges}}
-    {{#each activePledges as |pledge|}}
+  {{#if activeSustainingPledges}}
+    <h2 class="active-donations-header">Active Recurring Donations</h2>
+    {{#each activeSustainingPledges as |pledge|}}
       <div class="pledge-container">
         <div class="pledge-info-container">
           <div class="pledge-fund-name">
@@ -18,8 +19,7 @@
           </div>
           <div class="pledge-info">
             <div class="pledge-order-price">${{pledge.orderPrice}}{{if pledge.isSustainer '/month' }}</div>
-            <div class="pledge-order-date">{{moment-format pledge.orderDate 'MM/DD/YYYY'}}</div>
-            <div class="pledge-order-key">{{pledge.premium}}</div>
+            <div class="pledge-order-cc-type">{{pledge.creditCardType}} {{pledge.creditCardLast4Digits}}</div>
           </div>
         </div>
         <div class="pledge-update-link">
@@ -28,19 +28,21 @@
       </div>
     {{/each}}
 
-  {{else if hasSingleActivePledge}}
-    <p>Single active</p>
+  {{else if activeOneTimePledges}}
+    <p>You last donated on {{moment-format mostRecentPledge.orderDate 'M/DD/YYYY'}}</p>
+    <p class="pledge-donate-button">Make another donation</p>
 
-  {{else if hasExpiredPledges}}
-    <p>Expired member</p>
-
-  {{else}}
+  {{else if isLapsedOneTimeMember}}
+    <p>Lapsed member</p>
+  {{else if isLapsedSustainer}}
+    <p>Former sustainer</p>
+  {{else}} {{! i.e. isNonMember }}
     <p>Non-member</p>
   {{/if}}
 
   <div class="pledge-tools">
-    <div class="pledge-payment-history">Payment History</div>
-    <div class="pledge-tax-receipt">2016 Tax Receipt</div>
-    <div class="pledge-help-link">Help</div>
+    <div class="pledge-payment-history"><a href="#">Payment History</a></div>
+    <div class="pledge-tax-receipt"><a href="#">2016 Tax Receipt</a></div>
+    <div class="pledge-help-link"><a href="#">Help</a></div>
   </div>
 {{/nypr-card}}
