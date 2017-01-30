@@ -12,7 +12,7 @@
 
 .nypr-account-modal-title {
   background-color: $nearwhite;
-  padding: 25px;
+  padding: 18px 27px;
   margin-bottom: 25px;
   @include fontsize(24);
   
@@ -24,7 +24,8 @@
 }
 
 .nypr-account-modal-body {
-  padding: 27px 27px 0;
+  padding: 27px;
+  line-height: 1.6;
 }
 
 .nypr-account-modal-title + .nypr-account-modal-body {
@@ -34,8 +35,18 @@
 .nypr-account-modal-footer {
   text-align: center;
   margin-bottom: 27px;
+  @include flexbox((
+    display: flex,
+    justify-content: space-around
+  ));
+  
+  @include mq("(min-width: 421px)") {
+    padding: 0 50px;
+  }
 }
 
 .nypr-account-modal-close {
   @include blank-button;
+  width: 15px;
+  height: 15px;
 }
