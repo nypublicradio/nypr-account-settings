@@ -66,11 +66,10 @@
 
 .active-donations-header,
 .pledge-order-price,
-.pledge-order-date,
-.pledge-order-key,
 .pledge-update-link,
 .pledge-payment-history,
 .pledge-tax-receipt,
+.pledge-order-cc-type,
 .pledge-help-link {
   font-size: 12px;
   color: #888;
@@ -84,4 +83,11 @@
 
 .pledge-fund {
   font-size: 16px;
+}
+
+.pledge-donate-button {
+  @include btn;
+  @include btn--red;
+
+  margin-top: 0;
 }

@@ -1,6 +1,7 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
+import moment from 'moment';
 
 moduleForComponent('nypr-accounts/membership-card', 'Integration | Component | nypr accounts/membership card', {
   integration: true,
@@ -47,11 +48,17 @@ test('displays sustaining pledge details', function(assert) {
 
 // Active one-time member tests
 
-test ('displays last membership date if onetime member', function(assert) {
+test ('displays most recent active pledge details if active onetime member', function(assert) {
   let pledges = server.createList('pledge', 1, {isActive: true, orderType: 'onetime'});
   this.set('pledges', pledges);
   this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
 
+  assert.equal(this.$('.pledge-date').text().trim(),
+    moment(pledges[0].orderDate).format('M/DD/YYYY'),
+    'date is displayed');
+  assert.equal(this.$('.pledge-donate-button-link').attr('href'),
+    `https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id=${pledges[0].orderKey}`,
+    'donate links to correct sustainer form');
 });
 
 // test('displays renewal message if recent member', function(assert) {

@@ -29,11 +29,20 @@
     {{/each}}
 
   {{else if activeOneTimePledges}}
-    <p>You last donated on {{moment-format mostRecentPledge.orderDate 'M/DD/YYYY'}}</p>
-    <p class="pledge-donate-button">Make another donation</p>
+    <div class="pledge-active-onetime-member">
+      <p class="last-pledge-date">You last donated on <span class="pledge-date">{{moment-format mostRecentPledge.orderDate 'M/DD/YYYY'}}</span>.</p>
+      <a class="pledge-donate-button-link" href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id={{mostRecentPledge.orderKey}}" target="_blank">
+        <p class="pledge-donate-button">Make another donation</p>
+      </a>
+    </div>
 
   {{else if isLapsedOneTimeMember}}
-    <p>Lapsed member</p>
+    <div class="pledge-active-onetime-member">
+      <p class="last-pledge-date">Your {{mostRecentPledge.fund}} membership expired on <span class="pledge-date">{{moment-format mostRecentPledge.orderDate 'M/DD/YYYY'}}</span>.</p>
+      <a class="pledge-donate-button-link" href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id={{mostRecentPledge.orderKey}}" target="_blank">
+        <p class="pledge-donate-button">Make another donation</p>
+      </a>
+    </div>
   {{else if isLapsedSustainer}}
     <p>Former sustainer</p>
   {{else}} {{! i.e. isNonMember }}
