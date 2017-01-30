@@ -60,8 +60,8 @@ test('editing states', function(assert) {
   assert.ok(this.$('[data-test-selector=save]').length, 'save button should be visible in editing state');
   
   this.$('input[name=email]').val('baz@boo.com');
-  this.$('input[name=email]').change();
-  this.$('input[name=email]').click();
+  this.$('input[name=email]').blur();
+  this.$('input[name=email]').blur();
   
   assert.ok(this.$('input[name=confirmEmail]').length, 'confirm email should appear in dirty state');
   assert.equal(this.$('input').length, 5, 'should see 5 fields');
@@ -87,7 +87,7 @@ test('displays error states', function(assert) {
   this.$('button[data-test-selector=save]').click();
   
   return wait().then(() => {
-    assert.equal(this.$('.nypr-input-error').length, 4);
+    assert.equal(this.$('.nypr-input-error').length, 5); // 5 including confirmEmail
     keys(userFields()).forEach(name => {
       assert.ok(this.$(`[name=${name}] + .nypr-input-footer > .nypr-input-error`).length, `${name} has an error`);
     });
@@ -105,15 +105,15 @@ test('changes to fields are not persisted after a rollback', function(assert) {
   this.render(hbs`{{nypr-accounts/basic-card isEditing=isEditing user=user}}`);
   
   this.$('input[name=givenName]').val('zzzz');
-  this.$('input[name=givenName]').change();
+  this.$('input[name=givenName]').blur();
   this.$('input[name=familyName]').val('xxxxx');
-  this.$('input[name=familyName]').change();
+  this.$('input[name=familyName]').blur();
   this.$('input[name=preferredUsername]').val('yyyyyy');
-  this.$('input[name=preferredUsername]').change();
+  this.$('input[name=preferredUsername]').blur();
   this.$('input[name=email]').val('wwwwww');
-  this.$('input[name=email]').change();
+  this.$('input[name=email]').blur();
   this.$('input[name=confirmEmail]').val('wwwwww');
-  this.$('input[name=confirmEmail]').change();
+  this.$('input[name=confirmEmail]').blur();
   
   this.$('button[data-test-selector=rollback]').click();
   assert.equal(this.$('input[name=fullName]').val(), 'foo bar', 'displays fullname');
@@ -135,11 +135,11 @@ test('can update non-email attrs', function(assert) {
       
   
   this.$('input[name=givenName]').val(FIRST_NAME);
-  this.$('input[name=givenName]').change();
+  this.$('input[name=givenName]').blur();
   this.$('input[name=familyName]').val(LAST_NAME);
-  this.$('input[name=familyName]').change();
+  this.$('input[name=familyName]').blur();
   this.$('input[name=preferredUsername]').val(USERNAME);
-  this.$('input[name=preferredUsername]').change();
+  this.$('input[name=preferredUsername]').blur();
   
   return wait().then(() => {
     this.$('button[data-test-selector=save]').click();
@@ -170,10 +170,10 @@ test('can update email', function(assert) {
     user=user}}`);
   
   this.$('input[name=email]').val(EMAIL);
-  this.$('input[name=email]').change();
+  this.$('input[name=email]').blur();
   this.$('input[name=email]').click();
   this.$('input[name=confirmEmail]').val(EMAIL);
-  this.$('input[name=confirmEmail]').change();
+  this.$('input[name=confirmEmail]').blur();
   
   return wait().then(() => {
     this.$('[data-test-selector=save]').click();
@@ -182,7 +182,7 @@ test('can update email', function(assert) {
       modal
         .find('input')
         .val(PASSWORD)
-        .change();
+        .blur();
       modal
         .find('[data-test-selector=check-pw]')
         .click();
@@ -209,14 +209,14 @@ test('resets email value if emailRequirement is rejected', function(assert) {
   this.$('[data-test-selector=change-email]').click();
   
   this.$('input[name=givenName]').val(FIRST_NAME);
-  this.$('input[name=givenName]').change();
+  this.$('input[name=givenName]').blur();
   this.$('input[name=familyName]').val(LAST_NAME);
-  this.$('input[name=familyName]').change();
+  this.$('input[name=familyName]').blur();
   this.$('input[name=email]').val(EMAIL);
-  this.$('input[name=email]').change();
+  this.$('input[name=email]').blur();
   this.$('input[name=email]').click();
   this.$('input[name=confirmEmail]').val(EMAIL);
-  this.$('input[name=confirmEmail]').change();
+  this.$('input[name=confirmEmail]').blur();
   
   return wait().then(() => {
     this.$('[data-test-selector=save]').click();
@@ -247,10 +247,10 @@ test('shows an error message if password is rejected', function(assert) {
   this.$('[data-test-selector=change-email]').click();
   
   this.$('input[name=email]').val(EMAIL);
-  this.$('input[name=email]').change();
+  this.$('input[name=email]').blur();
   this.$('input[name=email]').click();
   this.$('input[name=confirmEmail]').val(EMAIL);
-  this.$('input[name=confirmEmail]').change();
+  this.$('input[name=confirmEmail]').blur();
   
   return wait().then(() => {
     this.$('[data-test-selector=save]').click();
@@ -290,16 +290,16 @@ test('can update them all', function(assert) {
   this.$('[data-test-selector=change-email]').click();
   
   this.$('input[name=givenName]').val(FIRST_NAME);
-  this.$('input[name=givenName]').change();
+  this.$('input[name=givenName]').blur();
   this.$('input[name=familyName]').val(LAST_NAME);
-  this.$('input[name=familyName]').change();
+  this.$('input[name=familyName]').blur();
   this.$('input[name=preferredUsername]').val(USERNAME);
-  this.$('input[name=preferredUsername]').change();
+  this.$('input[name=preferredUsername]').blur();
   this.$('input[name=email]').val(EMAIL);
-  this.$('input[name=email]').change();
+  this.$('input[name=email]').blur();
   this.$('input[name=email]').click();
   this.$('input[name=confirmEmail]').val(EMAIL);
-  this.$('input[name=confirmEmail]').change();
+  this.$('input[name=confirmEmail]').blur();
   
   return wait().then(() => {
     this.$('button[data-test-selector=save]').click();

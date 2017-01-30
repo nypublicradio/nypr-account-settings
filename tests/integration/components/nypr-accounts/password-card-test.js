@@ -55,9 +55,9 @@ test('changes to fields are not persisted after a rollback', function(assert) {
   this.render(hbs`{{nypr-accounts/password-card isEditing=true}}`);
   
   this.$('input[name=currentPassword]').val('vvvvvvv');
-  this.$('input[name=currentPassword]').change();
+  this.$('input[name=currentPassword]').blur();
   this.$('input[name=newPassword]').val('uuuuuuu');
-  this.$('input[name=newPassword]').change();
+  this.$('input[name=newPassword]').blur();
   this.$('button[data-test-selector=rollback]').click();
   
   assert.equal(this.$('input[name=password]').val(), '********', 'displays password asterisks');
@@ -84,9 +84,9 @@ test('clicking save with a valid password calls changePassword', function(assert
     isEditing=true}}`);
   
   this.$('input[name=currentPassword]').val(OLD_PW);
-  this.$('input[name=currentPassword]').change();
+  this.$('input[name=currentPassword]').blur();
   this.$('input[name=newPassword]').val(NEW_PW);
-  this.$('input[name=newPassword]').change();
+  this.$('input[name=newPassword]').blur();
   
   this.$('button[data-test-selector=save]').click();
   
@@ -115,7 +115,7 @@ test('if changePassword rejects, should show an error message', function(assert)
   this.$('input[name=currentPassword]').val(OLD_PW);
   this.$('input[name=currentPassword]').focusout();
   this.$('input[name=newPassword]').val(NEW_PW);
-  this.$('input[name=newPassword]').change();
+  this.$('input[name=newPassword]').blur();
   
   this.$('button[data-test-selector=save]').click();
   
