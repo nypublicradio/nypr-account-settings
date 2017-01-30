@@ -4,22 +4,15 @@ import layout from '../../../templates/components/nypr-accounts/membership-card'
 
 export default Ember.Component.extend({
   layout,
-  activePledges: computed('pledges', function() {
-    return this.get('pledges').filterBy('isActive', true);
+  orderDateSorting: ['orderDate:desc'],
+  sortedPledges: computed.sort('pledges', 'orderDateSorting'),
+  mostRecentPledge: computed('sortedPledges', function() {
+    return this.get('sortedPledges').get('firstObject');
   }),
-  numberOfActivePledges: computed('activePledges', function() {
-    return this.get('activePledges').length;
-  }),
-  numberOfTotalPledges: computed('pledges.length', function() {
-    return this.get('pledges.length');
-  }),
-  hasMultipleActivePledges: computed('numberOfActivePledges', function() {
-    return this.get('numberOfActivePledges') >= 2;
-  }),
-  hasSingleActivePledge: computed('numberOfActivePledges', function() {
-    return this.get('numberOfActivePledges') === 1;
-  }),
-  hasExpiredPledges: computed('numberOfTotalPledges', function() {
-    return this.get('numberOfTotalPledges');
+  activePledges: computed.filterBy('sortedPledges', 'isActive', true),
+  activeSustainingPledges: computed.filterBy('activePledges', 'orderType', 'sustainer'),
+  activeOneTimePledges: computed.filterBy('activePledges', 'orderType', 'onetime'),
+  isLapsedOneTimeMember: computed('pledges', 'activePledges', function() {
+    return this.get('sortedPledges').length > 0 && this.get('activePledges').length === 0;
   }),
 });
