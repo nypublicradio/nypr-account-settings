@@ -5,6 +5,11 @@
   max-width: 457px;
 }
 
+.nypr-account-overlay.ember-modal-overlay {
+  z-index: $zIndex--modal;
+  background-color: rgba(0,0,0,0.8);
+}
+
 .nypr-account-modal-title {
   background-color: $nearwhite;
   padding: 25px;
