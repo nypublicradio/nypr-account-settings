@@ -31,12 +31,6 @@ export default Component.extend({
     debounce(this, prefName => set(this, 'changeset.preferredUsername', prefName), newName, 150);
   }),
   
-  emailObserver: observer('changeset.email', function() {
-    if (this.changeset.get('confirmEmail')) {
-      this.changeset.validate('confirmEmail');
-    }
-  }),
-  
   init() {
     this._super(...arguments);
     let config = getOwner(this).resolveRegistration('config:environment');
@@ -50,6 +44,12 @@ export default Component.extend({
     // so we can do remote async validations before setting to the
     // changeset
     this.preferredUsername = get(user, 'preferredUsername');
+  },
+  
+  onEmailChange() {
+    if (this.changeset.get('email')) {
+      this.changeset.validate('confirmEmail');
+    }
   },
 
   emailRequirement() {
