@@ -1,57 +1,83 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 
 moduleForComponent('nypr-accounts/membership-card', 'Integration | Component | nypr accounts/membership card', {
-  integration: true
+  integration: true,
+  beforeEach() {
+    if(typeof server !== 'undefined') { server.shutdown(); }
+    this.server = startMirage();
+  },
+  afterEach() {
+    this.server.shutdown();
+    if(typeof server !== 'undefined') { server.shutdown(); }
+  }
 });
 
 test('it renders', function(assert) {
+  let pledges = server.createList('pledge', 0);
+  this.set('pledges', pledges);
+  this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
 
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-
-  this.render(hbs`{{nypr-accounts/membership-card/index}}`);
-
-  assert.equal(this.$().text().trim(), 'Membership Info');
-
-  // Template block usage:
-  this.render(hbs`
-    {{#nypr-accounts/membership-card/index}}
-      template block text
-    {{/nypr-accounts/membership-card/index}}
-  `);
-
-  assert.equal(this.$('.nypr-membership-info-body').text().trim(), 'template block text');
+  assert.ok(this.$().text().trim().match(/Membership Info/), 'has membership header');
+  assert.ok(this.$('a').text().trim().match(/Payment History/), 'has payment history link');
+  assert.ok(this.$('a').text().trim().match(/Tax Receipt/), 'has tax receipt link');
+  assert.ok(this.$('a').text().trim().match(/Help/), 'has help link');
 });
 
-test('displays membership details if membership active', function(assert) {
+// Active sustaining member tests
 
+test('displays correct number of sustaining pledges', function(assert) {
+  let pledges = server.createList('pledge', 8, {isActive: true, orderType: 'sustainer'});
+  this.set('pledges', pledges);
+  this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
+
+  assert.equal(this.$('.pledge-container').length, 8, 'displays correct num of pledges');
 });
 
-test('displays renewal message if recent member', function(assert) {
+test('displays sustaining pledge details', function(assert) {
+  let pledges = server.createList('pledge', 1, {isActive: true, orderType: 'sustainer'});
+  this.set('pledges', pledges);
+  this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
 
+  assert.equal(this.$('.pledge-order-price').text(), `$${pledges[0].orderPrice}/month`, 'displays monthly amount');
+  assert.equal(this.$('.pledge-fund').text(), pledges[0].fund, 'displays fund');
+  assert.equal(this.$('.pledge-order-cc-type').text(), `${pledges[0].creditCardType} ${pledges[0].creditCardLast4Digits}`, 'displays credit card details');
 });
 
-test('displays donation callout for non-members', function(assert) {
+// Active one-time member tests
 
-});
-
-test('displays expiring warning on near-expired membership', function(assert) {
-
-});
-
-test('pledge update link is populated with order_id', function(assert) {
-
-});
-
-test('payment history link works', function(assert) {
+test ('displays last membership date if onetime member', function(assert) {
+  let pledges = server.createList('pledge', 1, {isActive: true, orderType: 'onetime'});
+  this.set('pledges', pledges);
+  this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
 
 });
 
-test('displays full payment history', function(assert) {
+// test('displays renewal message if recent member', function(assert) {
 
-});
+// });
 
-test('displays help modal when clicked on', function(assert) {
+// test('displays donation callout for non-members', function(assert) {
 
-});
+// });
+
+// test('displays expiring warning on near-expired membership', function(assert) {
+
+// });
+
+// test('pledge update link is populated with order_id', function(assert) {
+
+// });
+
+// test('payment history link works', function(assert) {
+
+// });
+
+// test('displays full payment history', function(assert) {
+
+// });
+
+// test('displays help modal when clicked on', function(assert) {
+
+// });
