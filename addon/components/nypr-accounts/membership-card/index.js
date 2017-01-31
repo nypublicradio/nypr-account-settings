@@ -15,4 +15,11 @@ export default Ember.Component.extend({
   isLapsedOneTimeMember: computed('pledges', 'activePledges', function() {
     return this.get('sortedPledges').length > 0 && this.get('activePledges').length === 0;
   }),
+  showPaymentHistory: false,
+  actions: {
+    togglePaymentHistory() {
+      let historyState = this.get('showPaymentHistory');
+      this.set('showPaymentHistory', !historyState);
+    }
+  }
 });
