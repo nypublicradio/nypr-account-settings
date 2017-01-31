@@ -1,5 +1,4 @@
 import { Factory, faker } from 'ember-cli-mirage';
-import computed from 'ember-computed';
 
 export default Factory.extend({
   fund: () => faker.random.arrayElement(["WNYC", "WQXR", "Radiolab"]),
@@ -12,6 +11,6 @@ export default Factory.extend({
   creditCardLast4Digits: '0302',
   isActive: faker.random.boolean,
   isSustainer() {
-    return this.orderType == 'sustainer' ? true : false;
+    return this.orderType === 'sustainer' ? true : false;
   },
 });
