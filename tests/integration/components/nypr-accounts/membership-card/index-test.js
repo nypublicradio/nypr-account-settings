@@ -61,13 +61,29 @@ test ('displays most recent active pledge details if active onetime member', fun
     'donate links to correct sustainer form');
 });
 
-// test('displays renewal message if recent member', function(assert) {
+test('displays renewal message if recent member', function(assert) {
+  let pledges = server.createList('pledge', 1, {isActive: false, orderType: 'onetime'});
+  this.set('pledges', pledges);
+  this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
 
-// });
+  assert.equal(this.$('.pledge-donate-button').text(), 'Donate to renew', 'Button callout  for renewal');
+  assert.equal(this.$('.pledge-donate-button-link').attr('href'),
+    `https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id=${pledges[0].orderKey}`,
+    'donate links to correct recap form');
 
-// test('displays donation callout for non-members', function(assert) {
+});
 
-// });
+test('displays donation callout for non-members', function(assert) {
+  let pledges = server.createList('pledge', 0);
+  this.set('pledges', pledges);
+  this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
+
+  assert.equal(this.$('.pledge-donate-button').text(), 'Become a member', 'Button callout for non-member');
+  assert.equal(this.$('.pledge-donate-button-link').attr('href'),
+    `https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/`,
+    'donate button links to non sustainer version');
+
+});
 
 // test('displays expiring warning on near-expired membership', function(assert) {
 
