@@ -82,7 +82,7 @@
 }
 
 .pledge-fund {
-  font-size: 16px;
+  font-size: $base-font + px;
 }
 
 .pledge-donate-button {
@@ -90,4 +90,9 @@
   @include btn--red;
 
   margin-top: 0;
+}
+
+.last-pledge-date {
+  color: $darkergray;
+  font-size: $base-font*0.875 + px;
 }
