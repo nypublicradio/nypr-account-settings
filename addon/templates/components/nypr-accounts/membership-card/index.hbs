@@ -68,7 +68,7 @@
   {{/nypr-card}}
 
 {{else}}
-  {{#nypr-card classNames="nypr-membership-info" title="Payment History" edit=(action (mut isEditing) true)}}
+  {{#nypr-card classNames="nypr-membership-info" title="Payment History" edit=(action (mut showPaymentHistory) false) editLabel="Back"}}
       {{#each sortedPledges as |pledge|}}
         <div class="pledge-container">
           <div class="pledge-info-container">
