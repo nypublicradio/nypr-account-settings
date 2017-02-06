@@ -9,6 +9,10 @@
 
 @import "nypr-account-modal";
 
+.account-info {
+  margin-bottom: 100px;
+}
+
 .nypr-password-card,
 .nypr-basic-info {
   .nypr-input {
@@ -46,7 +50,7 @@
     display: flex,
     justify-content: center
   ));
-  
+
   @include mq($medium-and-up) {
     @include justify-content(flex-end);
   }

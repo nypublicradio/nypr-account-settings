@@ -15,7 +15,7 @@
   padding: 18px 27px;
   margin-bottom: 25px;
   @include fontsize(24);
-  
+
   @include flexbox((
     display: flex,
     justify-content: space-between,
@@ -39,14 +39,14 @@
     display: flex,
     justify-content: space-around
   ));
-  
+
   @include mq("(min-width: 421px)") {
     padding: 0 50px;
   }
 }
 
 .nypr-account-modal-close {
-  @include blank-button;
+  @include blank-button;   
   width: 15px;
   height: 15px;
 }
