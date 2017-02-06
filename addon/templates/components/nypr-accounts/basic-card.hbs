@@ -1,4 +1,4 @@
-{{#nypr-card classNames="nypr-basic-info" title="Basic Info" edit=(action (mut isEditing) true)}}
+{{#nypr-card classNames="nypr-basic-info" title="Personal Info" edit=(action (mut isEditing) true)}}
   {{#unless isEditing}}
     {{nypr-input
       label='Name'
@@ -61,7 +61,7 @@
         class="nypr-account-cancel"
         data-test-selector="rollback"
         {{action 'rollback' changeset}}>Cancel</button>
-        
+
       <button
         class="nypr-account-confirm"
         data-test-selector="save"
@@ -89,7 +89,7 @@
       showError=true
     }}
     {{/m.body}}
-    
+
     {{#m.footer}}
       <button
         class="nypr-account-confirm"
@@ -98,4 +98,3 @@
     {{/m.footer}}
   {{/nypr-account-modal}}
 {{/if}}
-  
