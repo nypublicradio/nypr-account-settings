@@ -45,7 +45,7 @@ export default Ember.Component.extend({
       if (this.get('isEditing')) {
         this.send('rollback', this.get('changeset'));
       } else {
-        this.set('isEditing', false);
+        this.set('isEditing', true);
       }
     }
   }
