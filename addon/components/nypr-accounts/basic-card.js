@@ -181,6 +181,14 @@ export default Component.extend({
         rejectModal: null,
         password: null
       });
+    },
+    
+    toggleEdit() {
+      if (get(this, 'isEditing')) {
+        this.send('rollback', get(this, 'changeset'));
+      } else {
+        set(this, 'isEditing', true);
+      }
     }
   }
 });

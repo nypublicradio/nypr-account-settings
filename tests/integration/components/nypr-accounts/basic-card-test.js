@@ -125,6 +125,37 @@ test('changes to fields are not persisted after a rollback', function(assert) {
   return wait();
 });
 
+test('changes to fields are not persisted after a rollback using toggleEdit', function(assert) {
+  let user = userFields();
+  user.rollbackAttributes = function() {};
+
+  this.set('user', user);
+  
+  this.set('isEditing', true);
+  
+  this.render(hbs`{{nypr-accounts/basic-card isEditing=isEditing user=user}}`);
+  
+  this.$('input[name=givenName]').val('zzzz');
+  this.$('input[name=givenName]').blur();
+  this.$('input[name=familyName]').val('xxxxx');
+  this.$('input[name=familyName]').blur();
+  this.$('input[name=preferredUsername]').val('yyyyyy');
+  this.$('input[name=preferredUsername]').blur();
+  this.$('input[name=email]').val('wwwwww');
+  this.$('input[name=email]').blur();
+  this.$('input[name=confirmEmail]').val('wwwwww');
+  this.$('input[name=confirmEmail]').blur();
+  
+  this.$('button[data-test-selector=edit-button]').click();
+  assert.equal(this.$('input[name=fullName]').val(), 'foo bar', 'displays fullname');
+  assert.equal(this.$('input[name=preferredUsername]').val(), 'foobar', 'displays username');
+  assert.equal(this.$('input[name=email]').val(), 'foo@bar.com', 'displays email');
+  
+  this.$('button[data-test-selector=edit-button]').click();
+  this.$('input').each((i, e) => assert.equal(e.value, userFields()[e.name], 'original values are shown'));
+  return wait();
+});
+
 test('can update non-email attrs', function(assert) {
   const FIRST_NAME = 'john';
   const LAST_NAME = 'doe';

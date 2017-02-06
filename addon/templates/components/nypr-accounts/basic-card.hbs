@@ -1,4 +1,4 @@
-{{#nypr-card classNames="nypr-basic-info" title="Personal Info" edit=(action (mut isEditing) true)}}
+{{#nypr-card classNames="nypr-basic-info" title="Personal Info" isEditing=isEditing edit=(action 'toggleEdit')}}
   {{#unless isEditing}}
     {{nypr-input
       label='Name'
