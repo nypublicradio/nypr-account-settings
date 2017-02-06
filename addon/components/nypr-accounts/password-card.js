@@ -39,6 +39,14 @@ export default Ember.Component.extend({
     rollback(changeset) {
       changeset.rollback();
       this.set('isEditing', false);
+    },
+    
+    toggleEdit() {
+      if (this.get('isEditing')) {
+        this.send('rollback', this.get('changeset'));
+      } else {
+        this.set('isEditing', false);
+      }
     }
   }
 });

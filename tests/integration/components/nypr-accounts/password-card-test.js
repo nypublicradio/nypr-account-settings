@@ -67,6 +67,22 @@ test('changes to fields are not persisted after a rollback', function(assert) {
   assert.notOk(this.$('[data-test-selector=save]').length, 'save button should not be visible in default state');
 });
 
+test('changes to fields are not persisted after a rollback using toggleEdit', function(assert) {
+  this.render(hbs`{{nypr-accounts/password-card isEditing=true}}`);
+  
+  this.$('input[name=currentPassword]').val('vvvvvvv');
+  this.$('input[name=currentPassword]').blur();
+  this.$('input[name=newPassword]').val('uuuuuuu');
+  this.$('input[name=newPassword]').blur();
+  this.$('button[data-test-selector=edit-button]').click();
+  
+  assert.equal(this.$('input[name=password]').val(), '********', 'displays password asterisks');
+  assert.ok(this.$('input[name=password]').attr('disabled'), 'input is disabled');
+  
+  assert.notOk(this.$('[data-test-selector=rollback]').length, 'cancel button should not be visible in default state');
+  assert.notOk(this.$('[data-test-selector=save]').length, 'save button should not be visible in default state');
+});
+
 test('clicking save with a valid password calls changePassword', function(assert) {
   const OLD_PW = 'oldvalidpassword1';
   const NEW_PW = 'newvalidpassword1';
