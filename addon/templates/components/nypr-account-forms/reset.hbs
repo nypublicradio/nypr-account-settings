@@ -1,0 +1,44 @@
+{{#if passwordWasReset}}
+  {{#nypr-account-forms/login
+    showSocialLogin=false
+    authAPI=authAPI}}
+    {{#each flashMessages.queue as |flash|}}
+      {{flash-message flash=flash}}
+    {{/each}}
+  {{/nypr-account-forms/login}}
+
+{{else}}
+
+  {{#nypr-form changeset=changeset allowedKeys=allowedKeys onSubmit=(action 'onSubmit') onSuccess=(action 'onSuccess') formClass='account-form' as |form|}}
+    {{#if codeExpired}}
+      <h2 class="account-form-heading">Oops!</h2>
+
+      <p class="account-form-description">
+      The link to reset your password has expired. If you still need to reset your password, click to resend, and we'll provide a new link.
+      <br>
+      {{#nypr-accounts/resend-button
+        target=resendUrl
+        email=email}}
+        Resend the email
+      {{/nypr-accounts/resend-button}}</p>
+
+    {{else}}
+      <h2 class="account-form-heading">Reset your password</h2>
+
+      <p class="account-form-description">Create a new password for {{email}}.</p>
+
+      {{nypr-input
+        label='New Password'
+        type='password'
+        placeholder='Enter password'
+        fieldname='password'
+        value=changeset.password
+        errors=changeset.error.password.validation
+        submitted=form.status.tried
+      clue=(if changeset.error.password 'must be at least 8 characters and 1 number')
+      }}
+
+      <button type="submit" class="account-form-btn" disabled={{form.status.processing}}>Reset password</button>
+    {{/if}}
+  {{/nypr-form}}
+{{/if}}
