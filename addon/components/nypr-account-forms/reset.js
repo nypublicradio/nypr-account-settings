@@ -28,12 +28,6 @@ export default Component.extend({
   passwordWasReset: false,
   init() {
     this._super(...arguments);
-    if ( !(get(this, 'email') && get(this, 'confirmation')) ) {
-      // if we got here with missing url parameters,
-      // (i.e. typing url, bad copy/paste)
-      // send the user to the 'forgot' page so they can request a reset email
-      return get(this, 'routing').transitionTo('forgot');
-    }
     set(this, 'fields', {
       password: ''
     });
