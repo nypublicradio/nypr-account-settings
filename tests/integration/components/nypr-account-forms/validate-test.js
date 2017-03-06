@@ -14,7 +14,11 @@ moduleForComponent('nypr-account-forms/validate', 'Integration | Component | acc
 });
 
 test('it renders', function(assert) {
-  this.render(hbs`{{nypr-account-forms/validate}}`);
+  let authAPI = 'http://example.com';
+  this.set('authAPI', authAPI);
+  this.server.get(`${authAPI}/v1/confirm/sign-up`, {}, 200);
+
+  this.render(hbs`{{nypr-account-forms/validate authAPI=authAPI}}`);
   assert.equal(this.$('.account-form').length, 1);
 });
 
