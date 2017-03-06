@@ -4,7 +4,7 @@ import layout from '../../templates/components/nypr-accounts/basic-card';
 import RSVP from 'rsvp';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
-import makeValidations from 'nypr-account-settings/validators/nypr-accounts/basic-card';
+import makeValidations from 'nypr-account-settings/validations/nypr-accounts/basic-card';
 import getOwner from 'ember-owner/get';
 import observer from 'ember-metal/observer';
 import { debounce } from 'ember-runloop';
@@ -20,7 +20,7 @@ export default Component.extend({
   verifyEmail: computed('user.email', 'changeset.email', function() {
     return get(this, 'changeset.email') !== get(this, 'user.email');
   }),
-  
+
   // until ember-changeset can handle debounce validations
   // https://github.com/DockYard/ember-changeset/issues/102
   // observe updates and debounce updating the changeset
@@ -30,22 +30,22 @@ export default Component.extend({
     let newName = get(this, 'preferredUsername');
     debounce(this, prefName => set(this, 'changeset.preferredUsername', prefName), newName, 150);
   }),
-  
+
   init() {
     this._super(...arguments);
     let config = getOwner(this).resolveRegistration('config:environment');
     let validations = makeValidations({usernamePath: config.wnycAuthAPI});
-    
+
     let user = get(this, 'user');
     let changeset = new Changeset(user, lookupValidator(validations), validations);
     this.changeset = changeset;
-    
+
     // provide a temporary binding for preferred username on the template
     // so we can do remote async validations before setting to the
     // changeset
     this.preferredUsername = get(user, 'preferredUsername');
   },
-  
+
   onEmailChange() {
     if (this.changeset.get('email')) {
       this.changeset.validate('confirmEmail');
@@ -62,7 +62,7 @@ export default Component.extend({
       });
     });
   },
-  
+
   rollbackEmailField(changeset) {
     // work around to rollback specific fields
     let snapshot = changeset.snapshot();
@@ -73,7 +73,7 @@ export default Component.extend({
     delete snapshot.errors.confirmEmail;
     changeset.restore(snapshot);
   },
-  
+
   commit(changeset) {
     let notifyEmail = get(changeset, 'change.email');
     return changeset.save().then(() => {
@@ -113,7 +113,7 @@ export default Component.extend({
       let verifyEmail = get(this, 'verifyEmail');
 
       if (verifyEmail) {
-        // defer validating preferredUsername b/c it incurs a UI delay due to 
+        // defer validating preferredUsername b/c it incurs a UI delay due to
         // waiting on a network call
         stepOne = RSVP.all([
           changeset.validate('givenName'),
@@ -155,7 +155,7 @@ export default Component.extend({
         }
       });
     },
-    
+
     rollback(changeset) {
       changeset.rollback();
       // manually reset preferredUsername b/c template binds to this
@@ -182,7 +182,7 @@ export default Component.extend({
         password: null
       });
     },
-    
+
     toggleEdit() {
       if (get(this, 'isEditing')) {
         this.send('rollback', get(this, 'changeset'));
