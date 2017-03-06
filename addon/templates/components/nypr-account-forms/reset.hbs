@@ -1,7 +1,8 @@
 {{#if passwordWasReset}}
   {{#nypr-account-forms/login
     showSocialLogin=false
-    authAPI=authAPI}}
+    authAPI=authAPI
+    session=session}}
     {{#each flashMessages.queue as |flash|}}
       {{flash-message flash=flash}}
     {{/each}}

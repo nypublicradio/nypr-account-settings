@@ -3,7 +3,6 @@ import Component from 'ember-component';
 import set from 'ember-metal/set';
 import get from 'ember-metal/get';
 import computed from 'ember-computed';
-import service from 'ember-service/inject';
 import Changeset from 'ember-changeset';
 import LoginValidations from 'nypr-account-settings/validations/nypr-accounts/login';
 import messages from 'nypr-account-settings/validations/nypr-accounts/custom-messages';
@@ -11,9 +10,9 @@ import lookupValidator from 'ember-changeset-validations';
 
 export default Component.extend({
   layout,
-  session: service(),
   messages,
   authAPI: null,
+  session: null,
   showSocialLogin: false,
   resendUrl: computed('authAPI', function() {
     return `${get(this, 'authAPI')}/v1/confirm/resend`;

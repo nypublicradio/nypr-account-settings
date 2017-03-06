@@ -13,10 +13,10 @@ import { rejectUnsuccessfulResponses } from 'nypr-account-settings/utils/fetch-u
 
 export default Component.extend({
   layout,
-  authApi: null,
-  showSocialSignup: false,
   store: service(),
-  session: service(),
+  showSocialSignup: false,
+  authApi: null,
+  session: null,
   allowedKeys: ['email','emailConfirmation','givenName','familyName','typedPassword'],
 
   init() {

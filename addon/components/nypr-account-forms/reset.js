@@ -18,8 +18,8 @@ const FLASH_MESSAGES = {
 export default Component.extend({
   layout,
   store: service(),
-  routing: service('wnyc-routing'),
   authAPI: null,
+  session: null,
   resendUrl: computed('authAPI', function() {
     return `${get(this, 'authAPI')}/v1/password/forgot`;
   }),
