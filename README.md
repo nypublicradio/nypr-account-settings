@@ -1,6 +1,5 @@
 # nypr-account-settings
-
-This README outlines the details of collaborating on this Ember addon.
+[![CircleCI](https://img.shields.io/circleci/project/github/nypublicradio/nypr-account-settings.svg?style=flat-square-blue)](https://circleci.com/gh/nypublicradio/nypr-account-settings) [![GitHub release](https://img.shields.io/github/release/nypublicradio/nypr-account-settings.svg?style=flat-square)](https://github.com/nypublicradio/nypr-account-settings/releases/latest) [![GitHub pull requests](https://img.shields.io/github/issues-pr/nypublicradio/nypr-account-settings.svg?style=flat-square)](https://github.com/nypublicradio/nypr-account-settings/pulls) [![GitHub contributors](https://img.shields.io/github/contributors/nypublicradio/nypr-account-settings.svg?style=flat-square)](https://github.com/nypublicradio/nypr-account-settings/graphs/contributors)
 
 ## Installation
 
