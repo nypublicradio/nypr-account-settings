@@ -1,13 +1,13 @@
 import Ember from 'ember';
 import layout from '../../templates/components/nypr-accounts/password-card';
-import validations from 'nypr-account-settings/validators/nypr-accounts/password';
+import validations from 'nypr-account-settings/validations/nypr-accounts/password-change';
 import lookupValidator from 'ember-changeset-validations';
 import Changeset from 'ember-changeset';
 
 export default Ember.Component.extend({
   layout,
   tagName: '',
-  
+
   init() {
     this._super(...arguments);
     this.changeset = new Changeset({
@@ -15,7 +15,7 @@ export default Ember.Component.extend({
       newPassword: ''
     }, lookupValidator(validations), validations);
   },
-  
+
   actions: {
     save(changeset) {
       return changeset
@@ -35,12 +35,12 @@ export default Ember.Component.extend({
           }
         });
     },
-    
+
     rollback(changeset) {
       changeset.rollback();
       this.set('isEditing', false);
     },
-    
+
     toggleEdit() {
       if (this.get('isEditing')) {
         this.send('rollback', this.get('changeset'));
