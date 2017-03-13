@@ -142,5 +142,40 @@ test('if changePassword rejects, should show an error message', function(assert)
     assert.equal(this.$('input[name=currentPassword]').val(), OLD_PW, 'old password should still be there');
     assert.equal(this.$('input[name=newPassword]').val(), NEW_PW, 'new password should still be there');
   });
-  
+
+});
+
+test('if changePassword rejects with an error object, should display the error message from the object', function(assert) {
+  const OLD_PW = 'oldvalidpassword1';
+  const NEW_PW = 'newvalidpassword1';
+  const ERROR_MESSAGE = 'error message';
+
+  this.set('changePassword', function(changeset) {
+    assert.ok('changePassword was called');
+    assert.equal(changeset.get('currentPassword'), OLD_PW);
+    assert.equal(changeset.get('newPassword'), NEW_PW);
+    assert.equal(this.$('[data-test-selector=save]').length, 1, 'form should be in editing state');
+    return Promise.reject({errors: {code: "", message: ERROR_MESSAGE}});
+  });
+  this.render(hbs`{{nypr-accounts/password-card
+    changePassword=(action changePassword)
+    helplinkUrl='/forgot'
+    helplinkText='Forgot password?'
+    isEditing=true}}`);
+
+  this.$('input[name=currentPassword]').val(OLD_PW);
+  this.$('input[name=currentPassword]').focusout();
+  this.$('input[name=newPassword]').val(NEW_PW);
+  this.$('input[name=newPassword]').blur();
+
+  this.$('button[data-test-selector=save]').click();
+
+  return wait().then(() => {
+    assert.equal(this.$('[data-test-selector=save]').length, 1, 'form should not be in editing state');
+    assert.equal(this.$('.nypr-input-error').text().trim(), ERROR_MESSAGE);
+    assert.equal(this.$('.nypr-input-helplink').text().trim(), 'Forgot password?');
+    assert.equal(this.$('input[name=currentPassword]').val(), OLD_PW, 'old password should still be there');
+    assert.equal(this.$('input[name=newPassword]').val(), NEW_PW, 'new password should still be there');
+  });
+
 });

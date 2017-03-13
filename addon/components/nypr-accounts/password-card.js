@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import get from 'ember-metal/get';
 import layout from '../../templates/components/nypr-accounts/password-card';
 import validations from 'nypr-account-settings/validations/nypr-accounts/password-change';
 import lookupValidator from 'ember-changeset-validations';
@@ -27,8 +28,13 @@ export default Ember.Component.extend({
               changeset.rollback();
               this.set('isEditing', false);
             })
-            .catch(() => {
-              changeset.pushErrors('currentPassword', 'This password is incorrect.');
+            .catch((e) => {
+              console.log(e);
+              if (e && get(e, 'errors.message')) {
+                changeset.pushErrors('currentPassword', e.errors.message);
+              } else {
+                changeset.pushErrors('currentPassword', 'This password is incorrect.');
+              }
             });
           } else {
             return changeset.get('errors');
