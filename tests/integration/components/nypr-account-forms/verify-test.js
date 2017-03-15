@@ -8,7 +8,7 @@ moduleForComponent('nypr-account-forms/verify', 'Integration | Component | nypr 
   integration: true,
   beforeEach() {
     this.server = startMirage();
-    this.session = { authorize(_, callback) { callback(); } };
+    this.session = { authorize(_, callback) { callback('Authorization', 'foo'); } };
 
   },
   afterEach() {

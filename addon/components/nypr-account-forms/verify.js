@@ -21,26 +21,24 @@ export default Component.extend({
     this.verifyEmail(get(this, 'APIUrl'), get(this, 'verificationCode'));
   },
   verifyEmail(url, verificationCode) {
+    let method = 'PATCH';
+    let mode = 'cors';
+    let headers = {'Content-Type': 'application/json'};
     this.get('session').authorize('authorizer:nypr', (header, value) => {
-      let headers = {
-        'Content-Type': 'application/json',
-        'Authorization': value
-      };
-      let method = 'PATCH';
-      let mode = 'cors';
-      let body = JSON.stringify({verification_code: verificationCode});
-      fetch(url, {method, mode, headers, body})
-      .then(rejectUnsuccessfulResponses)
-      .then(() => {
-        get(this, 'onSuccess')();
-      })
-      .catch((e) => {
-        let errorMessage = messages.genericVerificationError;
-        if (e && get(e, 'errors.message')) {
-          errorMessage = e.errors.message;
-        }
-        get(this, 'onFailure')(errorMessage);
-      });
+        headers[header] = value;
+    });
+    let body = JSON.stringify({verification_code: verificationCode});
+    fetch(url, {method, mode, headers, body})
+    .then(rejectUnsuccessfulResponses)
+    .then(() => {
+      get(this, 'onSuccess')();
+    })
+    .catch((e) => {
+      let errorMessage = messages.genericVerificationError;
+      if (e && get(e, 'errors.message')) {
+        errorMessage = e.errors.message;
+      }
+      get(this, 'onFailure')(errorMessage);
     });
   }
 });
