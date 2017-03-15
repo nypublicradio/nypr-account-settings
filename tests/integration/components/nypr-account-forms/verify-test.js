@@ -8,7 +8,7 @@ moduleForComponent('nypr-account-forms/verify', 'Integration | Component | nypr 
   integration: true,
   beforeEach() {
     this.server = startMirage();
-    this.session = { authorize(_, callback) { callback('Authorization', 'foo'); } };
+    this.session = { authorize(_, callback) { callback('authorization', 'foo'); } };
 
   },
   afterEach() {
@@ -41,6 +41,7 @@ test('it sends the correct values to the endpoint to verify the account', functi
 
   return wait().then(() => {
     assert.equal(requestSpy.callCount, 1);
+    assert.equal(requestSpy.firstCall.args[0].requestHeaders['authorization'], 'foo');
     assert.deepEqual(JSON.parse(requestSpy.firstCall.args[0].requestBody), { verification_code: testVerification });
   });
 });
