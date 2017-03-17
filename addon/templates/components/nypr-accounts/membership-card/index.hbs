@@ -1,0 +1,89 @@
+{{#unless showPaymentHistory}}
+  {{#nypr-card classNames="nypr-membership-info" title="Membership Info"}}
+
+    {{!--
+    Possible user states to handle:
+    1. Active sustaining pledge (activeSustainingPledges)
+    2. Active one-time pledge, e.g. donated within last year (activeOneTimePledges)
+    3. Expired/declined sustaining pledge (isLapsedSustainer)
+    4. Expired/lapsed one-time pledge (isLapsedOneTimeMember)
+    5. Never pledged (isNonMember)
+    --}}
+
+    {{#if activeSustainingPledges}}
+      <h2 class="active-donations-header">Active Recurring Donations</h2>
+      {{#each activeSustainingPledges as |pledge|}}
+        <div class="pledge-container">
+          <div class="pledge-info-container">
+            <div class="pledge-fund-name">
+              <div class="pledge-fund">{{pledge.fund}}</div>
+            </div>
+            <div class="pledge-info">
+              <div class="pledge-order-price">${{pledge.orderPrice}}{{if pledge.isSustainer '/month' }}</div>
+              <div class="pledge-order-cc-type">{{pledge.creditCardType}} {{pledge.creditCardLast4Digits}}</div>
+            </div>
+          </div>
+          <div class="pledge-update-link">
+            <a href={{pledge.orderKey}}>Update</a>
+          </div>
+        </div>
+      {{/each}}
+
+    {{else if activeOneTimePledges}}
+      <div class="pledge-active-onetime-member">
+        <p class="last-pledge-date">You last donated on <span class="pledge-date">{{moment-format mostRecentPledge.orderDate 'M/DD/YYYY'}}</span>.</p>
+        <a class="pledge-donate-button-link" href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id={{mostRecentPledge.orderKey}}" target="_blank">
+          <p class="pledge-donate-button">Make another donation</p>
+        </a>
+      </div>
+
+    {{else if isLapsedOneTimeMember}}
+      <div class="pledge-active-onetime-member">
+        <p class="last-pledge-date">Your {{mostRecentPledge.fund}} membership
+        from your <span class="pledge-date">{{moment-format mostRecentPledge.orderDate 'M/DD/YYYY'}}</span> donation has lapsed.</p>
+        <a class="pledge-donate-button-link"
+          href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id={{mostRecentPledge.orderKey}}"
+          target="_blank">
+          <p class="pledge-donate-button">Donate to renew</p>
+        </a>
+      </div>
+
+    {{else if isLapsedSustainer}}
+      <p>Former sustainer</p>
+
+    {{else}} {{! i.e. isNonMember }}
+      <div class="pledge-non-member">
+        <p class="last-pledge-date">You are not a WNYC member. We rely on listeners like you to produce content, maintain our websites, etc.</p>
+        <a class="pledge-donate-button-link" href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/" target="_blank">
+          <p class="pledge-donate-button">Become a member</p>
+        </a>
+      </div>
+    {{/if}}
+
+    <div class="pledge-tools">
+      <div class="pledge-payment-history"><a href="#" {{action "togglePaymentHistory" on="click"}}>Payment History</a></div>
+      <div class="pledge-tax-receipt"><a href="#">2016 Tax Receipt</a></div>
+      <div class="pledge-help-link"><a href="#">Help</a></div>
+    </div>
+  {{/nypr-card}}
+
+{{else}}
+  {{#nypr-card classNames="nypr-membership-info" title="Payment History" edit=(action (mut showPaymentHistory) false) editLabel="Back"}}
+      {{#each sortedPledges as |pledge|}}
+        <div class="pledge-container">
+          <div class="pledge-info-container">
+            <div class="pledge-fund-name">
+              <div class="pledge-fund">{{pledge.fund}}</div>
+            </div>
+            <div class="pledge-info">
+              <div class="pledge-order-price">${{pledge.orderPrice}}{{if pledge.isSustainer '/month' }}</div>
+              <div class="pledge-order-cc-type">{{pledge.creditCardType}} {{pledge.creditCardLast4Digits}}</div>
+            </div>
+          </div>
+          <div class="pledge-update-link">
+            <a href={{pledge.orderKey}}>Update</a>
+          </div>
+        </div>
+      {{/each}}
+  {{/nypr-card}}
+{{/unless}}
