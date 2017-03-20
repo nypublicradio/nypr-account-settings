@@ -24,14 +24,14 @@
             </div>
           </div>
           <div class="pledge-update-link">
-            <a href={{pledge.orderKey}}>Update</a>
+            <a href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/sustainer?order_id={{pledge.orderKey}}">Update</a>
           </div>
         </div>
       {{/each}}
 
     {{else if activeOneTimePledges}}
       <div class="pledge-active-onetime-member">
-        <p class="last-pledge-date">You last donated on <span class="pledge-date">{{moment-format mostRecentPledge.orderDate 'M/DD/YYYY'}}</span>.</p>
+        <p class="last-pledge-date">You last donated on <span class="pledge-date">{{moment-format mostRecentPledge.orderDate 'MMMM D, YYYY'}}</span>.</p>
         <a class="pledge-donate-button-link" href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id={{mostRecentPledge.orderKey}}" target="_blank">
           <p class="pledge-donate-button">Make another donation</p>
         </a>
@@ -40,16 +40,21 @@
     {{else if isLapsedOneTimeMember}}
       <div class="pledge-active-onetime-member">
         <p class="last-pledge-date">Your {{mostRecentPledge.fund}} membership
-        from your <span class="pledge-date">{{moment-format mostRecentPledge.orderDate 'M/DD/YYYY'}}</span> donation has lapsed.</p>
+        from your <span class="pledge-date">{{moment-format mostRecentPledge.orderDate 'MMM. D, YYYY'}}</span> donation has lapsed.</p>
         <a class="pledge-donate-button-link"
-          href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id={{mostRecentPledge.orderKey}}"
+           href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id={{pledge.orderKey}}"
           target="_blank">
           <p class="pledge-donate-button">Donate to renew</p>
         </a>
       </div>
 
     {{else if isLapsedSustainer}}
-      <p>Former sustainer</p>
+      <div class="pledge-lapsed-sustainer">
+        <p class="last-pledge-date">Your sustaining donations have expired.</p>
+        <a class="pledge-donate-button-link" href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/" target="_blank">
+          <p class="pledge-donate-button">Become a member</p>
+        </a>
+      </div>
 
     {{else}} {{! i.e. isNonMember }}
       <div class="pledge-non-member">
@@ -61,29 +66,26 @@
     {{/if}}
 
     <div class="pledge-tools">
+      {{#if pledges}}
       <div class="pledge-payment-history"><a href="#" {{action "togglePaymentHistory" on="click"}}>Payment History</a></div>
       <div class="pledge-tax-receipt"><a href="#">2016 Tax Receipt</a></div>
+      {{/if}}
       <div class="pledge-help-link"><a href="#">Help</a></div>
     </div>
   {{/nypr-card}}
 
 {{else}}
-  {{#nypr-card classNames="nypr-membership-info" title="Payment History" edit=(action (mut showPaymentHistory) false) editLabel="Back"}}
+  {{#nypr-card classNames="nypr-membership-info pledge-history" title="Payment History" edit=(action (mut showPaymentHistory) false) editLabel="Back"}}
       {{#each sortedPledges as |pledge|}}
-        <div class="pledge-container">
-          <div class="pledge-info-container">
-            <div class="pledge-fund-name">
-              <div class="pledge-fund">{{pledge.fund}}</div>
-            </div>
-            <div class="pledge-info">
-              <div class="pledge-order-price">${{pledge.orderPrice}}{{if pledge.isSustainer '/month' }}</div>
-              <div class="pledge-order-cc-type">{{pledge.creditCardType}} {{pledge.creditCardLast4Digits}}</div>
-            </div>
-          </div>
-          <div class="pledge-update-link">
-            <a href={{pledge.orderKey}}>Update</a>
-          </div>
+      <div class="pledge-container pledge-history-container">
+        <div class="pledge-date">{{moment-format pledge.orderDate 'MMM D, YYYY'}}</div>
+        <div class="pledge-fund-and-premium">
+          <div>{{pledge.fund}}</div>
+          <div class="pledge-premium">{{pledge.premium}}</div>
         </div>
+        <div class="pledge-order-price">${{pledge.orderPrice}}</div>
+        <div class="recurring-label">{{if pledge.isSustainer '(recurring)'}}</div>
+      </div>
       {{/each}}
   {{/nypr-card}}
 {{/unless}}
