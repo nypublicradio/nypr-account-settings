@@ -1,8 +1,8 @@
-import Ember from 'ember';
 import layout from '../../templates/components/nypr-account-forms/signup';
 import Component from 'ember-component';
 import get from 'ember-metal/get';
 import set from 'ember-metal/set';
+import { next } from 'ember-runloop';
 import Changeset from 'ember-changeset';
 import SignupValidations from 'nypr-account-settings/validations/nypr-accounts/signup';
 import messages from 'nypr-account-settings/validations/nypr-accounts/custom-messages';
@@ -14,6 +14,7 @@ import { rejectUnsuccessfulResponses } from 'nypr-account-settings/utils/fetch-u
 export default Component.extend({
   layout,
   store: service(),
+  flashMessages: service(),
   showSocialSignup: false,
   authApi: null,
   session: null,
@@ -25,7 +26,9 @@ export default Component.extend({
     set(this, 'changeset', new Changeset(get(this, 'newUser'), lookupValidator(SignupValidations), SignupValidations));
     get(this, 'changeset').validate();
   },
-
+  click() {
+    get(this, 'flashMessages').clearMessages();
+  },
   actions: {
     onSubmit() {
       return this.signUp();
@@ -36,30 +39,28 @@ export default Component.extend({
       }
     },
     signupWithFacebook() {
-      let authenticator = Ember.getOwner(this).lookup('authenticator:torii');
-      authenticator.authenticate('facebook-connect').then(({access_token}) => {
-        window.FB.api('/me', {fields: 'first_name,last_name,email,picture.width(500)'}, data => {
-          // collect user attrs from FB api and send to auth
-          let attrs = {
-            providerToken: access_token,
-            givenName: data.first_name,
-            familyName: data.last_name,
-            email: data.email,
-            picture: data.picture.data.url,
-            facebookId: data.id
-          };
-          let user = this.get('store').createRecord('user', attrs);
-          user.save({adapterOptions: {provider: 'facebook-connect'}}).then(() => {
-            // TODO: this opens a pop up twice, but how else to get an access token
-            // and create a user withouth first triggering the sessionAuthenticated
-            // event? if we authenticate first, the sessionAuthenticated event fires
-            // which tries to load a user before we've had a chance to send the token
-            // to the back end
-            this.get('session').authenticate('authenticator:torii', 'facebook-connect');
+      this.get('session').set('data.isSigningUpWithThirdParty', true);
+      this.get('session').authenticate('authenticator:torii', 'facebook-connect')
+      .then(() => {
+        // because we clear messages when clicking this form,
+        // wait a tick when we add one
+        next(() => {
+          this.get('flashMessages').add({
+            message: messages.socialAuthSignup,
+            type: 'success',
+            sticky: true,
           });
         });
       })
-      .catch(() => {});
+      .catch(() => {
+        next(() => {
+          this.get('flashMessages').add({
+            message: messages.socialAuthCancelled,
+            type: 'warning',
+            sticky: true,
+          });
+        });
+      });
     }
   },
   signUp() {

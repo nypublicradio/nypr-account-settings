@@ -29,7 +29,6 @@ export default Ember.Component.extend({
               this.set('isEditing', false);
             })
             .catch((e) => {
-              console.log(e);
               if (e && get(e, 'errors.message')) {
                 changeset.pushErrors('currentPassword', e.errors.message);
               } else {
