@@ -21,8 +21,6 @@ test('it renders', function(assert) {
   this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
 
   assert.ok(this.$().text().trim().match(/Membership Info/), 'has membership header');
-  assert.ok(this.$('a').text().trim().match(/Payment History/), 'has payment history link');
-  assert.ok(this.$('a').text().trim().match(/Tax Receipt/), 'has tax receipt link');
   assert.ok(this.$('a').text().trim().match(/Help/), 'has help link');
 });
 
@@ -44,6 +42,8 @@ test('displays sustaining pledge details', function(assert) {
   assert.equal(this.$('.pledge-order-price').text(), `$${pledges[0].orderPrice}/month`, 'displays monthly amount');
   assert.equal(this.$('.pledge-fund').text(), pledges[0].fund, 'displays fund');
   assert.equal(this.$('.pledge-order-cc-type').text(), `${pledges[0].creditCardType} ${pledges[0].creditCardLast4Digits}`, 'displays credit card details');
+  assert.ok(this.$('a').text().trim().match(/Payment History/), 'has payment history link');
+  assert.ok(this.$('a').text().trim().match(/Tax Receipt/), 'has tax receipt link');
 });
 
 // Active one-time member tests
@@ -54,11 +54,13 @@ test ('displays most recent active pledge details if active onetime member', fun
   this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
 
   assert.equal(this.$('.pledge-date').text().trim(),
-    moment(pledges[0].orderDate).format('M/DD/YYYY'),
+    moment(pledges[0].orderDate).format('MMMM D, YYYY'),
     'date is displayed');
   assert.equal(this.$('.pledge-donate-button-link').attr('href'),
     `https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id=${pledges[0].orderKey}`,
     'donate links to correct sustainer form');
+  assert.ok(this.$('a').text().trim().match(/Payment History/), 'has payment history link');
+  assert.ok(this.$('a').text().trim().match(/Tax Receipt/), 'has tax receipt link');
 });
 
 test('displays renewal message if recent member', function(assert) {
@@ -82,6 +84,7 @@ test('displays donation callout for non-members', function(assert) {
   assert.equal(this.$('.pledge-donate-button-link').attr('href'),
     `https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/`,
     'donate button links to non sustainer version');
+  // payment history link does NOT exist
 
 });
 
