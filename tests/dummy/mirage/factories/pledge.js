@@ -6,7 +6,7 @@ export default Factory.extend({
   orderDate: faker.date.past,
   orderType: () => faker.random.arrayElement(["onetime", "sustainer"]),
   orderKey: () => faker.random.uuid(),
-  premium: 'Brian Lehrer Animated Series',
+  premium: () => faker.random.arrayElement(['Brian Lehrer Animated Series', 'BL Mug', 'WNYC Hoodie', '']),
   creditCardType: 'VISA',
   creditCardLast4Digits: '0302',
   isActive: faker.random.boolean,
