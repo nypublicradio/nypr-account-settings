@@ -45,7 +45,7 @@ test('it sends the correct values to the endpoint to verify the account', functi
   });
 });
 
-test('it shows the login form and success alert when verification succeeds', function(assert) {
+test('it shows the login form when verification succeeds', function(assert) {
   const testUser = 'UserName';
   const testConfirmation = 'QWERTYUIOP';
   let authAPI = 'http://example.com';
@@ -65,7 +65,6 @@ test('it shows the login form and success alert when verification succeeds', fun
   return wait().then(() => {
     assert.equal(this.$('.account-form').length, 1, 'it should show an account form');
     assert.equal(this.$('button:contains(Log in)').length, 1, 'it should show a login button');
-    assert.equal(this.$('.alert-success:contains(Your email has been verified and your online account is now active.)').length, 1, 'it should show a success alert');
   });
 });
 
