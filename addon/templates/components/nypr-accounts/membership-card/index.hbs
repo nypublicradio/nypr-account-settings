@@ -42,7 +42,7 @@
         <p class="last-pledge-date">Your {{mostRecentPledge.fund}} membership
         from your <span class="pledge-date">{{moment-format mostRecentPledge.orderDate 'MMM. D, YYYY'}}</span> donation has lapsed.</p>
         <a class="pledge-donate-button-link"
-           href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id={{pledge.orderKey}}"
+           href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id={{mostRecentPledge.orderKey}}"
           target="_blank">
           <p class="pledge-donate-button">Donate to renew</p>
         </a>
