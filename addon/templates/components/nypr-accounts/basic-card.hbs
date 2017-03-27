@@ -81,7 +81,7 @@
 {{/nypr-card}}
 
 {{#if isShowingModal}}
-  {{#nypr-account-modal title="Re-enter Your Password" closeAction=(action 'closeModal') as |m|}}
+  {{#nypr-account-modal title="Re-enter Your Password" closeAction=(action 'cancelModal') as |m|}}
     {{#m.body}}
     <p>
       You must re-enter your password to make changes to your email. The email you are changing is the one you use to log into the site.

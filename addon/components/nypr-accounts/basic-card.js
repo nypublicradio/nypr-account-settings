@@ -62,7 +62,14 @@ export default Component.extend({
       });
     });
   },
-
+  
+  closeModal() {
+    this.setProperties({
+      resolveModal: null,
+      rejectModal: null,
+    });
+  },
+  
   rollbackEmailField(changeset) {
     // work around to rollback specific fields
     let snapshot = changeset.snapshot();
@@ -98,8 +105,6 @@ export default Component.extend({
     })
     .finally(() => {
       this.setProperties({
-        resolveModal: null,
-        rejectModal: null,
         password: null,
         passwordError: null,
         'user.confirmEmail': null
@@ -174,13 +179,10 @@ export default Component.extend({
           .catch(({error}) => set(this, 'passwordError', [error.message]));
       }
     },
-    closeModal() {
+    cancelModal() {
       get(this, 'rejectModal')();
-      this.setProperties({
-        resolveModal: null,
-        rejectModal: null,
-        password: null
-      });
+      this.closeModal();
+      this.set('password', null);
     },
 
     toggleEdit() {
