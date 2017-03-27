@@ -82,6 +82,7 @@ export default Component.extend({
   },
 
   commit(changeset) {
+    set(this, 'isLoading', true);
     let notifyEmail = get(changeset, 'change.email');
     return changeset.save().then(() => {
       set(this, 'isEditing', false);
@@ -104,6 +105,7 @@ export default Component.extend({
       }
     })
     .finally(() => {
+      set(this, 'isLoading', false);
       this.setProperties({
         password: null,
         passwordError: null,
