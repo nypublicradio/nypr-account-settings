@@ -2,11 +2,15 @@
   <div class="l-constrained">
     <h1>Hi {{model.givenName}}!</h1>
     <h2>Account Settings</h2>
-
+      
     {{nypr-accounts/basic-card
       user=model
+      emailUpdated=(action showFlash 'email')
       authenticate=(action authenticate)}}
-    {{nypr-accounts/password-card}}
-    
+
+    {{nypr-accounts/password-card
+      helplinkUrl='/forgot'
+      helplinkText='Forgot password?'
+      changePassword=(action changePassword)}}
   </div>
 </div>  
