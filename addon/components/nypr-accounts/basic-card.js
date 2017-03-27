@@ -90,6 +90,7 @@ export default Component.extend({
       }
     })
     .catch(error => {
+      get(this, 'user').rollbackAttributes();
       if (error.isAdapterError) {
         error = error.errors;
       }
@@ -97,7 +98,6 @@ export default Component.extend({
       if (values.includes('preferred_username')) {
         changeset.pushErrors('preferredUsername', error.message);
       } else if (code === 'AccountExists') {
-        get(this, 'user').rollbackAttributes();
         changeset.pushErrors('email', message);
         changeset.set('confirmEmail', null);
         changeset.set('error.confirmEmail', null);
