@@ -34,7 +34,7 @@ export default function({usernamePath}) {
     ],
     email: [
       validatePresence({
-      presence: true,
+        presence: true,
         message: messages.emailRequired
       }),
       validateFormat({ type: 'email', allowBlank: true, message: messages.emailFormat }),
