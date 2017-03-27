@@ -114,49 +114,31 @@ export default Component.extend({
 
   actions: {
     save(changeset) {
-      let stepOne;
       let verifyEmail = get(this, 'verifyEmail');
-
+      let validations = [
+        changeset.validate('givenName'),
+        changeset.validate('familyName')
+      ];
       if (verifyEmail) {
-        // defer validating preferredUsername b/c it incurs a UI delay due to
-        // waiting on a network call
-        stepOne = RSVP.all([
-          changeset.validate('givenName'),
-          changeset.validate('familyName'),
+        validations.push(
           changeset.validate('email'),
-          changeset.validate('confirmEmail'),
-        ]);
-      } else {
-        // if email hasn't changed, no point verifying it
-        // but roll back errors in case confirmEmail is showing an error
-        this.rollbackEmailField(changeset);
-        stepOne = RSVP.all([
-          changeset.validate('givenName'),
-          changeset.validate('familyName'),
-          changeset.validate('preferredUsername'),
-        ]);
+          changeset.validate('confirmEmail')
+        );
       }
 
-      return stepOne.then(() => {
-        if (verifyEmail && get(changeset, 'isValid')) {
-          return this.emailRequirement()
-            .then(() => {
-              // now that the modal has passed, validate the username
-              // TODO: I think we can actually skip this
-              return changeset.validate('preferredUsername')
-                .then(() => {
-                  if (get(changeset, 'isValid')) {
-                    return this.commit(changeset);
-                  } else {
-                    // something's wrong, probably the preferredUsername
-                    this.closeModal();
-                  }
-                });
-            })
-            .catch(() => this.rollbackEmailField(changeset));
-        } else if (get(changeset, 'isValid')) {
-          // if we're not doing the verify email flow, just commit the changeset
-          return this.commit(changeset);
+      return RSVP.all(validations).then(() => {
+        if (get(changeset, 'isValid')) {
+          if (verifyEmail) {
+            return this.emailRequirement()
+              .then(() => {
+                this.closeModal();
+                return this.commit(changeset);
+              })
+              .catch(() => this.rollbackEmailField(changeset));
+          } else {
+            // if we're not doing the verify email flow, just commit the changeset
+            return this.commit(changeset);
+          }
         }
       });
     },
