@@ -83,7 +83,7 @@
 
     <div class="pledge-tools">
       {{#if pledges}}
-      <div class="pledge-payment-history"><a href="#" {{action "togglePaymentHistory" on="click"}}>Payment History</a></div>
+      <div class="pledge-payment-history"><button {{action (action (mut showPaymentHistory) (not showPaymentHistory))}}>Payment History</button></div>
       {{/if}}
       <div class="pledge-help-link"><a href="#">Help</a></div>
     </div>
