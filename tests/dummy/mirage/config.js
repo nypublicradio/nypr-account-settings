@@ -50,5 +50,5 @@ export default function() {
       "message": "Incorrect username or password."
     }
   }));
-  this.get('/pledges');
+  this.get('/pledges', {timing: 1000});
 }
