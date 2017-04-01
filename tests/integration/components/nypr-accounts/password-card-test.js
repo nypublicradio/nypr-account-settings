@@ -74,7 +74,7 @@ test('changes to fields are not persisted after a rollback using toggleEdit', fu
   this.$('input[name=currentPassword]').blur();
   this.$('input[name=newPassword]').val('uuuuuuu');
   this.$('input[name=newPassword]').blur();
-  this.$('button[data-test-selector=edit-button]').click();
+  this.$('button[data-test-selector=nypr-card-button]').click();
   
   assert.equal(this.$('input[name=password]').val(), '********', 'displays password asterisks');
   assert.ok(this.$('input[name=password]').attr('disabled'), 'input is disabled');
