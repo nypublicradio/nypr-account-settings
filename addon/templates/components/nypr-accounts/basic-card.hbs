@@ -1,4 +1,13 @@
-{{#nypr-card classNames="nypr-basic-info" title="Personal Info" isEditing=isEditing edit=(action 'toggleEdit')}}
+{{#nypr-card class="nypr-basic-info" as |card|}}
+
+  {{#card.header as |header|}}
+    {{header.title text="Personal Info"}}
+    {{header.button
+      class="nypr-card-edit-btn"
+      click=(action 'toggleEdit')
+      text=(if isEditing 'Cancel' 'Edit')}}
+  {{/card.header}}
+  
   {{#unless isEditing}}
     {{nypr-input
       label='Name'
