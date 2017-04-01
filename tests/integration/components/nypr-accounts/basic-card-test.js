@@ -146,12 +146,12 @@ test('changes to fields are not persisted after a rollback using toggleEdit', fu
   this.$('input[name=confirmEmail]').val('wwwwww');
   this.$('input[name=confirmEmail]').blur();
   
-  this.$('button[data-test-selector=edit-button]').click();
+  this.$('button[data-test-selector=nypr-card-button]').click();
   assert.equal(this.$('input[name=fullName]').val(), 'foo bar', 'displays fullname');
   assert.equal(this.$('input[name=preferredUsername]').val(), 'foobar', 'displays username');
   assert.equal(this.$('input[name=email]').val(), 'foo@bar.com', 'displays email');
   
-  this.$('button[data-test-selector=edit-button]').click();
+  this.$('button[data-test-selector=nypr-card-button]').click();
   this.$('input').each((i, e) => assert.equal(e.value, userFields()[e.name], 'original values are shown'));
   return wait();
 });
