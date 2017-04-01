@@ -41,7 +41,7 @@ test('server errors when updating user model', function(assert) {
   visit('/');
   
   andThen(() => {
-    click('[data-test-selector=edit-button]');
+    click('[data-test-selector=nypr-card-button]');
     click('input[name=email]');
     fillIn('input[name=email]', EMAIL);
   });
