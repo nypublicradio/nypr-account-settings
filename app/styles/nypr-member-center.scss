@@ -62,6 +62,10 @@
   @include align-items(center);
 }
 
+.pledge-payment-history {
+  cursor: pointer;
+}
+
 .active-donations-header,
 .pledge-order-price,
 .pledge-update-link,
@@ -200,7 +204,7 @@
 }
 
 .pledge-order-info {
-  animation: fadeIn 0.2s ease;
+  animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {
