@@ -39,7 +39,6 @@ export default Component.extend({
       }
     },
     signupWithFacebook() {
-      this.get('session').set('data.isSigningUpWithThirdParty', true);
       this.get('session').authenticate('authenticator:torii', 'facebook-connect')
       .then(() => {
         // because we clear messages when clicking this form,

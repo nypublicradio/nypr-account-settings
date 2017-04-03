@@ -2,6 +2,7 @@ import layout from '../../templates/components/nypr-account-forms/login';
 import Component from 'ember-component';
 import set from 'ember-metal/set';
 import get from 'ember-metal/get';
+import { next } from 'ember-runloop';
 import computed from 'ember-computed';
 import service from 'ember-service/inject';
 import Changeset from 'ember-changeset';
@@ -52,11 +53,24 @@ export default Component.extend({
     },
     loginWithFacebook() {
       get(this, 'session').authenticate('authenticator:torii', 'facebook-connect')
+      .then(() => {
+        // because we clear messages when clicking this form,
+        // wait a tick when we add one
+        next(() => {
+          this.get('flashMessages').add({
+            message: messages.socialAuthSignup,
+            type: 'success',
+            sticky: true,
+          });
+        });
+      })
       .catch(() => {
-        this.get('flashMessages').add({
-          message: messages.socialAuthCancelled,
-          type: 'warning',
-          sticky: true,
+        next(() => {
+          this.get('flashMessages').add({
+            message: messages.socialAuthCancelled,
+            type: 'warning',
+            sticky: true,
+          });
         });
       });
     }
