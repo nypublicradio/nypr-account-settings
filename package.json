@@ -54,7 +54,7 @@
     "ember-sinon": "0.6.0",
     "ember-truth-helpers": "1.2.0",
     "loader.js": "^4.0.10",
-    "nypr-ui": "nypublicradio/nypr-ui#demo"
+    "nypr-ui": "nypublicradio/nypr-ui#mhearn/ui-updates-for-member-center"
   },
   "engines": {
     "node": ">= 0.12.0"
