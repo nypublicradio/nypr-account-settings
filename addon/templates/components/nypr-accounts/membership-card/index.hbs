@@ -1,5 +1,9 @@
 {{#unless showPaymentHistory}}
-  {{#nypr-card classNames="nypr-membership-info" title="Membership Info"}}
+  {{#nypr-card classNames="nypr-membership-info" title="Membership Info" as |card|}}
+
+  {{#card.header as |header|}}
+    {{header.title text="Membership Info"}}
+  {{/card.header}}
 
     {{!--
     Possible user states to handle:
@@ -87,7 +91,14 @@
   {{/nypr-card}}
 
 {{else}}
-  {{#nypr-card classNames="nypr-membership-info pledge-history" title="Payment History" edit=(action (mut showPaymentHistory) false) editLabel="Back"}}
+  {{#nypr-card classNames="nypr-membership-info pledge-history" as |card|}}
+    {{#card.header as |header|}}
+      {{header.title text="Payment History"}}
+      {{header.button
+        class="nypr-card-edit-btn"
+        click=(action (mut showPaymentHistory) false)
+        text=(if showPaymentHistory 'Back' 'Back')}}
+    {{/card.header}}
       {{#each sortedPledges as |pledge|}}
       <div class="pledge-container pledge-history-container">
         <div class="pledge-date">{{moment-format pledge.orderDate 'MMM D, YYYY'}}</div>
