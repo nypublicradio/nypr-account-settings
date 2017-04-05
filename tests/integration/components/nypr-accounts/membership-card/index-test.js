@@ -85,7 +85,7 @@ test('displays sustaining pledge details', function(assert) {
   return wait().then(() => {
     assert.equal(
       this.$('.pledge-order-price').text(),
-      `$${pledges[0].orderPrice}/month`,
+      `$${pledges[0].orderPrice} / month`,
       'displays monthly amount'
     );
     assert.equal(
