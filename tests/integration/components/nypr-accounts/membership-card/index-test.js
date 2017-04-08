@@ -40,7 +40,7 @@ test('it renders', function(assert) {
       this.$().text().trim().match(/Membership Info/),
       'has membership header'
     );
-    assert.ok(this.$('a').text().trim().match(/Help/), 'has help link');
+    assert.ok(this.$('span').text().trim().match(/Help/), 'has help link');
   });
 });
 
@@ -186,6 +186,23 @@ test('displays donation callout for non-members', function(assert) {
     );
   });
   // payment history link does NOT exist
+});
+
+test('clicking help displays modal', function(assert) {
+  let pledges = server.createList('pledge', 0);
+  let pledgePromise = DS.PromiseArray.create({
+    promise: RSVP.Promise.resolve(pledges)
+  });
+  this.set('pledges', pledgePromise);
+  this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
+
+  return wait().then(() => {
+    this.$('.pledge-help-link span').click();
+    assert.ok(
+      this.$().siblings().find('.nypr-account-modal-title').text().trim().match(/Membership Help/),
+      'displays membership modal'
+    );
+  });
 });
 
 // test('displays expiring warning on near-expired membership', function(assert) {
