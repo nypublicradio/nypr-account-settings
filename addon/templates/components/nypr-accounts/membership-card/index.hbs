@@ -15,13 +15,7 @@
     --}}
 
     {{#if pledges.isPending}}
-      <div class="spinner">
-        <div class="rect1"></div>
-        <div class="rect2"></div>
-        <div class="rect3"></div>
-        <div class="rect4"></div>
-        <div class="rect5"></div>
-      </div>
+      {{animated-loading-icon color="#CCC" classNames="membership-loading-animation"}}
     {{/if}}
     {{#if pledges.isFulfilled}}
       <div class="pledge-order-info">
@@ -115,11 +109,11 @@
 {{else}}
   {{#nypr-card classNames="nypr-membership-info pledge-history" as |card|}}
     {{#card.header as |header|}}
-      {{header.title text="Payment History"}}
       {{header.button
-        class="nypr-card-edit-btn"
+        class="nypr-card-edit-btn pledge-payment-history-back-button"
         click=(action (mut showPaymentHistory) false)
         text=(if showPaymentHistory 'Back' 'Back')}}
+      {{header.title text="Payment History" classNames="pledge-history-title"}}
     {{/card.header}}
       {{#each sortedPledges as |pledge|}}
       <div class="pledge-container pledge-history-container">
@@ -129,7 +123,7 @@
           <div class="pledge-premium">{{pledge.premium}}</div>
         </div>
         <div class="pledge-order-price">${{pledge.orderPrice}}</div>
-        <div class="recurring-label">{{if pledge.isSustainer '(recurring)'}}</div>
+        <div class="recurring-label">{{if pledge.isSustainer 'Recurring' 'One-time'}}</div>
       </div>
       {{/each}}
   {{/nypr-card}}
