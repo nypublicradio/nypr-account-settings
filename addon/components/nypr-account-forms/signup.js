@@ -39,31 +39,21 @@ export default Component.extend({
       }
     },
     signupWithFacebook() {
-      this.get('session').authenticate('authenticator:torii', 'facebook-connect')
-      .then(() => {
-        if (this.get('session').get('isNewSocialUser') === true) {
-          // because we clear flash messages when clicking this form,
-          // wait a tick when we add one in an action that can
-          // be triggered with a click
-          next(() => {
-            this.get('flashMessages').add({
-              message: messages.socialAuthSignup,
-              type: 'success',
-              sticky: true,
-            });
-          });
-        }
-      })
-      .catch(() => {
-        next(() => {
-          this.get('flashMessages').add({
-            message: messages.socialAuthCancelled,
-            type: 'warning',
-            sticky: true,
-          });
-        });
-      });
+      get(this, 'session').authenticate('authenticator:torii', 'facebook-connect')
+      .catch(() => this.onFacebookLoginFailure());
     }
+  },
+  onFacebookLoginFailure() {
+    // because we clear flash messages when clicking this form,
+    // wait a tick when we add one in an action that can
+    // be triggered with a click
+    next(() => {
+      this.get('flashMessages').add({
+        message: messages.socialAuthCancelled,
+        type: 'warning',
+        sticky: true,
+      });
+    });
   },
   signUp() {
     return get(this, 'newUser').save();

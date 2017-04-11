@@ -53,30 +53,20 @@ export default Component.extend({
     },
     loginWithFacebook() {
       get(this, 'session').authenticate('authenticator:torii', 'facebook-connect')
-      .then(() => {
-        if (this.get('session').get('isNewSocialUser') === true) {
-          // because we clear flash messages when clicking this form,
-          // wait a tick when we add one in an action that can
-          // be triggered with a click
-          next(() => {
-            this.get('flashMessages').add({
-              message: messages.socialAuthSignup,
-              type: 'success',
-              sticky: true,
-            });
-          });
-        }
-      })
-      .catch(() => {
-        next(() => {
-          this.get('flashMessages').add({
-            message: messages.socialAuthCancelled,
-            type: 'warning',
-            sticky: true,
-          });
-        });
-      });
+      .catch(() => this.onFacebookLoginFailure());
     }
+  },
+  onFacebookLoginFailure() {
+    // because we clear flash messages when clicking this form,
+    // wait a tick when we add one in an action that can
+    // be triggered with a click
+    next(() => {
+      this.get('flashMessages').add({
+        message: messages.socialAuthCancelled,
+        type: 'warning',
+        sticky: true,
+      });
+    });
   },
   authenticate(email, password) {
     return get(this, 'session').authenticate('authenticator:nypr', email, password);
