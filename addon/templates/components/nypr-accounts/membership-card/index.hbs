@@ -79,7 +79,7 @@
 
     <div class="pledge-tools">
       {{#if pledges}}
-      <div class="pledge-payment-history"><span {{action (action (mut showPaymentHistory) (not showPaymentHistory))}}>Payment History</span></div>
+      <div class="pledge-payment-history"><span {{action (action (mut showPaymentHistory) (not showPaymentHistory))}}>Giving History</span></div>
       {{/if}}
       <div class="pledge-help-link"><span {{action (action (mut disableModal) true)}}>Help</span></div>
 
@@ -113,7 +113,7 @@
         class="nypr-card-edit-btn pledge-payment-history-back-button"
         click=(action (mut showPaymentHistory) false)
         text=(if showPaymentHistory 'Back' 'Back')}}
-      {{header.title text="Payment History" classNames="pledge-history-title"}}
+      {{header.title text="Giving History" classNames="pledge-history-title"}}
     {{/card.header}}
       {{#each sortedPledges as |pledge|}}
       <div class="pledge-container pledge-history-container">

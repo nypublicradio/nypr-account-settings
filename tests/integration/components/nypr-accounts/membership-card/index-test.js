@@ -99,8 +99,8 @@ test('displays sustaining pledge details', function(assert) {
       'displays credit card details'
     );
     assert.ok(
-      this.$('span').text().trim().match(/Payment History/),
-      'has payment history link'
+      this.$('span').text().trim().match(/Giving History/),
+      'has giving history link'
     );
   });
 });
@@ -133,8 +133,8 @@ test('displays most recent active pledge details if active onetime member', func
       'donate links to correct sustainer form'
     );
     assert.ok(
-      this.$('span').text().trim().match(/Payment History/),
-      'has payment history link'
+      this.$('span').text().trim().match(/Giving History/),
+      'has giving history link'
     );
   });
 });
