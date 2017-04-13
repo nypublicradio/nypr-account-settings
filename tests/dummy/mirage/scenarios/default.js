@@ -9,5 +9,7 @@ export default function(server) {
 
   // server.createList('post', 10);
   server.create('user');
-  server.createList('pledge', 11);
+  // server.createList('member-status', 2);
+  server.createList('member-status', 2, {membershipStartDate: null});
+  server.createList('pledge', 11, {isActive: false});
 }

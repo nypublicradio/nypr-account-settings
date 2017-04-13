@@ -48,7 +48,7 @@ test('it renders', function(assert) {
 
 test('displays correct number of sustaining pledges', function(assert) {
   let pledges = server.createList('pledge', 8, {
-    isActive: true,
+    isActiveMember: true,
     orderType: 'sustainer'
   });
   let pledgePromise = DS.PromiseArray.create({
@@ -72,7 +72,7 @@ test('displays sustaining pledge details', function(assert) {
   assert.expect(4);
 
   let pledges = server.createList('pledge', 1, {
-    isActive: true,
+    isActiveMember: true,
     orderType: 'sustainer'
   });
   let pledgePromise = DS.PromiseArray.create({
@@ -111,7 +111,7 @@ test('displays most recent active pledge details if active onetime member', func
   assert.expect(3);
 
   let pledges = server.createList('pledge', 1, {
-    isActive: true,
+    isActiveMember: true,
     orderType: 'onetime'
   });
   let pledgePromise = DS.PromiseArray.create({
@@ -142,7 +142,7 @@ test('displays most recent active pledge details if active onetime member', func
 test('displays renewal message if recent member', function(assert) {
   assert.expect(2);
   let pledges = server.createList('pledge', 1, {
-    isActive: false,
+    isActiveMember: false,
     orderType: 'onetime'
   });
   let pledgePromise = DS.PromiseArray.create({

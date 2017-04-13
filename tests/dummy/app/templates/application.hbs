@@ -1,7 +1,10 @@
 <div class="l-gray">
   <div class="l-constrained">
     <div class="nypr-account-settings-header">
-      <h1>Hi {{model.givenName}}!</h1>
+      <h1>Hi {{model.user.givenName}}!</h1>
+      {{#if membershipStartDate}}
+        <h3>Member since {{moment-format membershipStartDate 'MMMM YYYY'}}</h3>
+      {{/if}}
       <h2>Account Settings</h2>
     </div>
     <div class="nypr-account-settings-and-member-center">
@@ -11,7 +14,10 @@
           authenticate=(action authenticate)}}
         {{nypr-accounts/password-card}}
       </div>
-      {{nypr-accounts/membership-card/index pledges=pledges class='nypr-membership-info-body'}}
+      {{nypr-accounts/membership-card/index
+        status=model.membershipStatus
+        pledges=pledges
+        class='nypr-membership-info-body'}}
     </div>
 
   </div>

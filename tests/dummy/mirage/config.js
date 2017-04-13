@@ -50,5 +50,6 @@ export default function() {
       "message": "Incorrect username or password."
     }
   }));
-  this.get('/pledges', {timing: 1000});
+  this.get('/pledges', {timing: 2000});
+  this.get('/member-status');
 }
