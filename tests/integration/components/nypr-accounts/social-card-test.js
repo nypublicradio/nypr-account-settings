@@ -6,20 +6,28 @@ moduleForComponent('nypr-accounts/social-card', 'Integration | Component | nypr 
 });
 
 test('it renders', function(assert) {
-
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-
   this.render(hbs`{{nypr-accounts/social-card}}`);
 
-  assert.equal(this.$().text().trim(), '');
+  assert.equal(this.$('.nypr-social-card__header').length, 1);
+});
 
-  // Template block usage:
+
+test('it yields a connect button', function(assert) {
   this.render(hbs`
-    {{#nypr-accounts/social-card}}
-      template block text
-    {{/nypr-accounts/social-card}}
-  `);
+    {{#nypr-accounts/social-card as |card|}}
+      {{card.connect-button}}
+    {{/nypr-accounts/social-card}}`);
 
-  assert.equal(this.$().text().trim(), 'template block text');
+  assert.equal(this.$('.nypr-social-connect__button').length, 1);
+});
+
+test('it yields three connect buttons', function(assert) {
+  this.render(hbs`
+    {{#nypr-accounts/social-card as |card|}}
+      {{card.connect-button}}
+      {{card.connect-button}}
+      {{card.connect-button}}
+    {{/nypr-accounts/social-card}}`);
+
+  assert.equal(this.$('.nypr-social-connect__button').length, 3);
 });
