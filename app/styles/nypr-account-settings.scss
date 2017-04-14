@@ -262,3 +262,25 @@
     }
   }
 }
+
+.nypr-social-connect__button {
+  @include btn;
+  @include btn--blue;
+  @include btn--strongtext;
+  white-space: nowrap;
+  text-align: center;
+  height: 36px;
+  width: 218px;
+  > .fa {
+    margin-right: 6px;
+    font-size: 19px;
+    vertical-align: text-bottom;
+  }
+}
+.nypr-social-connect__button--facebook {
+  @include btn--facebook;
+  margin-bottom: 14px;
+}
+.nypr-social-connect__link {
+  font-size: 12px;
+}
