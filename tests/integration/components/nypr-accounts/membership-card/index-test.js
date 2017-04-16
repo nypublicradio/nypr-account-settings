@@ -55,6 +55,11 @@ test('displays correct number of sustaining pledges', function(assert) {
     promise: RSVP.Promise.resolve(pledges)
   });
 
+  // Determine number of unique 'funds' in all sustaining donations
+  let allPledgeFunds = [];
+  pledges.forEach(pledge => allPledgeFunds.push(pledge.fund));
+  let uniquePledgeFunds = Array.from(new Set(allPledgeFunds));
+
   this.set('promise', pledgePromise);
 
   this.render(hbs`{{nypr-accounts/membership-card/index pledges=promise}}`);
@@ -62,7 +67,7 @@ test('displays correct number of sustaining pledges', function(assert) {
   return wait().then(() => {
     assert.equal(
       this.$('.pledge-container').length,
-      8,
+      uniquePledgeFunds.length,
       'displays correct num of pledges'
     );
   });

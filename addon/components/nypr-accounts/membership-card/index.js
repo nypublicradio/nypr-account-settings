@@ -25,5 +25,20 @@ export default Ember.Component.extend({
       this.get('activePledges').length === 0
     );
   }),
-  showPaymentHistory: false
+  showPaymentHistory: false,
+  mostRecentSustainingPledgesPerFund: computed(
+    'activeSustainingPledges',
+    function() {
+      let funds = [];
+      let latestPledgesPerFund = [];
+      this.get('activeSustainingPledges').forEach(pledge => {
+        let pledgeFund = pledge.fund || pledge.get('fund');
+        if (!funds.includes(pledgeFund)) {
+          funds.push(pledgeFund);
+          latestPledgesPerFund.push(pledge);
+        }
+      });
+      return latestPledgesPerFund;
+    }
+  )
 });
