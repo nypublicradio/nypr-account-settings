@@ -2,7 +2,9 @@ import layout from '../../templates/components/nypr-account-forms/login';
 import Component from 'ember-component';
 import set from 'ember-metal/set';
 import get from 'ember-metal/get';
+import { next } from 'ember-runloop';
 import computed from 'ember-computed';
+import service from 'ember-service/inject';
 import Changeset from 'ember-changeset';
 import LoginValidations from 'nypr-account-settings/validations/nypr-accounts/login';
 import messages from 'nypr-account-settings/validations/nypr-accounts/custom-messages';
@@ -11,6 +13,7 @@ import lookupValidator from 'ember-changeset-validations';
 export default Component.extend({
   layout,
   messages,
+  flashMessages: service(),
   authAPI: null,
   session: null,
   showSocialLogin: false,
@@ -28,6 +31,9 @@ export default Component.extend({
     });
     set(this, 'changeset', new Changeset(get(this, 'fields'), lookupValidator(LoginValidations), LoginValidations));
     get(this, 'changeset').validate();
+  },
+  click() {
+    get(this, 'flashMessages').clearMessages();
   },
   actions: {
     onSubmit() {
@@ -47,8 +53,20 @@ export default Component.extend({
     },
     loginWithFacebook() {
       get(this, 'session').authenticate('authenticator:torii', 'facebook-connect')
-      .catch(() => {});
+      .catch(() => this.onFacebookLoginFailure());
     }
+  },
+  onFacebookLoginFailure() {
+    // because we clear flash messages when clicking this form,
+    // wait a tick when we add one in an action that can
+    // be triggered with a click
+    next(() => {
+      this.get('flashMessages').add({
+        message: messages.socialAuthCancelled,
+        type: 'warning',
+        sticky: true,
+      });
+    });
   },
   authenticate(email, password) {
     return get(this, 'session').authenticate('authenticator:nypr', email, password);
