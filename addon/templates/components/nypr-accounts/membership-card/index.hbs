@@ -1,8 +1,8 @@
 {{#unless showPaymentHistory}}
-  {{#nypr-card classNames="nypr-membership-info" title="Membership Info" as |card|}}
+  {{#nypr-card classNames="nypr-membership-info" title="Giving History" as |card|}}
 
   {{#card.header as |header|}}
-    {{header.title text="Membership Info"}}
+    {{header.title text="Giving History"}}
   {{/card.header}}
 
     {{!--
@@ -49,8 +49,9 @@
 
         {{else if isLapsedOneTimeMember}}
           <div class="pledge-active-onetime-member">
-            <p class="last-pledge-date">Your {{mostRecentPledge.fund}} membership
-            from your <span class="pledge-date">{{moment-format mostRecentPledge.orderDate 'MMM. D, YYYY'}}</span> donation has lapsed.</p>
+            <p class="last-pledge-date">It looks like you haven’t given since
+              {{moment-format mostRecentPledge.orderDate 'MMM. D, YYYY'}}.  Take
+              a moment to renew your membership right now!</p>
             <a class="pledge-donate-button-link"
                 href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id={{mostRecentPledge.orderKey}}"
                 target="_blank">
@@ -68,7 +69,7 @@
 
         {{else}} {{! i.e. isNonMember }}
           <div class="pledge-non-member">
-            <p class="last-pledge-date">You are not a WNYC member. We rely on listeners like you to produce content, maintain our websites, etc.</p>
+            <p class="last-pledge-date">Our records show you're not a member yet. How about changing that right now, and help pay for all of the great programming you hear on WNYC.</p>
             <a class="pledge-donate-button-link" href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/" target="_blank">
               <p class="pledge-donate-button">Become a member</p>
             </a>
