@@ -19,9 +19,9 @@
     {{/if}}
     {{#if pledges.isFulfilled}}
       <div class="pledge-order-info">
-        {{#if mostRecentSustainingPledgesPerFund}}
+        {{#if mostRecentSustainingPledgesPerOrderCode}}
           <h2 class="active-donations-header">Active Recurring Donations</h2>
-          {{#each mostRecentSustainingPledgesPerFund as |pledge|}}
+          {{#each mostRecentSustainingPledgesPerOrderCode as |pledge|}}
             <div class="pledge-container">
               <div class="pledge-info-container">
                 <div class="pledge-fund-name">

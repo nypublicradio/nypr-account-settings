@@ -26,19 +26,19 @@ export default Ember.Component.extend({
     );
   }),
   showPaymentHistory: false,
-  mostRecentSustainingPledgesPerFund: computed(
+  mostRecentSustainingPledgesPerOrderCode: computed(
     'activeSustainingPledges',
     function() {
-      let funds = [];
-      let latestPledgesPerFund = [];
+      let orderCodes = [];
+      let latestPledgePerOrderCode = [];
       this.get('activeSustainingPledges').forEach(pledge => {
-        let pledgeFund = pledge.fund || pledge.get('fund');
-        if (!funds.includes(pledgeFund)) {
-          funds.push(pledgeFund);
-          latestPledgesPerFund.push(pledge);
+        let pledgeOrderCode = Ember.get(pledge, 'orderCode');
+        if (!orderCodes.includes(pledgeOrderCode)) {
+          orderCodes.push(pledgeOrderCode);
+          latestPledgePerOrderCode.push(pledge);
         }
       });
-      return latestPledgesPerFund;
+      return latestPledgePerOrderCode;
     }
   )
 });
