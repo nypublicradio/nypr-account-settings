@@ -7,6 +7,8 @@ export default Ember.Component.extend({
   layout,
   orderDateSorting: ['orderDate:desc'],
   sortedPledges: computed.sort('pledges', 'orderDateSorting'),
+  sortedSustainingPledges: computed.filterBy('sortedPledges', 'orderType', 'sustainer'),
+  sortedOneTimePledges: computed.filterBy('sortedPledges', 'orderType', 'onetime'),
   mostRecentPledge: computed.reads('sortedPledges.firstObject'),
   activePledges: computed.filterBy('sortedPledges', 'isActiveMember', true),
   activeSustainingPledges: computed.filterBy(
