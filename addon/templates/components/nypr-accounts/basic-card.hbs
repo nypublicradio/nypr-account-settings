@@ -7,7 +7,8 @@
       click=(action 'toggleEdit')
       text=(if isEditing 'Cancel' 'Edit')}}
   {{/card.header}}
-  
+
+  <form disabled={{not isEditing}} {{action 'save' changeset on='submit'}}>
   {{#unless isEditing}}
     {{nypr-input
       label='Name'
@@ -69,19 +70,22 @@
       <button
         class="nypr-account-cancel"
         data-test-selector="rollback"
+        type="button"
         {{action 'rollback' changeset}}>Cancel</button>
 
       <button
         class="nypr-account-confirm"
         data-test-selector="save"
-        {{action 'save' changeset}}>Save</button>
+        type="submit">Save</button>
     </div>
   </div>
   {{/if}}
+  </form>
 {{/nypr-card}}
 
 {{#if isShowingModal}}
   {{#nypr-account-modal title="Re-enter Your Password" closeAction=(action 'closeModal') as |m|}}
+    <form {{action 'verifyPassword' on='submit'}}>
     {{#m.body}}
     <p>
       You must re-enter your password to make changes to your email. The email you are changing is the one you use to log into the site.
@@ -103,7 +107,8 @@
       <button
         class="nypr-account-confirm"
         data-test-selector="check-pw"
-        {{action 'verifyPassword'}}>Submit</button>
+        >Submit</button>
     {{/m.footer}}
+    </form>
   {{/nypr-account-modal}}
 {{/if}}
