@@ -16,5 +16,7 @@ export default {
   emailNotFound:         email => `we can't find an account for the email ${email}. <a href="/signup">Sign up?</a>`,
   publicHandleRequired:  'public handle cannot be blank',
   publicHandleExists:    'public handle already exists',
+  emailExists:           'an account with this email address already exists',
+  genericVerificationError: 'There was a problem verifying your email address. Please try again later.',
   socialAuthCancelled:   "We're sorry, but we weren't able to log you in through Facebook.",
 };

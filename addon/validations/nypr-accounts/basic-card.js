@@ -37,6 +37,11 @@ export default function({usernamePath}) {
       presence: true,
         message: messages.emailRequired
       }),
+      validateRemote({
+        path: `${usernamePath}/v1/user/exists-by-attribute`,
+        filterKey: 'email',
+        message: messages.emailExists
+      }),
       validateFormat({ type: 'email', allowBlank: true, message: messages.emailFormat }),
     ],
     confirmEmail: validateConfirmation({ on: 'email', message: messages.emailConfirmation })
