@@ -198,9 +198,12 @@ test('changes to fields are not persisted after a rollback using toggleEdit', fu
 
 
 test('can update non-email attrs', function(assert) {
+  let done = assert.async();
+  assert.expect(4);
   const FIRST_NAME = 'john';
   const LAST_NAME = 'doe';
   const USERNAME = 'johndoe';
+  let notEditing = () => this.$('input').length === 3;
 
   this.set('user', userFields());
   this.render(hbs`{{nypr-accounts/basic-card
@@ -216,13 +219,15 @@ test('can update non-email attrs', function(assert) {
   this.$('input[name=preferredUsername]').blur();
   wait().then(() => {
     this.$('button[data-test-selector=save]').click();
+    registerWaiter(this, notEditing);
   });
   wait().then(() => {
-    assert.equal(this.$('input'), 3, 'should see 3 fields');
-    assert.ok(this.$('input').get().every(i => i.disabled), 'all inputs should be disabled');
-
+    unregisterWaiter(this, notEditing);
+    assert.equal(this.$('input').length, 3, 'should see 3 fields');
+    assert.strictEqual(this.$('input:not([disabled])').length, 0, 'all inputs should be disabled');
     assert.equal(this.$('input[name=fullName]').val(), `${FIRST_NAME} ${LAST_NAME}`, 'displays new fullname');
     assert.equal(this.$('input[name=preferredUsername]').val(), USERNAME, 'displays new username');
+    done();
   });
   return wait();
 });
@@ -436,7 +441,7 @@ test('can update them all', function(assert) {
   wait().then(() => {
     unregisterWaiter(this, formIsDisabled);
     assert.equal(this.$('input').length, 3, 'should see 3 fields');
-    assert.ok(this.$('input').get().every(i => i.disabled), 'all inputs should be disabled');
+    assert.strictEqual(this.$('input:not([disabled])').length, 0, 'all inputs should be disabled');
     assert.equal(this.$('input[name=fullName]').val(), `${FIRST_NAME} ${LAST_NAME}`, 'displays new fullname');
     assert.equal(this.$('input[name=preferredUsername]').val(), USERNAME, 'displays new username');
     assert.equal(this.$('input[name=email]').val(), EMAIL, 'displays new email');
