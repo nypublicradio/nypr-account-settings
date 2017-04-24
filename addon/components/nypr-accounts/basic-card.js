@@ -31,6 +31,10 @@ export default Component.extend({
     let newName = get(this, 'preferredUsername');
     debounce(this, prefName => set(this, 'changeset.preferredUsername', prefName), newName, 150);
   }),
+  emailObserver: observer('email', function() {
+    let newName = get(this, 'email');
+    debounce(this, prefName => set(this, 'changeset.preferredUsername', prefName), newName, 150);
+  }),
 
   init() {
     this._super(...arguments);
