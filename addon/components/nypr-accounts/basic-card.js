@@ -180,6 +180,9 @@ export default Component.extend({
       }
     },
     closeModal() {
+      if (this.isDestroyed || this.isDestroying) {
+        return;
+      }
       get(this, 'rejectModal')();
       this.setProperties({
         resolveModal: null,
