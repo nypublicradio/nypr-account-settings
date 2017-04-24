@@ -6,7 +6,6 @@ import rsvp from 'rsvp';
 import observer from 'ember-metal/observer';
 import Test from 'ember-test';
 const { Promise } = rsvp;
-const { registerWaiter, unregisterWaiter } = Test;
 
 moduleForComponent('nypr-accounts/basic-card', 'Integration | Component | nypr-accounts/basic card', {
   integration: true,
@@ -103,9 +102,9 @@ test('displays error states', function(assert) {
   this.$('input[name=email]').blur();
 
   // wait for confirmation field
-  registerWaiter(this, confirmEmailIsVisible);
+  Test.registerWaiter(this, confirmEmailIsVisible);
   wait().then(() => {
-    unregisterWaiter(this, confirmEmailIsVisible);
+    Test.unregisterWaiter(this, confirmEmailIsVisible);
     this.$('input[name=confirmEmail]').blur();
     this.$('button[data-test-selector=save]').click();
     assert.equal(this.$('.nypr-input-error').length, 5); // 5 fields including confirmEmail
@@ -219,10 +218,10 @@ test('can update non-email attrs', function(assert) {
   this.$('input[name=preferredUsername]').blur();
   wait().then(() => {
     this.$('button[data-test-selector=save]').click();
-    registerWaiter(this, notEditing);
+    Test.registerWaiter(this, notEditing);
   });
   wait().then(() => {
-    unregisterWaiter(this, notEditing);
+    Test.unregisterWaiter(this, notEditing);
     assert.equal(this.$('input').length, 3, 'should see 3 fields');
     assert.strictEqual(this.$('input:not([disabled])').length, 0, 'all inputs should be disabled');
     assert.equal(this.$('input[name=fullName]').val(), `${FIRST_NAME} ${LAST_NAME}`, 'displays new fullname');
@@ -262,18 +261,18 @@ test('resets email value if emailRequirement is rejected', function(assert) {
   this.$('input[name=familyName]').blur();
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').blur();
-  registerWaiter(this, confirmEmailIsVisible);
+  Test.registerWaiter(this, confirmEmailIsVisible);
   wait().then(() => {
-    unregisterWaiter(this, confirmEmailIsVisible);
+    Test.unregisterWaiter(this, confirmEmailIsVisible);
     this.$('input[name=confirmEmail]').val(EMAIL);
     this.$('input[name=confirmEmail]').blur();
   });
   wait().then(() => {
     this.$('[data-test-selector=save]').click();
-    registerWaiter(this, confirmEmailIsHidden);
+    Test.registerWaiter(this, confirmEmailIsHidden);
   });
   wait().then(() => {
-    unregisterWaiter(this, confirmEmailIsHidden);
+    Test.unregisterWaiter(this, confirmEmailIsHidden);
     assert.equal(this.$('input[name=email]').val(), OLD_EMAIL, 'displays old email');
     assert.equal(this.$('input[name=givenName]').val(), FIRST_NAME, 'first name still updated value');
     assert.equal(this.$('input[name=familyName]').val(), LAST_NAME, 'last name still updated value');
@@ -307,18 +306,18 @@ test('can update email', function(assert) {
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').blur();
 
-  registerWaiter(this, confirmEmailIsVisible);
+  Test.registerWaiter(this, confirmEmailIsVisible);
   wait().then(() => {
-    unregisterWaiter(this, confirmEmailIsVisible);
+    Test.unregisterWaiter(this, confirmEmailIsVisible);
     this.$('input[name=confirmEmail]').val(EMAIL);
     this.$('input[name=confirmEmail]').blur();
   });
   wait().then(() => {
     this.$('[data-test-selector=save]').click();
-    registerWaiter(this, modalIsVisible);
+    Test.registerWaiter(this, modalIsVisible);
   });
   wait().then(() => {
-    unregisterWaiter(this, modalIsVisible);
+    Test.unregisterWaiter(this, modalIsVisible);
     let modal = this.$().siblings('.ember-modal-wrapper');
     modal
       .find('input')
@@ -327,10 +326,10 @@ test('can update email', function(assert) {
     modal
       .find('[data-test-selector=check-pw]')
       .click();
-    registerWaiter(this, modalIsHidden);
+    Test.registerWaiter(this, modalIsHidden);
   });
   wait().then(() => {
-    unregisterWaiter(this, modalIsHidden);
+    Test.unregisterWaiter(this, modalIsHidden);
     assert.equal(this.$('input[name=email]').val(), EMAIL, 'displays new email');
     done();
   });
@@ -366,18 +365,18 @@ test('shows an error message if password is rejected', function(assert) {
 
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').blur();
-  registerWaiter(this, confirmEmailIsVisible);
+  Test.registerWaiter(this, confirmEmailIsVisible);
   wait().then(() => {
-    unregisterWaiter(this, confirmEmailIsVisible);
+    Test.unregisterWaiter(this, confirmEmailIsVisible);
     this.$('input[name=confirmEmail]').val(EMAIL);
     this.$('input[name=confirmEmail]').blur();
   });
   wait().then(() => {
     this.$('[data-test-selector=save]').click();
-    registerWaiter(this, modalIsVisible);
+    Test.registerWaiter(this, modalIsVisible);
   });
   wait().then(() => {
-    unregisterWaiter(this, modalIsVisible);
+    Test.unregisterWaiter(this, modalIsVisible);
     this.$().siblings('.ember-modal-wrapper').find('input[name=passwordForEmailChange]').val(BAD_PW);
     this.$().siblings('.ember-modal-wrapper').find('input[name=passwordForEmailChange]').blur();
     this.$().siblings('.ember-modal-wrapper').find('[data-test-selector="check-pw"]').click();
@@ -427,19 +426,19 @@ test('can update them all', function(assert) {
     this.$('input[name=preferredUsername]').blur();
     this.$('input[name=email]').val(EMAIL);
     this.$('input[name=email]').blur();
-    registerWaiter(this, confirmEmailIsVisible);
+    Test.registerWaiter(this, confirmEmailIsVisible);
   });
   wait().then(() => {
-    unregisterWaiter(this, confirmEmailIsVisible);
+    Test.unregisterWaiter(this, confirmEmailIsVisible);
     this.$('input[name=confirmEmail]').val(EMAIL);
     this.$('input[name=confirmEmail]').blur();
   });
   wait().then(() => {
     this.$('button[data-test-selector=save]').click();
-    registerWaiter(this, formIsDisabled);
+    Test.registerWaiter(this, formIsDisabled);
   });
   wait().then(() => {
-    unregisterWaiter(this, formIsDisabled);
+    Test.unregisterWaiter(this, formIsDisabled);
     assert.equal(this.$('input').length, 3, 'should see 3 fields');
     assert.strictEqual(this.$('input:not([disabled])').length, 0, 'all inputs should be disabled');
     assert.equal(this.$('input[name=fullName]').val(), `${FIRST_NAME} ${LAST_NAME}`, 'displays new fullname');
