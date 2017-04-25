@@ -106,6 +106,8 @@ test('displays error states', function(assert) {
   wait().then(() => {
     Test.unregisterWaiter(this, confirmEmailIsVisible);
     this.$('input[name=confirmEmail]').blur();
+  });
+  wait().then(() => {
     this.$('button[data-test-selector=save]').click();
     assert.equal(this.$('.nypr-input-error').length, 5); // 5 fields including confirmEmail
     keys(userFields()).forEach(name => {
