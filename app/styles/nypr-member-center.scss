@@ -19,7 +19,7 @@
 .nypr-account-settings-body,
 .nypr-membership-info-body {
   @include flex-grow(1);
-  @include flex-shrink(0);
+  @include flex-shrink(1);
   @include flex-basis(480px);
 
   padding: 0.5rem;
@@ -38,7 +38,7 @@
 }
 
 .pledge-update-link {
-  @include flex(0 0 100px);
+  @include flex(0 1 100px);
 }
 
 .pledge-info,
@@ -73,6 +73,12 @@
 .pledge-help-link
 {
   cursor: pointer;
+}
+
+.active-donations-header {
+    margin-top: 14px;
+    margin-bottom: 10px;
+    font-weight: 400;
 }
 
 .active-donations-header,
