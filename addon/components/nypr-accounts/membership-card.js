@@ -2,7 +2,7 @@ import Ember from 'ember';
 import computed from 'ember-computed';
 import { getCookie }  from 'nypr-account-settings/utils/cookies';
 import layout
-  from '../../../templates/components/nypr-accounts/membership-card';
+  from '../../templates/components/nypr-accounts/membership-card';
 
 export default Ember.Component.extend({
   layout,

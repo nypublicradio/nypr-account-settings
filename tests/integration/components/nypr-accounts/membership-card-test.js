@@ -33,7 +33,7 @@ test('it renders', function(assert) {
   });
   this.set('pledges', pledgePromise);
 
-  this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
+  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
 
   return wait().then(() => {
     assert.ok(
@@ -62,7 +62,7 @@ test('displays correct number of sustaining pledges', function(assert) {
 
   this.set('promise', pledgePromise);
 
-  this.render(hbs`{{nypr-accounts/membership-card/index pledges=promise}}`);
+  this.render(hbs`{{nypr-accounts/membership-card pledges=promise}}`);
 
   return wait().then(() => {
     assert.equal(
@@ -85,7 +85,7 @@ test('displays sustaining pledge details', function(assert) {
   });
   this.set('pledges', pledgePromise);
 
-  this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
+  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
 
   return wait().then(() => {
     assert.equal(
@@ -124,7 +124,7 @@ test('displays most recent active pledge details if active onetime member', func
   });
   this.set('pledges', pledgePromise);
 
-  this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
+  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
 
   return wait().then(() => {
     assert.equal(
@@ -154,7 +154,7 @@ test('displays renewal message if recent member', function(assert) {
     promise: RSVP.Promise.resolve(pledges)
   });
   this.set('pledges', pledgePromise);
-  this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
+  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
 
   return wait().then(() => {
     assert.equal(
@@ -176,7 +176,7 @@ test('displays donation callout for non-members', function(assert) {
     promise: RSVP.Promise.resolve(pledges)
   });
   this.set('pledges', pledgePromise);
-  this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
+  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
 
   return wait().then(() => {
     assert.equal(
@@ -199,7 +199,7 @@ test('clicking help displays modal', function(assert) {
     promise: RSVP.Promise.resolve(pledges)
   });
   this.set('pledges', pledgePromise);
-  this.render(hbs`{{nypr-accounts/membership-card/index pledges=pledges}}`);
+  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
 
   return wait().then(() => {
     this.$('.pledge-help-link span').click();
