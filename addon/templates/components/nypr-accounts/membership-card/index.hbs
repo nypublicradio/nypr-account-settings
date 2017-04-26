@@ -19,6 +19,11 @@
     {{/if}}
     {{#if pledges.isFulfilled}}
       <div class="pledge-order-info">
+        {{#if hasMadeRecentPledge}}
+          {{#nypr-notification}}
+            <span>It looks like you have made a new donation or updated an existing donation. It can take up to 4 days for changes to be reflected below.</span>
+          {{/nypr-notification}}
+        {{/if}}
         {{#if mostRecentSustainingPledgesPerOrderCode}}
           <h2 class="active-donations-header">Active Recurring Donations</h2>
           {{#each mostRecentSustainingPledgesPerOrderCode as |pledge|}}
@@ -87,26 +92,6 @@
     </div>
   {{/nypr-card}}
 
-  {{#if disableModal}}
-    {{#nypr-account-modal title="Membership Help" closeAction=(action (mut disableModal) false) as |m|}}
-      {{#m.body}}
-      <p>
-        If you've donated but don't see your donation info here, it may be because you've donated with a different email. You can change your donation email in your Personal Info section.
-      </p>
-      <p>
-        Other questions: <a href="/support/faq/">Check out our FAQs</a><br/>
-        Or contact us: <a href="/contact">wnyc.org/contact</a> or 646-829-4000
-      </p>
-      {{/m.body}}
-      {{#m.footer}}
-        <button
-          class="nypr-account-confirm"
-          data-test-selector="confirm-disable"
-          {{action (action (mut disableModal) false)}}>Got it!</button>
-      {{/m.footer}}
-    {{/nypr-account-modal}}
-  {{/if}}
-
 {{else}}
   {{#nypr-card classNames="nypr-membership-info pledge-history" as |card|}}
     {{#card.header as |header|}}
@@ -117,40 +102,63 @@
       {{header.title text="Giving History" classNames="pledge-history-title"}}
     {{/card.header}}
     {{#nypr-tabs selection=selection as |tabs|}}
-    {{#tabs.tablist as |tablist|}}
-      {{#tablist.tab "TabA" on-select=(action (mut selection))}}Sustaining donations{{/tablist.tab}}
-      {{#tablist.tab "TabB" on-select=(action (mut selection))}}One-time donations{{/tablist.tab}}
-    {{/tabs.tablist}}
+      {{#tabs.tablist as |tablist|}}
+        {{#tablist.tab "TabA" on-select=(action (mut selection))}}Sustaining donations{{/tablist.tab}}
+        {{#tablist.tab "TabB" on-select=(action (mut selection))}}One-time donations{{/tablist.tab}}
+      {{/tabs.tablist}}
 
-    {{#tabs.tabpanel "TabA"}}
-      {{#each sortedSustainingPledges as |pledge|}}
-      <div class="pledge-container pledge-history-container">
-        <div class="pledge-date">{{moment-format pledge.orderDate 'MMM D, YYYY'}}</div>
-        <div class="pledge-fund-and-premium">
-          <div>{{pledge.fund}}</div>
-          <div class="pledge-premium">{{pledge.premium}}</div>
+      {{#tabs.tabpanel "TabA"}}
+        {{#each sortedSustainingPledges as |pledge|}}
+        <div class="pledge-container pledge-history-container">
+          <div class="pledge-date">{{moment-format pledge.orderDate 'MMM D, YYYY'}}</div>
+          <div class="pledge-fund-and-premium">
+            <div>{{pledge.fund}}</div>
+            <div class="pledge-premium">{{pledge.premium}}</div>
+          </div>
+          <div class="pledge-order-price">${{pledge.orderPrice}}</div>
+          <div class="recurring-label">{{if pledge.isSustainer 'Sustaining' 'One-time'}}</div>
         </div>
-        <div class="pledge-order-price">${{pledge.orderPrice}}</div>
-        <div class="recurring-label">{{if pledge.isSustainer 'Sustaining' 'One-time'}}</div>
-      </div>
-      {{/each}}
-    {{/tabs.tabpanel}}
+        {{/each}}
+      {{/tabs.tabpanel}}
 
-    {{#tabs.tabpanel "TabB"}}
-      {{#each sortedOneTimePledges as |pledge|}}
-      <div class="pledge-container pledge-history-container">
-        <div class="pledge-date">{{moment-format pledge.orderDate 'MMM D, YYYY'}}</div>
-        <div class="pledge-fund-and-premium">
-          <div>{{pledge.fund}}</div>
-          <div class="pledge-premium">{{pledge.premium}}</div>
+      {{#tabs.tabpanel "TabB"}}
+        {{#each sortedOneTimePledges as |pledge|}}
+        <div class="pledge-container pledge-history-container">
+          <div class="pledge-date">{{moment-format pledge.orderDate 'MMM D, YYYY'}}</div>
+          <div class="pledge-fund-and-premium">
+            <div>{{pledge.fund}}</div>
+            <div class="pledge-premium">{{pledge.premium}}</div>
+          </div>
+          <div class="pledge-order-price">${{pledge.orderPrice}}</div>
+          <div class="recurring-label">{{if pledge.isSustainer 'Sustaining' 'One-time'}}</div>
         </div>
-        <div class="pledge-order-price">${{pledge.orderPrice}}</div>
-        <div class="recurring-label">{{if pledge.isSustainer 'Sustaining' 'One-time'}}</div>
-      </div>
-      {{/each}}
-    {{/tabs.tabpanel}}
+        {{/each}}
+      {{/tabs.tabpanel}}
 
     {{/nypr-tabs}}
+    <div class="pledge-tools">
+      <div class="pledge-help-link"><span {{action (action (mut disableModal) true)}}>Help</span></div>
+    </div>
 
   {{/nypr-card}}
 {{/unless}}
+
+{{#if disableModal}}
+  {{#nypr-account-modal title="Membership Help" closeAction=(action (mut disableModal) false) as |m|}}
+    {{#m.body}}
+    <p>
+      If you've donated but don't see your donation info here, it may be because you've donated with a different email. You can change your donation email in your Personal Info section.
+    </p>
+    <p>
+      Other questions: <a href="/support/faq/">Check out our FAQs</a><br/>
+      Or contact us: <a href="/contact">wnyc.org/contact</a> or 646-829-4000
+    </p>
+    {{/m.body}}
+    {{#m.footer}}
+      <button
+        class="nypr-account-confirm"
+        data-test-selector="confirm-disable"
+        {{action (action (mut disableModal) false)}}>Got it!</button>
+    {{/m.footer}}
+  {{/nypr-account-modal}}
+{{/if}}
