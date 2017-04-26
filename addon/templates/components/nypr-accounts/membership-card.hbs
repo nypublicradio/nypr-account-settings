@@ -1,9 +1,9 @@
 {{#unless showPaymentHistory}}
   {{#nypr-card classNames="nypr-membership-info" title="Membership Info" as |card|}}
 
-  {{#card.header as |header|}}
-    {{header.title text="Membership Info"}}
-  {{/card.header}}
+    {{#card.header as |header|}}
+      {{header.title text="Membership Info"}}
+    {{/card.header}}
 
     {{!--
     Possible user states to handle:
@@ -17,14 +17,17 @@
     {{#if pledges.isPending}}
       {{animated-loading-icon color="#CCC" classNames="membership-loading-animation"}}
     {{/if}}
+
     {{#if pledges.isFulfilled}}
       <div class="pledge-order-info">
+
         {{#if hasMadeRecentPledge}}
           {{#nypr-notification}}
             <span>It looks like you have made a new donation or updated an existing donation. It can take up to 4 days for changes to be reflected below.</span>
           {{/nypr-notification}}
         {{/if}}
-        {{#if mostRecentSustainingPledgesPerOrderCode}}
+
+        {{#if activeSustainingPledges}}
           <h2 class="active-donations-header">Active Recurring Donations</h2>
           {{#each mostRecentSustainingPledgesPerOrderCode as |pledge|}}
             <div class="pledge-container">
@@ -52,6 +55,14 @@
             </a>
           </div>
 
+        {{else if isLapsedSustainer}}
+          <div class="pledge-lapsed-sustainer">
+            <p class="last-pledge-date">Your sustaining donations have expired.</p>
+            <a class="pledge-donate-button-link" href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/" target="_blank">
+              <p class="pledge-donate-button">Become a member</p>
+            </a>
+          </div>
+
         {{else if isLapsedOneTimeMember}}
           <div class="pledge-active-onetime-member">
             <p class="last-pledge-date">It looks like you haven’t given since
@@ -61,14 +72,6 @@
                 href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id={{mostRecentPledge.orderKey}}"
                 target="_blank">
               <p class="pledge-donate-button">Donate to renew</p>
-            </a>
-          </div>
-
-        {{else if isLapsedSustainer}}
-          <div class="pledge-lapsed-sustainer">
-            <p class="last-pledge-date">Your sustaining donations have expired.</p>
-            <a class="pledge-donate-button-link" href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/" target="_blank">
-              <p class="pledge-donate-button">Become a member</p>
             </a>
           </div>
 
@@ -87,7 +90,7 @@
       {{#if pledges}}
       <div class="pledge-payment-history"><span {{action (action (mut showPaymentHistory) (not showPaymentHistory))}}>Giving History</span></div>
       {{/if}}
-      <div class="pledge-help-link"><span {{action (action (mut disableModal) true)}}>Help</span></div>
+      <div class="pledge-help-link"><span {{action (action (mut enableModal) true)}}>Help</span></div>
 
     </div>
   {{/nypr-card}}
@@ -137,14 +140,14 @@
 
     {{/nypr-tabs}}
     <div class="pledge-tools">
-      <div class="pledge-help-link"><span {{action (action (mut disableModal) true)}}>Help</span></div>
+      <div class="pledge-help-link"><span {{action (action (mut enableModal) true)}}>Help</span></div>
     </div>
 
   {{/nypr-card}}
 {{/unless}}
 
-{{#if disableModal}}
-  {{#nypr-account-modal title="Membership Help" closeAction=(action (mut disableModal) false) as |m|}}
+{{#if enableModal}}
+  {{#nypr-account-modal title="Membership Help" closeAction=(action (mut enableModal) false) as |m|}}
     {{#m.body}}
     <p>
       If you've donated but don't see your donation info here, it may be because you've donated with a different email. You can change your donation email in your Personal Info section.
@@ -158,7 +161,7 @@
       <button
         class="nypr-account-confirm"
         data-test-selector="confirm-disable"
-        {{action (action (mut disableModal) false)}}>Got it!</button>
+        {{action (action (mut enableModal) false)}}>Got it!</button>
     {{/m.footer}}
   {{/nypr-account-modal}}
 {{/if}}
