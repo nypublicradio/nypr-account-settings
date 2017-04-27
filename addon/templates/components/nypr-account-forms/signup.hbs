@@ -7,7 +7,7 @@
   as |form|
 }}
   {{#if form.status.success}}
-    {{nypr-account-forms/thanks email=changeset.email}}
+    {{nypr-account-forms/thanks email=changeset.email authAPI=authAPI}}
   {{else}}
 
   <h2 class="account-form-heading">Sign up for an account</h2>
