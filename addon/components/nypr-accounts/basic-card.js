@@ -45,10 +45,11 @@ export default Component.extend({
     let changeset = new Changeset(user, lookupValidator(validations), validations);
     this.changeset = changeset;
 
-    // provide a temporary binding for preferred username on the template
+    // provide a temporary binding for preferred username and email on the template
     // so we can do remote async validations before setting to the
     // changeset
     this.preferredUsername = get(user, 'preferredUsername');
+    this.email = get(user, 'email');
   },
 
   onEmailChange() {
