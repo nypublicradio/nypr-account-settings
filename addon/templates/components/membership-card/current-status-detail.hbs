@@ -1,0 +1,65 @@
+<div class="pledge-order-info">
+
+{{#if hasMadeRecentPledge}}
+  {{#nypr-notification}}
+    <span>It looks like you have made a new donation or updated an existing donation. It can take up to 4 days for changes to be reflected below.</span>
+  {{/nypr-notification}}
+{{/if}}
+
+{{!--
+Possible user states to handle:
+1. Active sustaining pledge (activeSustainingPledges)
+2. Active one-time pledge, e.g. donated within last year (activeOneTimePledges)
+3. Expired/declined sustaining pledge (isLapsedSustainer)
+4. Expired/lapsed one-time pledge (isLapsedOneTimeMember)
+5. Never pledged (isNonMember)
+--}}
+
+{{#if activeSustainingPledges}}
+  <h2 class="active-donations-header">Active Recurring Donations</h2>
+  {{#each mostRecentSustainingPledgesPerOrderCode as |pledge|}}
+    <div class="pledge-container">
+      <div class="pledge-info-container">
+        <div class="pledge-fund-name">
+          <div class="pledge-fund">{{pledge.fund}}</div>
+        </div>
+        <div class="pledge-info">
+          <div class="pledge-order-price">${{pledge.orderPrice}}{{if pledge.isSustainer ' / month' }}</div>
+          <div class="pledge-hyphen-separator">-</div>
+          <div class="pledge-order-cc-type">{{pledge.creditCardType}} {{pledge.creditCardLast4Digits}}</div>
+        </div>
+      </div>
+      <div class="pledge-update-link">
+        <a href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/sustainer?order_id={{pledge.orderKey}}">Update</a>
+      </div>
+    </div>
+  {{/each}}
+
+{{else if activeOneTimePledges}}
+  <div class="pledge-active-onetime-member">
+    <p class="last-pledge-date">You last donated on <span class="pledge-date">{{moment-format mostRecentPledge.orderDate 'MMMM D, YYYY'}}</span>.</p>
+    {{#membership-card/donation-button orderKey=mostRecentPledge.orderKey}}Make another donation{{/membership-card/donation-button}}
+  </div>
+
+{{else if isLapsedSustainer}}
+  <div class="pledge-lapsed-sustainer">
+    <p class="last-pledge-date">Your sustaining donations have expired.</p>
+    {{#membership-card/donation-button}}Become a member{{/membership-card/donation-button}}
+  </div>
+
+{{else if isLapsedOneTimeMember}}
+  <div class="pledge-active-onetime-member">
+    <p class="last-pledge-date">It looks like you haven’t given since {{moment-format mostRecentPledge.orderDate 'MMM. D, YYYY'}}.  Take a moment to renew your membership right now!</p>
+    {{#membership-card/donation-button orderKey=mostRecentPledge.orderKey}}Donate to renew{{/membership-card/donation-button}}
+  </div>
+
+{{else}} {{! i.e. isNonMember }}
+  <div class="pledge-non-member">
+    <p class="last-pledge-date">Our records show you're not a member yet. How about changing that right now, and help pay for all of the great programming you hear on WNYC.</p>
+    <a class="pledge-donate-button-link" href="https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/" target="_blank">
+      <p class="pledge-donate-button">Become a member</p>
+    </a>
+  </div>
+{{/if}}
+
+</div>
