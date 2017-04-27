@@ -1,0 +1,39 @@
+  {{#nypr-tabs selection=selection as |tabs|}}
+    {{#tabs.tablist as |tablist|}}
+      {{#tablist.tab "TabA" on-select=(action (mut selection))}}Sustaining donations{{/tablist.tab}}
+      {{#tablist.tab "TabB" on-select=(action (mut selection))}}One-time donations{{/tablist.tab}}
+    {{/tabs.tablist}}
+
+    {{#tabs.tabpanel "TabA"}}
+      {{#each sortedSustainingPledges as |pledge|}}
+      <div class="pledge-container pledge-history-container">
+        <div class="pledge-date">{{moment-format pledge.orderDate 'MMM D, YYYY'}}</div>
+        <div class="pledge-fund-and-premium">
+          <div>{{pledge.fund}}</div>
+          <div class="pledge-premium">{{pledge.premium}}</div>
+        </div>
+        <div class="pledge-order-price">${{pledge.orderPrice}}</div>
+        <div class="recurring-label">{{if pledge.isSustainer 'Sustaining' 'One-time'}}</div>
+      </div>
+      {{/each}}
+    {{/tabs.tabpanel}}
+
+    {{#tabs.tabpanel "TabB"}}
+      {{#each sortedOneTimePledges as |pledge|}}
+      <div class="pledge-container pledge-history-container">
+        <div class="pledge-date">{{moment-format pledge.orderDate 'MMM D, YYYY'}}</div>
+        <div class="pledge-fund-and-premium">
+          <div>{{pledge.fund}}</div>
+          <div class="pledge-premium">{{pledge.premium}}</div>
+        </div>
+        <div class="pledge-order-price">${{pledge.orderPrice}}</div>
+        <div class="recurring-label">{{if pledge.isSustainer 'Sustaining' 'One-time'}}</div>
+      </div>
+      {{/each}}
+    {{/tabs.tabpanel}}
+
+  {{/nypr-tabs}}
+
+  <div class="pledge-tools">
+    <div class="pledge-help-link"><span {{action (action (mut enableModal) true)}}>Help</span></div>
+  </div>

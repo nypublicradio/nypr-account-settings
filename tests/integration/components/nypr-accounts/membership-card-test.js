@@ -5,6 +5,8 @@ import hbs from 'htmlbars-inline-precompile';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 import moment from 'moment';
 import RSVP from 'rsvp';
+import testSelector from 'ember-test-selectors';
+
 
 moduleForComponent(
   'nypr-accounts/membership-card',
@@ -104,7 +106,7 @@ test('displays sustaining pledge details', function(assert) {
       'displays credit card details'
     );
     assert.ok(
-      this.$('span').text().trim().match(/Giving History/),
+      this.$(testSelector('giving-history-button')).text().trim().match(/Giving History/),
       'has giving history link'
     );
   });

@@ -1,8 +1,6 @@
-{{#unless showPaymentHistory}}
-  {{#nypr-card classNames="nypr-membership-info" title="Membership Info" as |card|}}
-    {{#card.header as |header|}}
-      {{header.title text="Membership Info"}}
-    {{/card.header}}
+{{#nypr-multi-card as |m|}}
+  {{#m.panel to=1 classNames="nypr-membership-info" title="Membership Info" as |card|}}
+    {{card.header title="Membership Info"}}
 
     {{#if pledges.isPending}}
       {{animated-loading-icon color="#CCC" classNames="membership-loading-animation"}}
@@ -14,64 +12,24 @@
 
     <div class="pledge-tools">
       {{#if pledges}}
-      <div class="pledge-payment-history"><span {{action (action (mut showPaymentHistory) (not showPaymentHistory))}}>Giving History</span></div>
+      {{#card.button}}
+        <span data-test-giving-history-button>Giving History</span>
+      {{/card.button}}
       {{/if}}
       <div class="pledge-help-link"><span {{action (action (mut enableModal) true)}}>Help</span></div>
-
     </div>
-  {{/nypr-card}}
+  {{/m.panel}}
 
-{{else}}
-  {{#nypr-card classNames="nypr-membership-info pledge-history" as |card|}}
+  {{#m.panel to=0 title="Giving History" as |card|}}
     {{#card.header as |header|}}
-      {{header.button
-        class="nypr-card-edit-btn pledge-payment-history-back-button"
-        click=(action (mut showPaymentHistory) false)
-        text=(if showPaymentHistory 'Back' 'Back')}}
-      {{header.title text="Giving History" classNames="pledge-history-title"}}
+      {{card.button text="Back" class="nypr-card-edit-btn pledge-payment-history-back-button"}}
+      {{header.title}}
     {{/card.header}}
-    {{#nypr-tabs selection=selection as |tabs|}}
-      {{#tabs.tablist as |tablist|}}
-        {{#tablist.tab "TabA" on-select=(action (mut selection))}}Sustaining donations{{/tablist.tab}}
-        {{#tablist.tab "TabB" on-select=(action (mut selection))}}One-time donations{{/tablist.tab}}
-      {{/tabs.tablist}}
-
-      {{#tabs.tabpanel "TabA"}}
-        {{#each sortedSustainingPledges as |pledge|}}
-        <div class="pledge-container pledge-history-container">
-          <div class="pledge-date">{{moment-format pledge.orderDate 'MMM D, YYYY'}}</div>
-          <div class="pledge-fund-and-premium">
-            <div>{{pledge.fund}}</div>
-            <div class="pledge-premium">{{pledge.premium}}</div>
-          </div>
-          <div class="pledge-order-price">${{pledge.orderPrice}}</div>
-          <div class="recurring-label">{{if pledge.isSustainer 'Sustaining' 'One-time'}}</div>
-        </div>
-        {{/each}}
-      {{/tabs.tabpanel}}
-
-      {{#tabs.tabpanel "TabB"}}
-        {{#each sortedOneTimePledges as |pledge|}}
-        <div class="pledge-container pledge-history-container">
-          <div class="pledge-date">{{moment-format pledge.orderDate 'MMM D, YYYY'}}</div>
-          <div class="pledge-fund-and-premium">
-            <div>{{pledge.fund}}</div>
-            <div class="pledge-premium">{{pledge.premium}}</div>
-          </div>
-          <div class="pledge-order-price">${{pledge.orderPrice}}</div>
-          <div class="recurring-label">{{if pledge.isSustainer 'Sustaining' 'One-time'}}</div>
-        </div>
-        {{/each}}
-      {{/tabs.tabpanel}}
-
-    {{/nypr-tabs}}
-
-    <div class="pledge-tools">
-      <div class="pledge-help-link"><span {{action (action (mut enableModal) true)}}>Help</span></div>
-    </div>
-
-  {{/nypr-card}}
-{{/unless}}
+    {{membership-card/giving-history
+      pledges=pledges
+      showPaymentHistory=showPaymentHistory}}
+  {{/m.panel}}
+{{/nypr-multi-card}}
 
 {{#if enableModal}}
   {{membership-card/help-modal enableModal=enableModal}}

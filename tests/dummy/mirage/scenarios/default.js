@@ -11,5 +11,5 @@ export default function(server) {
   server.create('user');
   // server.createList('member-status', 2);
   server.createList('member-status', 2, {membershipStartDate: null});
-  server.createList('pledge', 11, {isActive: false});
+  server.createList('pledge', 11);
 }
