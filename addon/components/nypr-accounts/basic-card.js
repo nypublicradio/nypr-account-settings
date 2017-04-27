@@ -19,7 +19,7 @@ export default Component.extend({
   user: {},
   emailIsPendingVerification: false,
   verifyEmail: computed('user.email', 'changeset.email', function() {
-    return get(this, 'changeset.email') !== get(this, 'user.email');
+    return get(this, 'email') !== get(this, 'user.email');
   }),
 
   // until ember-changeset can handle debounce validations
