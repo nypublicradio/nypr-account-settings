@@ -29,11 +29,11 @@ export default Component.extend({
   // otherwise we get very unpleasant UI hiccups
   usernameObserver: observer('preferredUsername', function() {
     let newName = get(this, 'preferredUsername');
-    debounce(this, prefName => set(this, 'changeset.preferredUsername', prefName), newName, 150);
+    debounce(this, prefName => set(this, 'changeset.preferredUsername', prefName), newName, 300);
   }),
   emailObserver: observer('email', function() {
     let newName = get(this, 'email');
-    debounce(this, prefName => set(this, 'changeset.preferredUsername', prefName), newName, 150);
+    debounce(this, email => set(this, 'changeset.email', email), newName, 300);
   }),
 
   init() {
