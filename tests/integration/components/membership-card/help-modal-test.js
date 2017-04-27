@@ -7,13 +7,6 @@ moduleForComponent('membership-card/help-modal', 'Integration | Component | memb
 
 test('it renders', function(assert) {
 
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-
-  this.render(hbs`{{membership-card/help-modal}}`);
-
-  assert.equal(this.$().text().trim(), '');
-
   // Template block usage:
   this.render(hbs`
     {{#membership-card/help-modal}}
