@@ -12,6 +12,7 @@ import getOwner from 'ember-owner/get';
 import get from 'ember-metal/get';
 import set from 'ember-metal/set';
 import computed from 'ember-computed';
+import { decamelize } from 'ember-string';
 import { task, timeout, all } from 'ember-concurrency';
 
 export default Component.extend({
@@ -24,16 +25,20 @@ export default Component.extend({
     return get(this, 'changeset.email') !== get(this, 'user.email');
   }),
 
-  debounceMs: Ember.testing ? 50 : 250,
+  debounceMs: Ember.testing ? 0 : 250,
 
-  checkForExistingAttribute: task(function * (filterKey, message, value) {
+  checkForExistingAttribute: task(function * ({key, value, errorMessage}) {
     let validator = validateRemote({
       path: `${this.config.wnycAuthAPI}/v1/user/exists-by-attribute`,
-      filterKey,
-      message,
+      filterKey: decamelize(key),
+      message: errorMessage,
     });
-    let result = yield validator(filterKey, value);
-    return result;
+    let result = yield validator(decamelize(key), value);
+    if (result === true) {
+      return true;
+    } else {
+      this.changeset.pushErrors(key, errorMessage);
+    }
   }),
 
   asyncChecksBusy: computed.or(
@@ -42,26 +47,22 @@ export default Component.extend({
 
   checkForExistingEmail: task(function * (value) {
     let validator = get(this, 'checkForExistingAttribute');
-    // debounce
     yield timeout(this.get('debounceMs'));
-    let result = yield validator.perform('email', messages.emailExists, value);
-    if (result === true) {
-      return true;
-    } else {
-      this.changeset.pushErrors('email', result);
-    }
+    return yield validator.perform({
+      key: 'email',
+      value,
+      errorMessage: messages.emailExists
+    });
   }).restartable(),
 
   checkForExistingUsername: task(function * (value) {
     let validator = get(this, 'checkForExistingAttribute');
-    // debounce
     yield timeout(this.get('debounceMs'));
-    let result = yield validator.perform('preferred_username', messages.publicHandleExists, value);
-    if (result === true) {
-      return true;
-    } else {
-      this.changeset.pushErrors('preferredUsername', result);
-    }
+    return yield validator.perform({
+      key: 'preferredUsername',
+      value,
+      errorMessage: messages.publicHandleExists
+    });
   }).restartable(),
 
   init() {
@@ -117,12 +118,11 @@ export default Component.extend({
         get(this, 'checkForExistingUsername').perform(changeset.get('preferredUsername')),
         get(this, 'checkForExistingEmail').perform(changeset.get('email')),
       ]);
-      yield changeset.save().then(() => {
-        set(this, 'isEditing', false);
-        if (notifyEmail && this.attrs.emailUpdated) {
-          this.attrs.emailUpdated();
-        }
-      });
+      yield changeset.save();
+      set(this, 'isEditing', false);
+      if (notifyEmail && this.attrs.emailUpdated) {
+        this.attrs.emailUpdated();
+      }
     } catch(error) {
       let errorObject;
       if (error.isAdapterError) {
