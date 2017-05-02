@@ -6,9 +6,9 @@ export default function validateRemote({path, filterKey, message} = {}) {
       return true;
     }
     return fetch(`${path}?${filterKey ? filterKey : key}=${newValue}`)
-      .then(r => r.json())
-      .then(j => {
-        if (!j[filterKey ? filterKey : key]) {
+      .then(response => response.json())
+      .then(json => {
+        if (!json[filterKey ? filterKey : key]) {
           return true;
         } else {
           return message;
