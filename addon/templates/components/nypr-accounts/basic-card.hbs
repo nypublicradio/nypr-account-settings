@@ -37,9 +37,10 @@
     label='Public Handle<span> (visible when you comment on the site)</span>'
     placeholder='publichandle'
     fieldname='preferredUsername'
-    value=preferredUsername
+    value=changeset.preferredUsername
     errors=changeset.error.preferredUsername.validation
     disabled=(not isEditing)
+    onInput=(action onUsernameUpdate)
     validMark=true
     showError=true
   }}
@@ -48,10 +49,11 @@
     label='Email'
     placeholder='you@email.com'
     fieldname='email'
-    value=email
+    value=changeset.email
     errors=changeset.error.email.validation
     disabled=(not isEditing)
     onChange=(action onEmailChange)
+    onInput=(action onEmailUpdate)
   }}
   {{#if (and emailIsPendingVerification (not isEditing))}}
     <div class="nypr-account-pending">pending verification</div>

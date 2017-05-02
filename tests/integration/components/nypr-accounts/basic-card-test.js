@@ -3,8 +3,8 @@ import hbs from 'htmlbars-inline-precompile';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 import wait from 'ember-test-helpers/wait';
 import rsvp from 'rsvp';
-import observer from 'ember-metal/observer';
 import Test from 'ember-test';
+
 const { Promise } = rsvp;
 
 moduleForComponent('nypr-accounts/basic-card', 'Integration | Component | nypr-accounts/basic card', {
@@ -12,14 +12,6 @@ moduleForComponent('nypr-accounts/basic-card', 'Integration | Component | nypr-a
   beforeEach() {
     if(typeof server !== 'undefined') { server.shutdown(); }
     this.server = startMirage();
-    function dummyUsernameObserver() {
-      this.changeset.set('preferredUsername', this.get('preferredUsername'));
-    }
-    function dummyEmailObserver() {
-      this.changeset.set('email', this.get('email'));
-    }
-    this.set('usernameObserver', observer('preferredUsername', dummyUsernameObserver));
-    this.set('emailObserver', observer('email', dummyEmailObserver));
   },
   afterEach() {
     this.server.shutdown();
@@ -61,6 +53,8 @@ test('renders default values of passed in model', function(assert) {
 
 test('editing states', function(assert) {
   let done = assert.async();
+  let confirmEmailIsVisible = () => this.$('input[name=confirmEmail]').length === 1;
+
   assert.expect(9);
   this.set('user', userFields());
 
@@ -74,8 +68,9 @@ test('editing states', function(assert) {
 
   this.$('input[name=email]').val('baz@boo.com');
   this.$('input[name=email]').blur();
-
+  Test.registerWaiter(this, confirmEmailIsVisible);
   wait().then(() => {
+    Test.unregisterWaiter(this, confirmEmailIsVisible);
     assert.ok(this.$('input[name=confirmEmail]').length, 'confirm email should appear in dirty state');
     assert.equal(this.$('input').length, 5, 'should see 5 fields');
     done();
@@ -91,9 +86,7 @@ test('displays error states', function(assert) {
   let confirmEmailIsVisible = () => this.$('input[name=confirmEmail]').length === 1;
 
   this.render(hbs`{{nypr-accounts/basic-card
-    isEditing=true
-    usernameObserver=usernameObserver
-    emailObserver=emailObserver}}`);
+    isEditing=true}}`);
 
   // trigger error states
   this.$('input[name=givenName]').blur();
@@ -132,9 +125,7 @@ test('changes to fields are not persisted after a rollback', function(assert) {
 
   this.render(hbs`{{nypr-accounts/basic-card
     isEditing=isEditing
-    user=user
-    usernameObserver=usernameObserver
-    emailObserver=emailObserver}}`);
+    user=user}}`);
 
   this.$('input[name=givenName]').val('zzzz');
   this.$('input[name=givenName]').blur();
@@ -171,9 +162,7 @@ test('changes to fields are not persisted after a rollback using toggleEdit', fu
 
   this.render(hbs`{{nypr-accounts/basic-card
     isEditing=isEditing
-    user=user
-    usernameObserver=usernameObserver
-    emailObserver=emailObserver}}`);
+    user=user}}`);
 
   this.$('input[name=givenName]').val('zzzz');
   this.$('input[name=givenName]').blur();
@@ -204,13 +193,12 @@ test('can update non-email attrs', function(assert) {
   const FIRST_NAME = 'john';
   const LAST_NAME = 'doe';
   const USERNAME = 'johndoe';
-  let notEditing = () => this.$('input').length === 3;
+  let notEditing = () => this.$('input:not([disabled])').length === 0;
 
   this.set('user', userFields());
   this.render(hbs`{{nypr-accounts/basic-card
     isEditing=true
-    user=user
-    usernameObserver=usernameObserver}}`);
+    user=user}}`);
 
   this.$('input[name=givenName]').val(FIRST_NAME);
   this.$('input[name=givenName]').blur();
@@ -254,8 +242,7 @@ test('resets email value if emailRequirement is rejected', function(assert) {
   this.render(hbs`{{nypr-accounts/basic-card
     emailRequirement=emailRequirement
     isEditing=true
-    user=user
-    emailObserver=emailObserver}}`);
+    user=user}}`);
 
   this.$('input[name=givenName]').val(FIRST_NAME);
   this.$('input[name=givenName]').blur();
@@ -302,8 +289,7 @@ test('can update email', function(assert) {
   this.render(hbs`{{nypr-accounts/basic-card
     authenticate=(action authenticate)
     isEditing=true
-    user=user
-    emailObserver=emailObserver}}`);
+    user=user}}`);
 
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').blur();
@@ -362,8 +348,7 @@ test('shows an error message if password is rejected', function(assert) {
   this.render(hbs`{{nypr-accounts/basic-card
     authenticate=(action authenticate)
     isEditing=true
-    user=user
-    emailObserver=emailObserver}}`);
+    user=user}}`);
 
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').blur();
@@ -417,8 +402,6 @@ test('can update them all', function(assert) {
     isEditing=true
     emailRequirement=emailRequirement}}`);
 
-  this.$('[data-test-selector=change-email]').click();
-
   wait().then(() => {
     this.$('input[name=givenName]').val(FIRST_NAME);
     this.$('input[name=givenName]').blur();
@@ -468,3 +451,60 @@ test('does not show pending message for verified email', function(assert) {
   this.render(hbs`{{nypr-accounts/basic-card user=user emailIsPendingVerification=emailIsPendingVerification}}`);
   assert.equal(this.$('.nypr-account-pending').length, 0);
 });
+
+test('shows error for taken username', function(assert) {
+  let done = assert.async();
+  assert.expect(2);
+
+  const USERNAME = 'taken';
+  let showingErrors = () => this.$(".nypr-input-error").length > 0;
+
+  this.set('user', userFields());
+
+  this.render(hbs`{{nypr-accounts/basic-card
+    user=user
+    isEditing=true}}`);
+
+  wait().then(() => {
+    this.$('input[name=preferredUsername]').val(USERNAME);
+    this.$('input[name=preferredUsername]').blur();
+    this.$('input[name=preferredUsername]').trigger($.Event("input"));
+    Test.registerWaiter(this, showingErrors);
+  });
+  wait().then(() => {
+    Test.unregisterWaiter(this, showingErrors);
+    assert.equal(this.$("[name=preferredUsername] + .nypr-input-footer .nypr-input-error").length, 1, 'preferredUsername has one error');
+    assert.equal(this.$("[name=preferredUsername] + .nypr-input-footer .nypr-input-error").text().trim(), "public handle already exists", 'preferredUsername shows the correct error message');
+    done();
+  });
+  return wait();
+});
+
+test('shows error for taken email', function(assert) {
+  let done = assert.async();
+  assert.expect(2);
+
+  const EMAIL = 'taken@example.com';
+  let showingErrors = () => this.$(".nypr-input-error").length > 0;
+
+  this.set('user', userFields());
+
+  this.render(hbs`{{nypr-accounts/basic-card
+    user=user
+    isEditing=true}}`);
+
+  wait().then(() => {
+    this.$('input[name=email]').val(EMAIL);
+    this.$('input[name=email]').blur();
+    this.$('input[name=email]').trigger($.Event("input"));
+    Test.registerWaiter(this, showingErrors);
+  });
+  wait().then(() => {
+    Test.unregisterWaiter(this, showingErrors);
+    assert.equal(this.$("[name=email] + .nypr-input-footer .nypr-input-error").length, 1, 'email has one error');
+    assert.equal(this.$("[name=email] + .nypr-input-footer .nypr-input-error").text().trim(), "an account with this email address already exists", 'email shows the correct error message');
+    done();
+  });
+  return wait();
+});
+

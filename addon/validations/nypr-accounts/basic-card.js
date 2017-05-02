@@ -4,10 +4,9 @@ import {
   validateFormat,
   validateConfirmation
 } from 'ember-changeset-validations/validators';
-import validateRemote from 'nypr-account-settings/validators/nypr-accounts/remote';
 import messages from './custom-messages';
 
-export default function({usernamePath}) {
+export default function() {
   return {
     givenName:  [
       validatePresence({ presence: true, message: messages.firstNameRequired }),
@@ -26,11 +25,6 @@ export default function({usernamePath}) {
         presence: true,
         message: messages.publicHandleRequired
       }),
-      validateRemote({
-        path: `${usernamePath}/v1/user/exists-by-attribute`,
-        filterKey: 'preferred_username',
-        message: messages.publicHandleExists
-      })
     ],
     email: [
       validatePresence({
@@ -38,11 +32,6 @@ export default function({usernamePath}) {
         message: messages.emailRequired
       }),
       validateFormat({ type: 'email', allowBlank: true, message: messages.emailFormat }),
-      validateRemote({
-        path: `${usernamePath}/v1/user/exists-by-attribute`,
-        filterKey: 'email',
-        message: messages.emailExists
-      }),
     ],
     confirmEmail: validateConfirmation({ on: 'email', message: messages.emailConfirmation })
   };
