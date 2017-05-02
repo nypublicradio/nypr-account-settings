@@ -184,22 +184,28 @@ export default Component.extend({
     }
   }),
 
+  verifyPassword: task(function * () {
+    let password = get(this, 'password');
+    console.log('veriy');
+    if (!password) {
+      set(this, 'passwordError', ["Password can't be blank."]);
+    } else {
+      try {
+        yield this.attrs.authenticate(password);
+        get(this, 'resolveModal')();
+      } catch({error}) {
+        set(this, 'passwordError', [error.message]);
+      }
+    }
+  }),
+
   actions: {
     rollback(changeset) {
       changeset.rollback();
       set(this, 'isEditing', false);
     },
 
-    verifyPassword() {
-      let password = get(this, 'password');
-      if (!password) {
-        set(this, 'passwordError', ["Password can't be blank."]);
-      } else {
-        this.attrs.authenticate(password)
-          .then(get(this, 'resolveModal'))
-          .catch(({error}) => set(this, 'passwordError', [error.message]));
-      }
-    },
+
     closeModal() {
       if (this.isDestroyed || this.isDestroying) {
         return;
