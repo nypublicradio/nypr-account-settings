@@ -186,7 +186,6 @@ export default Component.extend({
 
   verifyPassword: task(function * () {
     let password = get(this, 'password');
-    console.log('veriy');
     if (!password) {
       set(this, 'passwordError', ["Password can't be blank."]);
     } else {
