@@ -148,44 +148,43 @@ export default Component.extend({
     }
   }),
 
-  actions: {
-    save(changeset) {
-      let fieldsToValidate;
-      let emailWasChanged = get(this, 'emailWasChanged');
+  save: task(function * (changeset) {
+    let fieldsToValidate;
+    let emailWasChanged = get(this, 'emailWasChanged');
+    if (emailWasChanged) {
+      // defer validating preferredUsername b/c it incurs a UI delay due to
+      // waiting on a network call
+      fieldsToValidate = ['givenName', 'familyName', 'email', 'confirmEmail'];
+    } else {
+      // if email hasn't changed, no point verifying it
+      // but roll back errors in case confirmEmail is showing an error
+      this.rollbackEmailField(changeset);
+      fieldsToValidate = ['givenName', 'familyName', 'preferredUsername'];
+    }
+    let validationPromises = fieldsToValidate.map(field => changeset.validate(field));
+    yield RSVP.all(validationPromises);
 
-      if (emailWasChanged) {
-        // defer validating preferredUsername b/c it incurs a UI delay due to
-        // waiting on a network call
-        fieldsToValidate = ['givenName', 'familyName', 'email', 'confirmEmail'];
-      } else {
-        // if email hasn't changed, no point verifying it
-        // but roll back errors in case confirmEmail is showing an error
-        this.rollbackEmailField(changeset);
-        fieldsToValidate = ['givenName', 'familyName', 'preferredUsername'];
-      }
-      let validationPromises = fieldsToValidate.map(field => changeset.validate(field));
+    if (emailWasChanged && get(changeset, 'isValid')) {
+      try {
+        yield this.emailRequirement();
+        yield changeset.validate('preferredUsername');
 
-      return RSVP.all(validationPromises).then(() => {
-        if (emailWasChanged && get(changeset, 'isValid')) {
-          return this.emailRequirement()
-            .then(() => {
-              changeset.validate('preferredUsername').then(() => {
-                if (get(changeset, 'isValid')) {
-                  return get(this, 'commit').perform(changeset);
-                } else {
-                  // something's wrong, probably the preferredUsername
-                  this.closeModal();
-                }
-              });
-            })
-            .catch(() => this.rollbackEmailField(changeset));
-        } else if (get(changeset, 'isValid')) {
-          // if we're not doing the validate email flow, just commit the changeset
+        if (get(changeset, 'isValid')) {
           return get(this, 'commit').perform(changeset);
+        } else {
+          // something's wrong, probably the preferredUsername
+          return this.closeModal();
         }
-      });
-    },
+      } catch(e) {
+        this.rollbackEmailField(changeset);
+      }
+    } else if (get(changeset, 'isValid')) {
+      // if we're not doing the validate email flow, just commit the changeset
+      return get(this, 'commit').perform(changeset);
+    }
+  }),
 
+  actions: {
     rollback(changeset) {
       changeset.rollback();
       set(this, 'isEditing', false);
