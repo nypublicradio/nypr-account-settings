@@ -27,9 +27,17 @@ export default function() {
   */
 
   this.get('/v1/user/exists-by-attribute', (schema, {queryParams}) => {
-    return {
-      preferred_username: queryParams.preferred_username === 'taken' ? 'taken' : ''
-    };
+    if (queryParams.preferred_username) {
+      return {
+        preferred_username: queryParams.preferred_username === 'taken' ? 'taken' : ''
+      };
+    } else if (queryParams.email) {
+      return {
+        email: queryParams.email === 'taken@example.com' ? 'taken@example.com' : ''
+      };
+    } else {
+      return {};
+    }
   });
   this.get('/users', schema => schema.users.first());
   this.post('/users', {data: {
@@ -50,6 +58,6 @@ export default function() {
       "message": "Incorrect username or password."
     }
   }));
-  this.get('/pledges', {timing: 2000});
+  this.get('/pledges');
   this.get('/member-status');
 }
