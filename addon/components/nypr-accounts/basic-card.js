@@ -82,11 +82,19 @@ export default Component.extend({
   },
 
   onEmailUpdate() {
-    get(this,'checkForExistingEmail').perform(this.changeset.get('email'));
+    let newEmail = this.changeset.get('email');
+    let oldEmail = get(this, 'user.email');
+    if (newEmail && newEmail !== oldEmail) {
+      get(this,'checkForExistingEmail').perform(newEmail);
+    }
   },
 
   onUsernameUpdate() {
-    get(this,'checkForExistingUsername').perform(this.changeset.get('preferredUsername'));
+    let newUsername = this.changeset.get('preferredUsername');
+    let oldUsername = get(this, 'user.preferredUsername');
+    if (newUsername && newUsername !== oldUsername) {
+      get(this,'checkForExistingUsername').perform(newUsername);
+    }
   },
 
   emailRequirement() {
