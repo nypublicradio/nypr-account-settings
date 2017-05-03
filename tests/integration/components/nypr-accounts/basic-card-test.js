@@ -1,6 +1,7 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
+import { task } from 'ember-concurrency';
 import wait from 'ember-test-helpers/wait';
 import rsvp from 'rsvp';
 import Test from 'ember-test';
@@ -26,6 +27,21 @@ const userFields = () => ({
   preferredUsername: 'foobar',
   email: 'foo@bar.com',
 });
+const waiters = {
+  confirmEmailFieldIsVisible() {
+    return this.$('input[name=confirmEmail]').length === 1;
+  },
+  confirmEmailFieldIsHidden() {
+    return this.$('input[name=confirmEmail]').length === 0;
+  },
+  modalIsVisible() {
+    return this.$().siblings('.ember-modal-wrapper').find('input[name=passwordForEmailChange]').length === 1;
+  },
+  modalIsHidden() {
+    return this.$().siblings('.ember-modal-wrapper').find('input[name=passwordForEmailChange]').length === 0;
+  }
+};
+
 
 test('it renders', function(assert) {
   this.render(hbs`{{nypr-accounts/basic-card}}`);
@@ -53,7 +69,6 @@ test('renders default values of passed in model', function(assert) {
 
 test('editing states', function(assert) {
   let done = assert.async();
-  let confirmEmailIsVisible = () => this.$('input[name=confirmEmail]').length === 1;
 
   assert.expect(9);
   this.set('user', userFields());
@@ -68,9 +83,9 @@ test('editing states', function(assert) {
 
   this.$('input[name=email]').val('baz@boo.com');
   this.$('input[name=email]').blur();
-  Test.registerWaiter(this, confirmEmailIsVisible);
+  Test.registerWaiter(this, waiters.confirmEmailFieldIsVisible);
   wait().then(() => {
-    Test.unregisterWaiter(this, confirmEmailIsVisible);
+    Test.unregisterWaiter(this, waiters.confirmEmailFieldIsVisible);
     assert.ok(this.$('input[name=confirmEmail]').length, 'confirm email should appear in dirty state');
     assert.equal(this.$('input').length, 5, 'should see 5 fields');
     done();
@@ -83,7 +98,6 @@ test('displays error states', function(assert) {
   let done = assert.async();
   assert.expect(6);
 
-  let confirmEmailIsVisible = () => this.$('input[name=confirmEmail]').length === 1;
 
   this.render(hbs`{{nypr-accounts/basic-card
     isEditing=true}}`);
@@ -95,9 +109,9 @@ test('displays error states', function(assert) {
   this.$('input[name=email]').blur();
 
   // wait for confirmation field
-  Test.registerWaiter(this, confirmEmailIsVisible);
+  Test.registerWaiter(this, waiters.confirmEmailFieldIsVisible);
   wait().then(() => {
-    Test.unregisterWaiter(this, confirmEmailIsVisible);
+    Test.unregisterWaiter(this, waiters.confirmEmailFieldIsVisible);
     this.$('input[name=confirmEmail]').blur();
   });
   wait().then(() => {
@@ -222,25 +236,17 @@ test('can update non-email attrs', function(assert) {
 });
 
 
-test('resets email value if emailRequirement is rejected', function(assert) {
-  let done = assert.async(2);
-  assert.expect(4);
+test('resets email value if password modal is closed', function(assert) {
+  let done = assert.async();
+  assert.expect(3);
   const OLD_EMAIL = userFields()['email'];
   const EMAIL = 'john@doe.com';
   const FIRST_NAME = 'john';
   const LAST_NAME = 'doe';
-  let confirmEmailIsHidden = () => this.$('input[name=confirmEmail]').length === 0;
-  let confirmEmailIsVisible = () => this.$('input[name=confirmEmail]').length === 1;
 
   this.set('user', userFields());
-  this.set('emailRequirement', function() {
-    assert.ok('emailRequirement called');
-    done();
-    return Promise.reject();
-  });
 
   this.render(hbs`{{nypr-accounts/basic-card
-    emailRequirement=emailRequirement
     isEditing=true
     user=user}}`);
 
@@ -250,18 +256,23 @@ test('resets email value if emailRequirement is rejected', function(assert) {
   this.$('input[name=familyName]').blur();
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').blur();
-  Test.registerWaiter(this, confirmEmailIsVisible);
+  Test.registerWaiter(this, waiters.confirmEmailFieldIsVisible);
   wait().then(() => {
-    Test.unregisterWaiter(this, confirmEmailIsVisible);
+    Test.unregisterWaiter(this, waiters.confirmEmailFieldIsVisible);
     this.$('input[name=confirmEmail]').val(EMAIL);
     this.$('input[name=confirmEmail]').blur();
   });
   wait().then(() => {
     this.$('[data-test-selector=save]').click();
-    Test.registerWaiter(this, confirmEmailIsHidden);
+    Test.registerWaiter(this, waiters.modalIsVisible);
   });
   wait().then(() => {
-    Test.unregisterWaiter(this, confirmEmailIsHidden);
+    Test.unregisterWaiter(this, waiters.modalIsVisible);
+    this.$().siblings('.ember-modal-wrapper').find('.nypr-account-modal-close').click();
+    Test.registerWaiter(this, waiters.confirmEmailFieldIsHidden);
+  });
+  wait().then(() => {
+    Test.unregisterWaiter(this, waiters.confirmEmailFieldIsHidden);
     assert.equal(this.$('input[name=email]').val(), OLD_EMAIL, 'displays old email');
     assert.equal(this.$('input[name=givenName]').val(), FIRST_NAME, 'first name still updated value');
     assert.equal(this.$('input[name=familyName]').val(), LAST_NAME, 'last name still updated value');
@@ -276,9 +287,6 @@ test('can update email', function(assert) {
   assert.expect(2);
   const EMAIL = 'john@doe.com';
   const PASSWORD = '1234567890';
-  let confirmEmailIsVisible = () => this.$('input[name=confirmEmail]').length === 1;
-  let modalIsVisible = () => this.$().siblings('.ember-modal-wrapper').find('input[name=passwordForEmailChange]').length === 1;
-  let modalIsHidden = () => this.$().siblings('.ember-modal-wrapper').find('input[name=passwordForEmailChange]').length === 0;
   this.set('user', userFields());
   this.set('authenticate', pw => {
     assert.equal(pw, PASSWORD, 'authenticate was called with correct pw');
@@ -294,18 +302,18 @@ test('can update email', function(assert) {
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').blur();
 
-  Test.registerWaiter(this, confirmEmailIsVisible);
+  Test.registerWaiter(this, waiters.confirmEmailFieldIsVisible);
   wait().then(() => {
-    Test.unregisterWaiter(this, confirmEmailIsVisible);
+    Test.unregisterWaiter(this, waiters.confirmEmailFieldIsVisible);
     this.$('input[name=confirmEmail]').val(EMAIL);
     this.$('input[name=confirmEmail]').blur();
   });
   wait().then(() => {
     this.$('[data-test-selector=save]').click();
-    Test.registerWaiter(this, modalIsVisible);
+    Test.registerWaiter(this, waiters.modalIsVisible);
   });
   wait().then(() => {
-    Test.unregisterWaiter(this, modalIsVisible);
+    Test.unregisterWaiter(this, waiters.modalIsVisible);
     let modal = this.$().siblings('.ember-modal-wrapper');
     modal
       .find('input')
@@ -314,10 +322,10 @@ test('can update email', function(assert) {
     modal
       .find('[data-test-selector=check-pw]')
       .click();
-    Test.registerWaiter(this, modalIsHidden);
+    Test.registerWaiter(this, waiters.modalIsHidden);
   });
   wait().then(() => {
-    Test.unregisterWaiter(this, modalIsHidden);
+    Test.unregisterWaiter(this, waiters.modalIsHidden);
     assert.equal(this.$('input[name=email]').val(), EMAIL, 'displays new email');
     done();
   });
@@ -330,8 +338,6 @@ test('shows an error message if password is rejected', function(assert) {
   assert.expect(2);
   const EMAIL = 'john@doe.com';
   const BAD_PW = '1234567890';
-  let modalIsVisible = () => this.$().siblings('.ember-modal-wrapper').find('input[name=passwordForEmailChange]').length === 1;
-  let confirmEmailIsVisible = () => this.$('input[name=confirmEmail]').length === 1;
 
   this.set('user', userFields());
   this.set('authenticate', function() {
@@ -352,18 +358,18 @@ test('shows an error message if password is rejected', function(assert) {
 
   this.$('input[name=email]').val(EMAIL);
   this.$('input[name=email]').blur();
-  Test.registerWaiter(this, confirmEmailIsVisible);
+  Test.registerWaiter(this, waiters.confirmEmailFieldIsVisible);
   wait().then(() => {
-    Test.unregisterWaiter(this, confirmEmailIsVisible);
+    Test.unregisterWaiter(this, waiters.confirmEmailFieldIsVisible);
     this.$('input[name=confirmEmail]').val(EMAIL);
     this.$('input[name=confirmEmail]').blur();
   });
   wait().then(() => {
     this.$('[data-test-selector=save]').click();
-    Test.registerWaiter(this, modalIsVisible);
+    Test.registerWaiter(this, waiters.modalIsVisible);
   });
   wait().then(() => {
-    Test.unregisterWaiter(this, modalIsVisible);
+    Test.unregisterWaiter(this, waiters.modalIsVisible);
     this.$().siblings('.ember-modal-wrapper').find('input[name=passwordForEmailChange]').val(BAD_PW);
     this.$().siblings('.ember-modal-wrapper').find('input[name=passwordForEmailChange]').blur();
     this.$().siblings('.ember-modal-wrapper').find('[data-test-selector="check-pw"]').click();
@@ -386,12 +392,11 @@ test('can update them all', function(assert) {
   const EMAIL = 'john@doe.com';
 
   let formIsDisabled = () => this.$('input').length === 3;
-  let confirmEmailIsVisible = () => this.$('input[name=confirmEmail]').length === 1;
 
   this.set('user', userFields());
   this.set('authenticate', () => Promise.resolve());
   // skip filling in the modal
-  this.set('emailRequirement', () => Promise.resolve());
+  this.set('promptForPassword', task(function * () {yield this.set('password', null);}));
 
   this.set('emailUpdated', () => assert.ok('emailUpdated called'));
 
@@ -400,7 +405,7 @@ test('can update them all', function(assert) {
     authenticate=(action authenticate)
     emailUpdated=(action emailUpdated)
     isEditing=true
-    emailRequirement=emailRequirement}}`);
+    promptForPassword=promptForPassword}}`);
 
   wait().then(() => {
     this.$('input[name=givenName]').val(FIRST_NAME);
@@ -411,10 +416,10 @@ test('can update them all', function(assert) {
     this.$('input[name=preferredUsername]').blur();
     this.$('input[name=email]').val(EMAIL);
     this.$('input[name=email]').blur();
-    Test.registerWaiter(this, confirmEmailIsVisible);
+    Test.registerWaiter(this, waiters.confirmEmailFieldIsVisible);
   });
   wait().then(() => {
-    Test.unregisterWaiter(this, confirmEmailIsVisible);
+    Test.unregisterWaiter(this, waiters.confirmEmailFieldIsVisible);
     this.$('input[name=confirmEmail]').val(EMAIL);
     this.$('input[name=confirmEmail]').blur();
   });

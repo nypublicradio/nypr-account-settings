@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import Component from 'ember-component';
-import { bool } from 'ember-computed';
 import layout from '../../templates/components/nypr-accounts/basic-card';
 import RSVP from 'rsvp';
 import Changeset from 'ember-changeset';
@@ -13,12 +12,11 @@ import get from 'ember-metal/get';
 import set from 'ember-metal/set';
 import computed from 'ember-computed';
 import { decamelize } from 'ember-string';
-import { task, timeout, all } from 'ember-concurrency';
+import { task, timeout, all, waitForEvent } from 'ember-concurrency';
 
 export default Component.extend({
   layout,
   tagName: '',
-  isShowingModal: bool('resolveModal'),
   user: {},
   emailIsPendingVerification: false,
   emailWasChanged: computed('user.email', 'changeset.email', function() {
@@ -40,10 +38,6 @@ export default Component.extend({
       this.changeset.pushErrors(key, errorMessage);
     }
   }),
-
-  asyncChecksBusy: computed.or(
-    'checkForExistingEmail.isRunning',
-    'checkForExistingUsername.isRunning'),
 
   checkForExistingEmail: task(function * (value) {
     let validator = get(this, 'checkForExistingAttribute');
@@ -98,17 +92,6 @@ export default Component.extend({
     }
   },
 
-  emailRequirement() {
-    return new RSVP.Promise((resolve, reject) => {
-      // resolved by verifyPassword
-      // setting resolveModal shows the modal
-      this.setProperties({
-        resolveModal: resolve,
-        rejectModal: reject
-      });
-    });
-  },
-
   rollbackEmailField(changeset) {
     // work around to rollback specific fields
     let snapshot = changeset.snapshot();
@@ -123,16 +106,19 @@ export default Component.extend({
   commit: task(function * (changeset) {
     let notifyEmail = get(changeset, 'change.email');
     try {
+      // confirm async validations
       yield all([
         get(this, 'checkForExistingUsername').perform(changeset.get('preferredUsername')),
         get(this, 'checkForExistingEmail').perform(changeset.get('email')),
       ]);
+      // save
       yield changeset.save();
       set(this, 'isEditing', false);
       if (notifyEmail && this.attrs.emailUpdated) {
         this.attrs.emailUpdated();
       }
     } catch(error) {
+      // handle  server errors
       let errorObject;
       if (error.isAdapterError) {
         errorObject = error.errors;
@@ -148,8 +134,6 @@ export default Component.extend({
       }
     } finally {
       this.setProperties({
-        resolveModal: null,
-        rejectModal: null,
         password: null,
         passwordError: null,
         'user.confirmEmail': null
@@ -161,13 +145,8 @@ export default Component.extend({
     let fieldsToValidate;
     let emailWasChanged = get(this, 'emailWasChanged');
     if (emailWasChanged) {
-      // defer validating preferredUsername b/c it incurs a UI delay due to
-      // waiting on a network call
-      fieldsToValidate = ['givenName', 'familyName', 'email', 'confirmEmail'];
+      fieldsToValidate = ['givenName', 'familyName', 'email', 'confirmEmail', 'preferredUsername'];
     } else {
-      // if email hasn't changed, no point verifying it
-      // but roll back errors in case confirmEmail is showing an error
-      this.rollbackEmailField(changeset);
       fieldsToValidate = ['givenName', 'familyName', 'preferredUsername'];
     }
     let validationPromises = fieldsToValidate.map(field => changeset.validate(field));
@@ -175,21 +154,31 @@ export default Component.extend({
 
     if (emailWasChanged && get(changeset, 'isValid')) {
       try {
-        yield this.emailRequirement();
-        yield changeset.validate('preferredUsername');
+        yield get(this, 'promptForPassword').perform();
 
         if (get(changeset, 'isValid')) {
           return get(this, 'commit').perform(changeset);
         } else {
-          // something's wrong, probably the preferredUsername
-          return this.closeModal();
+          // something's wrong
+          get(this, 'closeModal')();
         }
-      } catch(e) {
-        this.rollbackEmailField(changeset);
+      } finally {
+        if (get(this, 'promptForPassword.last.isSuccessful') === false) {
+          // modal was cancelled;
+          this.rollbackEmailField(changeset);
+        }
       }
     } else if (get(changeset, 'isValid')) {
       // if we're not doing the validate email flow, just commit the changeset
       return get(this, 'commit').perform(changeset);
+    }
+  }).drop(),
+
+  promptForPassword: task(function * () {
+    try {
+      yield waitForEvent(this, 'passwordVerified');
+    } finally {
+      set(this, 'password', null);
     }
   }).drop(),
 
@@ -200,7 +189,7 @@ export default Component.extend({
     } else {
       try {
         yield this.attrs.authenticate(password);
-        get(this, 'resolveModal')();
+        this.trigger('passwordVerified');
       } catch({error}) {
         set(this, 'passwordError', [error.message]);
       }
@@ -213,17 +202,8 @@ export default Component.extend({
       set(this, 'isEditing', false);
     },
 
-
     closeModal() {
-      if (this.isDestroyed || this.isDestroying) {
-        return;
-      }
-      get(this, 'rejectModal')();
-      this.setProperties({
-        resolveModal: null,
-        rejectModal: null,
-        password: null
-      });
+      get(this, 'promptForPassword').cancelAll();
     },
 
     toggleEdit() {

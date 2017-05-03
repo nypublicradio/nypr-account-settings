@@ -91,7 +91,7 @@
   </form>
 {{/nypr-card}}
 
-{{#if isShowingModal}}
+{{#if promptForPassword.isRunning}}
   {{#nypr-account-modal title="Re-enter Your Password" closeAction=(action 'closeModal') as |m|}}
     <form {{action 'verifyPassword' on='submit'}}>
     {{#m.body}}
