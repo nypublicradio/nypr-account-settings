@@ -76,23 +76,24 @@ export default Component.extend({
   },
 
   onEmailChange() {
-    if (this.changeset.get('email')) {
+    let newEmail = this.changeset.get('email');
+    if (newEmail !== undefined) {
       this.changeset.validate('confirmEmail');
+    } else {
+      this.rollbackEmailField();
     }
   },
 
   onEmailUpdate() {
     let newEmail = this.changeset.get('email');
-    let oldEmail = get(this, 'user.email');
-    if (newEmail && newEmail !== oldEmail) {
+    if (newEmail) {
       get(this,'checkForExistingEmail').perform(newEmail);
     }
   },
 
   onUsernameUpdate() {
     let newUsername = this.changeset.get('preferredUsername');
-    let oldUsername = get(this, 'user.preferredUsername');
-    if (newUsername && newUsername !== oldUsername) {
+    if (newUsername) {
       get(this,'checkForExistingUsername').perform(newUsername);
     }
   },
