@@ -18,46 +18,7 @@ export default Component.extend({
   layout,
   tagName: '',
   user: {},
-  emailIsPendingVerification: false,
-  emailWasChanged: computed('user.email', 'changeset.email', function() {
-    return get(this, 'changeset.email') !== get(this, 'user.email');
-  }),
-
-  debounceMs: Ember.testing ? 0 : 250,
-
-  checkForExistingAttribute: task(function * ({key, value, errorMessage}) {
-    let validator = validateRemote({
-      path: `${this.config.wnycAuthAPI}/v1/user/exists-by-attribute`,
-      filterKey: decamelize(key),
-      message: errorMessage,
-    });
-    let result = yield validator(decamelize(key), value);
-    if (result === true) {
-      return true;
-    } else {
-      this.changeset.pushErrors(key, errorMessage);
-    }
-  }),
-
-  checkForExistingEmail: task(function * (value) {
-    let validator = get(this, 'checkForExistingAttribute');
-    yield timeout(this.get('debounceMs'));
-    return yield validator.perform({
-      key: 'email',
-      value,
-      errorMessage: messages.emailExists
-    });
-  }).restartable(),
-
-  checkForExistingUsername: task(function * (value) {
-    let validator = get(this, 'checkForExistingAttribute');
-    yield timeout(this.get('debounceMs'));
-    return yield validator.perform({
-      key: 'preferredUsername',
-      value,
-      errorMessage: messages.publicHandleExists
-    });
-  }).restartable(),
+  debounceMs: Ember.testing ? 10 : 250,
 
   init() {
     this._super(...arguments);
@@ -68,6 +29,10 @@ export default Component.extend({
     let changeset = new Changeset(user, lookupValidator(validations), validations);
     this.changeset = changeset;
   },
+
+  emailWasChanged: computed('changeset.email', 'user.email', function() {
+    return get(this, 'changeset.email') !== get(this, 'user.email');
+  }),
 
   onEmailChange() {
     let newEmail = this.changeset.get('email');
@@ -102,6 +67,38 @@ export default Component.extend({
     delete snapshot.errors.confirmEmail;
     changeset.restore(snapshot);
   },
+
+  checkForExistingAttribute: task(function * ({key, value, errorMessage}) {
+    let validator = validateRemote({
+      path: `${this.config.wnycAuthAPI}/v1/user/exists-by-attribute`,
+      filterKey: decamelize(key),
+      message: errorMessage,
+    });
+    let result = yield validator(decamelize(key), value);
+    if (result !== true) {
+      this.changeset.pushErrors(key, errorMessage);
+    }
+  }),
+
+  checkForExistingEmail: task(function * (value) {
+    let validator = get(this, 'checkForExistingAttribute');
+    yield timeout(this.get('debounceMs'));
+    yield validator.perform({
+      key: 'email',
+      value,
+      errorMessage: messages.emailExists
+    });
+  }).restartable(),
+
+  checkForExistingUsername: task(function * (value) {
+    let validator = get(this, 'checkForExistingAttribute');
+    yield timeout(this.get('debounceMs'));
+    yield validator.perform({
+      key: 'preferredUsername',
+      value,
+      errorMessage: messages.publicHandleExists
+    });
+  }).restartable(),
 
   commit: task(function * (changeset) {
     let notifyEmail = get(changeset, 'change.email');
@@ -157,7 +154,7 @@ export default Component.extend({
         yield get(this, 'promptForPassword').perform();
 
         if (get(changeset, 'isValid')) {
-          return get(this, 'commit').perform(changeset);
+          get(this, 'commit').perform(changeset);
         } else {
           // something's wrong
           get(this, 'closeModal')();
@@ -170,7 +167,7 @@ export default Component.extend({
       }
     } else if (get(changeset, 'isValid')) {
       // if we're not doing the validate email flow, just commit the changeset
-      return get(this, 'commit').perform(changeset);
+      get(this, 'commit').perform(changeset);
     }
   }).drop(),
 
