@@ -190,7 +190,7 @@ export default Component.extend({
       // if we're not doing the validate email flow, just commit the changeset
       return get(this, 'commit').perform(changeset);
     }
-  }),
+  }).drop(),
 
   verifyPassword: task(function * () {
     let password = get(this, 'password');
