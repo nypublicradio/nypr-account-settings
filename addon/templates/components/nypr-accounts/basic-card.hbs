@@ -83,7 +83,7 @@
       <button
         class="nypr-account-confirm"
         data-test-selector="save"
-        disabled={{changeset.isInvalid}}
+        disabled={{or changeset.isPristine changeset.isInvalid}}
         type="submit">Save</button>
     </div>
   </div>

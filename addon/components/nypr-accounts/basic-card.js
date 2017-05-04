@@ -34,6 +34,10 @@ export default Component.extend({
     return get(this, 'changeset.email') !== get(this, 'user.email');
   }),
 
+  usernameWasChanged: computed('changeset.preferredUsername', 'user.preferredUsername', function() {
+    return get(this, 'changeset.preferredUsername') !== get(this, 'user.preferredUsername');
+  }),
+
   onEmailChange() {
     let newEmail = this.changeset.get('email');
     if (newEmail !== undefined) {
@@ -45,16 +49,14 @@ export default Component.extend({
 
   onEmailUpdate() {
     let newEmail = this.changeset.get('email');
-    let oldEmail = get(this, 'user.email');
-    if (newEmail && newEmail !== oldEmail) {
+    if (newEmail && get(this, 'emailWasChanged')) {
       get(this,'checkForExistingEmail').perform(newEmail);
     }
   },
 
   onUsernameUpdate() {
     let newUsername = this.changeset.get('preferredUsername');
-    let oldUsername = get(this, 'user.preferredUsername');
-    if (newUsername && newUsername !== oldUsername) {
+    if (newUsername && get(this, 'usernameWasChanged')) {
       get(this,'checkForExistingUsername').perform(newUsername);
     }
   },
@@ -83,23 +85,31 @@ export default Component.extend({
   }),
 
   checkForExistingEmail: task(function * (value) {
-    let validator = get(this, 'checkForExistingAttribute');
-    yield timeout(this.get('debounceMs'));
-    yield validator.perform({
-      key: 'email',
-      value,
-      errorMessage: messages.emailExists
-    });
+    if (get(this, 'emailWasChanged')) {
+      let validator = get(this, 'checkForExistingAttribute');
+      yield timeout(this.get('debounceMs'));
+      yield validator.perform({
+        key: 'email',
+        value,
+        errorMessage: messages.emailExists
+      });
+    } else {
+      yield;
+    }
   }).restartable(),
 
   checkForExistingUsername: task(function * (value) {
-    let validator = get(this, 'checkForExistingAttribute');
-    yield timeout(this.get('debounceMs'));
-    yield validator.perform({
-      key: 'preferredUsername',
-      value,
-      errorMessage: messages.publicHandleExists
-    });
+    if (get(this, 'usernameWasChanged')) {
+      let validator = get(this, 'checkForExistingAttribute');
+      yield timeout(this.get('debounceMs'));
+      yield validator.perform({
+        key: 'preferredUsername',
+        value,
+        errorMessage: messages.publicHandleExists
+      });
+    } else {
+      yield;
+    }
   }).restartable(),
 
   commit: task(function * (changeset) {

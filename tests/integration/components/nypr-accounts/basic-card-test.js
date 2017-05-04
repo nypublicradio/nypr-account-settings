@@ -340,8 +340,6 @@ test('can save email', function(assert) {
     .clickSubmit();
 
   later(() => {
-    console.log(user);
-    console.log(user.save.firstCall);
     assert.equal(user.email, EMAIL);
     assert.ok(user.save.calledOnce);
     done();
