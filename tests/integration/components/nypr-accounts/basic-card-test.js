@@ -2,9 +2,12 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 import { task } from 'ember-concurrency';
+import { later } from 'ember-runloop';
+import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
 import rsvp from 'rsvp';
 import Test from 'ember-test';
+import card from '../../../../tests/pages/basic-card';
 
 const { Promise } = rsvp;
 
@@ -13,10 +16,12 @@ moduleForComponent('nypr-accounts/basic-card', 'Integration | Component | nypr-a
   beforeEach() {
     if(typeof server !== 'undefined') { server.shutdown(); }
     this.server = startMirage();
+    card.setContext(this);
   },
   afterEach() {
     this.server.shutdown();
     if(typeof server !== 'undefined') { server.shutdown(); }
+    card.removeContext(this);
   }
 });
 
@@ -283,53 +288,64 @@ test('resets email value if password modal is closed', function(assert) {
 
 
 test('can update email', function(assert) {
-  let done = assert.async(2);
-  assert.expect(2);
+  let done = assert.async();
+  assert.expect(3);
   const EMAIL = 'john@doe.com';
   const PASSWORD = '1234567890';
+  let authenticate = sinon.stub().returns(Promise.resolve());
+  this.set('authenticate', authenticate);
   this.set('user', userFields());
-  this.set('authenticate', pw => {
-    assert.equal(pw, PASSWORD, 'authenticate was called with correct pw');
-    done();
-    return Promise.resolve();
-  });
 
   this.render(hbs`{{nypr-accounts/basic-card
     authenticate=(action authenticate)
     isEditing=true
     user=user}}`);
 
-  this.$('input[name=email]').val(EMAIL);
-  this.$('input[name=email]').blur();
+  card
+    .fillInEmail(EMAIL)
+    .fillInConfirmEmail(EMAIL)
+    .clickSave();
+  card.passwordModal
+    .fillInPassword(PASSWORD)
+    .clickSubmit();
 
-  Test.registerWaiter(this, waiters.confirmEmailFieldIsVisible);
-  wait().then(() => {
-    Test.unregisterWaiter(this, waiters.confirmEmailFieldIsVisible);
-    this.$('input[name=confirmEmail]').val(EMAIL);
-    this.$('input[name=confirmEmail]').blur();
-  });
-  wait().then(() => {
-    this.$('[data-test-selector=save]').click();
-    Test.registerWaiter(this, waiters.modalIsVisible);
-  });
-  wait().then(() => {
-    Test.unregisterWaiter(this, waiters.modalIsVisible);
-    let modal = this.$().siblings('.ember-modal-wrapper');
-    modal
-      .find('input')
-      .val(PASSWORD)
-      .blur();
-    modal
-      .find('[data-test-selector=check-pw]')
-      .click();
-    Test.registerWaiter(this, waiters.modalIsHidden);
-  });
-  wait().then(() => {
-    Test.unregisterWaiter(this, waiters.modalIsHidden);
-    assert.equal(this.$('input[name=email]').val(), EMAIL, 'displays new email');
+  assert.ok(authenticate.calledOnce, 'authenticate was called once');
+  assert.ok(authenticate.calledWith(PASSWORD), 'authenticate was called with correct pw');
+  assert.equal(card.email, EMAIL, 'displays new email');
+  done();
+});
+
+test('can save email', function(assert) {
+  let done = assert.async();
+  assert.expect(2);
+  const EMAIL = 'john@doe.com';
+  const PASSWORD = '1234567890';
+  let authenticate = sinon.stub().returns(Promise.resolve());
+  this.set('authenticate', authenticate);
+  let user = userFields();
+  user.save = sinon.stub().returns(Promise.resolve());
+  this.set('user', user);
+
+  this.render(hbs`{{nypr-accounts/basic-card
+    authenticate=(action authenticate)
+    isEditing=true
+    user=user}}`);
+
+  card
+    .fillInEmail(EMAIL)
+    .fillInConfirmEmail(EMAIL)
+    .clickSave();
+  card.passwordModal
+    .fillInPassword(PASSWORD)
+    .clickSubmit();
+
+  later(() => {
+    console.log(user);
+    console.log(user.save.firstCall);
+    assert.equal(user.email, EMAIL);
+    assert.ok(user.save.calledOnce);
     done();
-  });
-  return wait();
+  }, 50);
 });
 
 
@@ -512,4 +528,3 @@ test('shows error for taken email', function(assert) {
   });
   return wait();
 });
-
