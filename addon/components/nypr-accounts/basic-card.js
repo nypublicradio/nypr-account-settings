@@ -45,14 +45,16 @@ export default Component.extend({
 
   onEmailUpdate() {
     let newEmail = this.changeset.get('email');
-    if (newEmail) {
+    let oldEmail = get(this, 'user.email');
+    if (newEmail && newEmail !== oldEmail) {
       get(this,'checkForExistingEmail').perform(newEmail);
     }
   },
 
   onUsernameUpdate() {
     let newUsername = this.changeset.get('preferredUsername');
-    if (newUsername) {
+    let oldUsername = get(this, 'user.preferredUsername');
+    if (newUsername && newUsername !== oldUsername) {
       get(this,'checkForExistingUsername').perform(newUsername);
     }
   },
@@ -120,7 +122,7 @@ export default Component.extend({
       if (error.isAdapterError) {
         errorObject = error.errors;
       }
-      let { code, message, values = [] } = errorObject;
+      let { code, message, values = [] } = errorObject || error;
       if (values.includes('preferred_username')) {
         changeset.pushErrors('preferredUsername', message);
       } else if (code === 'AccountExists') {
