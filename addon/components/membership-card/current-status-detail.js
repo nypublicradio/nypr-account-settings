@@ -1,7 +1,8 @@
 import Ember from "ember";
 import computed from "ember-computed";
 import { getCookie } from "nypr-account-settings/utils/cookies";
-import layout from '../../templates/components/membership-card/current-status-detail';
+import layout
+  from "../../templates/components/membership-card/current-status-detail";
 
 export default Ember.Component.extend({
   layout,
@@ -19,11 +20,14 @@ export default Ember.Component.extend({
   ),
   mostRecentPledge: computed.reads("sortedPledges.firstObject"),
   activePledges: computed.filterBy("sortedPledges", "isActiveMember", true),
-  activeSustainingPledges: computed.filterBy(
-    "activePledges",
-    "isSustainer",
-    true
-  ),
+  activeSustainingPledges: computed("activePledges", function() {
+    return this.get("activePledges").filter(pledge => {
+      return (
+        Ember.get(pledge, "orderType") === "sustainer" &&
+        Ember.get(pledge, "isSustainer") === true
+      );
+    });
+  }),
   activeOneTimePledges: computed.filterBy(
     "activePledges",
     "orderType",
