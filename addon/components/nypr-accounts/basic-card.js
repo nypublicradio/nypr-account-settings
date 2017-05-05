@@ -17,7 +17,7 @@ export default Component.extend({
   tagName: '',
   isShowingModal: bool('resolveModal'),
   user: {},
-  emailIsVerified: true,
+  emailPendingVerification: false,
   verifyEmail: computed('user.email', 'changeset.email', function() {
     return get(this, 'changeset.email') !== get(this, 'user.email');
   }),
