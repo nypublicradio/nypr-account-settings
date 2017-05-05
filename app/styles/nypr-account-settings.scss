@@ -45,6 +45,18 @@
     -webkit-text-fill-color: $darkergray;
     opacity: 1;
   }
+  .nypr-account-email-wrapper {
+    display: flex;
+    input {
+      width: 100%;
+    }
+  }
+  .nypr-account-pending {
+    margin-top: 23px;
+    width: 100%;
+    text-align: right;
+    color: $lightgreen;
+  }
 }
 
 .nypr-input-label[for="preferredUsername"] > span {
