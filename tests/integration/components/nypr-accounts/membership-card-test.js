@@ -57,9 +57,10 @@ test('displays correct number of sustaining pledges', function(assert) {
     promise: RSVP.Promise.resolve(pledges)
   });
 
-  // Determine number of unique order codes in all sustaining donations
+  // Determine number of unique order codes in all active sustaining donations
   let allPledgeOrderCodes = [];
-  pledges.forEach(pledge => allPledgeOrderCodes.push(pledge.orderCode));
+  let activePledges = pledges.filter((item) => item.isSustainer === true);
+  activePledges.forEach(pledge => allPledgeOrderCodes.push(pledge.orderCode));
   let uniquePledgeOrders = Array.from(new Set(allPledgeOrderCodes));
 
   this.set('promise', pledgePromise);
@@ -122,15 +123,15 @@ test('displays most recent active pledge details if active onetime member', func
     isActiveMember: true,
     orderType: 'onetime'
   });
+  console.log(pledges);
   let pledgePromise = DS.PromiseArray.create({
     promise: RSVP.Promise.resolve(pledges)
   });
   this.set('pledges', pledgePromise);
 
-  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
+  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges siteDomain='wnyc'}}`);
 
   return wait().then(() => {
-    assert.async();
     assert.equal(
       this.$('.pledge-date').text().trim(),
       moment(pledges[0].orderDate).format('MMMM D, YYYY'),
@@ -158,7 +159,7 @@ test('displays renewal message if recent member', function(assert) {
     promise: RSVP.Promise.resolve(pledges)
   });
   this.set('pledges', pledgePromise);
-  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
+  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges siteDomain='wnyc'}}`);
 
   return wait().then(() => {
     assert.equal(
@@ -180,7 +181,7 @@ test('displays donation callout for non-members', function(assert) {
     promise: RSVP.Promise.resolve(pledges)
   });
   this.set('pledges', pledgePromise);
-  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
+  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges siteDomain='wnyc'}}`);
 
   return wait().then(() => {
     assert.equal(
@@ -190,7 +191,7 @@ test('displays donation callout for non-members', function(assert) {
     );
     assert.equal(
       this.$('.pledge-donate-button-link').attr('href'),
-      `https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/`,
+      `https://pledge3.wnyc.org/donate/mc-main`,
       'donate button links to non sustainer version'
     );
   });
