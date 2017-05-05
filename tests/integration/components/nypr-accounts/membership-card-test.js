@@ -123,7 +123,6 @@ test('displays most recent active pledge details if active onetime member', func
     isActiveMember: true,
     orderType: 'onetime'
   });
-  console.log(pledges);
   let pledgePromise = DS.PromiseArray.create({
     promise: RSVP.Promise.resolve(pledges)
   });
