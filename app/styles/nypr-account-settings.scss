@@ -47,7 +47,8 @@
   }
   .nypr-account-email-wrapper {
     display: flex;
-    input {
+    .nypr-input-container,
+    .nypr-input-container input {
       width: 100%;
     }
   }
