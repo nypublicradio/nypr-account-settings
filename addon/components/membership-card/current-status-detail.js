@@ -21,8 +21,8 @@ export default Ember.Component.extend({
   activePledges: computed.filterBy("sortedPledges", "isActiveMember", true),
   activeSustainingPledges: computed.filterBy(
     "activePledges",
-    "orderType",
-    "sustainer"
+    "isSustainer",
+    true
   ),
   activeOneTimePledges: computed.filterBy(
     "activePledges",
