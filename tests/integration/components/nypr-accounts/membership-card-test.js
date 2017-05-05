@@ -80,6 +80,7 @@ test('displays sustaining pledge details', function(assert) {
 
   let pledges = server.createList('pledge', 1, {
     isActiveMember: true,
+    isSustainer: true,
     orderType: 'sustainer'
   });
   let pledgePromise = DS.PromiseArray.create({
@@ -129,6 +130,7 @@ test('displays most recent active pledge details if active onetime member', func
   this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
 
   return wait().then(() => {
+    assert.async();
     assert.equal(
       this.$('.pledge-date').text().trim(),
       moment(pledges[0].orderDate).format('MMMM D, YYYY'),
