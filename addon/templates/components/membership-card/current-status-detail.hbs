@@ -30,7 +30,7 @@ Possible user states to handle:
         </div>
       </div>
       <div class="pledge-update-link">
-        <a href="https://pledge3.{{siteDomain}}.org/donate/mc-{{lowercase pledge.fund}}/sustainer/sustainer?order_id={{pledge.orderKey}}">Update</a>
+        <a href="https://{{pledgePrefix}}.{{siteDomain}}.org/donate/mc-{{lowercase pledge.fund}}/sustainer/sustainer?order_id={{pledge.orderKey}}">Update</a>
       </div>
     </div>
   {{/each}}
@@ -56,7 +56,7 @@ Possible user states to handle:
 {{else}} {{! i.e. isNonMember }}
   <div class="pledge-non-member">
     <p class="last-pledge-date">Our records show you're not a member yet. How about changing that right now, and help pay for all of the great programming you hear on {{siteName}}.</p>
-    <a class="pledge-donate-button-link" href="https://pledge3.{{siteDomain}}.org/donate/mc-main" target="_blank">
+    <a class="pledge-donate-button-link" href="https://{{pledgePrefix}}.{{siteDomain}}.org/donate/mc-main" target="_blank">
       <p class="pledge-donate-button">Become a member</p>
     </a>
   </div>

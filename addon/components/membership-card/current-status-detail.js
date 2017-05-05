@@ -6,6 +6,10 @@ import layout
 
 export default Ember.Component.extend({
   layout,
+  pledgePrefix: computed(function() {
+    let { environment } = Ember.getOwner(this).resolveRegistration('config:environment');
+    return environment === 'development' ? 'pledge-demo' : 'pledge3';
+  }),
   orderDateSorting: ["orderDate:desc"],
   sortedPledges: computed.sort("pledges", "orderDateSorting"),
   sortedSustainingPledges: computed.filterBy(
