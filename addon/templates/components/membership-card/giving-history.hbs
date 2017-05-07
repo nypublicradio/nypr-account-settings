@@ -1,7 +1,11 @@
   {{#nypr-tabs selection=selection as |tabs|}}
     {{#tabs.tablist as |tablist|}}
-      {{#tablist.tab "TabA" on-select=(action (mut selection))}}Sustaining donations{{/tablist.tab}}
-      {{#tablist.tab "TabB" on-select=(action (mut selection))}}One-time donations{{/tablist.tab}}
+      {{#if sortedSustainingPledges}}
+        {{#tablist.tab "TabA" on-select=(action (mut selection))}}Sustaining donations{{/tablist.tab}}
+      {{/if}}
+      {{#if sortedOneTimePledges}}
+        {{#tablist.tab "TabB" on-select=(action (mut selection))}}One-time donations{{/tablist.tab}}
+      {{/if}}
     {{/tabs.tablist}}
 
     {{#tabs.tabpanel "TabA"}}
@@ -13,9 +17,10 @@
           <div class="pledge-premium">{{pledge.premium}}</div>
         </div>
         <div class="pledge-order-price">${{pledge.orderPrice}}</div>
-        <div class="recurring-label">{{if pledge.isSustainer 'Sustaining' 'One-time'}}</div>
+        <div class="recurring-label">{{pledge.orderType}}</div>
       </div>
       {{/each}}
+      <p>We only show a year's worth of sustaining pledges.</p>
     {{/tabs.tabpanel}}
 
     {{#tabs.tabpanel "TabB"}}
@@ -27,7 +32,7 @@
           <div class="pledge-premium">{{pledge.premium}}</div>
         </div>
         <div class="pledge-order-price">${{pledge.orderPrice}}</div>
-        <div class="recurring-label">{{if pledge.isSustainer 'Sustaining' 'One-time'}}</div>
+        <div class="recurring-label">{{pledge.orderType}}</div>
       </div>
       {{/each}}
     {{/tabs.tabpanel}}
