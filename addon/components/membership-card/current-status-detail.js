@@ -7,8 +7,10 @@ import layout
 export default Ember.Component.extend({
   layout,
   pledgePrefix: computed(function() {
-    let { environment } = Ember.getOwner(this).resolveRegistration('config:environment');
-    return environment === 'development' ? 'pledge-demo' : 'pledge3';
+    let { environment } = Ember.getOwner(this).resolveRegistration(
+      "config:environment"
+    );
+    return environment === "development" ? "pledge-demo" : "pledge3";
   }),
   orderDateSorting: ["orderDate:desc"],
   sortedPledges: computed.sort("pledges", "orderDateSorting"),
@@ -54,20 +56,9 @@ export default Ember.Component.extend({
     }
   ),
   showPaymentHistory: false,
-  mostRecentSustainingPledgesPerOrderCode: computed(
+  mostRecentSustainingPledgesPerOrderCode: computed.uniqBy(
     "activeSustainingPledges",
-    function() {
-      let orderCodes = [];
-      let latestPledgePerOrderCode = [];
-      this.get("activeSustainingPledges").forEach(pledge => {
-        let pledgeOrderCode = Ember.get(pledge, "orderCode");
-        if (!orderCodes.includes(pledgeOrderCode)) {
-          orderCodes.push(pledgeOrderCode);
-          latestPledgePerOrderCode.push(pledge);
-        }
-      });
-      return latestPledgePerOrderCode;
-    }
+    "orderCode"
   ),
   hasMadeRecentPledge: computed(function() {
     return getCookie("recentPledge") === "true";
