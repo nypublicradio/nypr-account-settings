@@ -27,6 +27,15 @@
     -webkit-text-fill-color: $darkergray;
     opacity: 1;
   }
+  
+  &.is-loading .nypr-input {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.nypr-basic-info .animated-loading-icon {
+  @include align-self(center);
 }
 
 .nypr-input-label[for="preferredUsername"] > span {
@@ -46,6 +55,15 @@
   color: $blue;
 }
 
+.nypr-password-card.is-loading,
+.nypr-basic-info.is-loading {
+  .nypr-account-confirm,
+  .nypr-account-cancel {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
 .nypr-account-footer {
   @include flexbox((
     display: flex,
@@ -63,6 +81,10 @@
     justify-content: space-between,
     flex-basis: 150px
   ));
+}
+
+.nypr-basic-info.is-loading .nypr-account-footer-wrapper {
+  @include flex-basis(200px);
 }
 
 .nypr-account-link {

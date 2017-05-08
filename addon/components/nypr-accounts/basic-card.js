@@ -62,7 +62,14 @@ export default Component.extend({
       });
     });
   },
-
+  
+  closeModal() {
+    this.setProperties({
+      resolveModal: null,
+      rejectModal: null,
+    });
+  },
+  
   rollbackEmailField(changeset) {
     // work around to rollback specific fields
     let snapshot = changeset.snapshot();
@@ -75,6 +82,7 @@ export default Component.extend({
   },
 
   commit(changeset) {
+    set(this, 'isLoading', true);
     let notifyEmail = get(changeset, 'change.email');
     return changeset.save().then(() => {
       set(this, 'isEditing', false);
@@ -83,6 +91,7 @@ export default Component.extend({
       }
     })
     .catch(error => {
+      get(this, 'user').rollbackAttributes();
       if (error.isAdapterError) {
         error = error.errors;
       }
@@ -90,16 +99,14 @@ export default Component.extend({
       if (values.includes('preferred_username')) {
         changeset.pushErrors('preferredUsername', error.message);
       } else if (code === 'AccountExists') {
-        get(this, 'user').rollbackAttributes();
         changeset.pushErrors('email', message);
         changeset.set('confirmEmail', null);
         changeset.set('error.confirmEmail', null);
       }
     })
     .finally(() => {
+      set(this, 'isLoading', false);
       this.setProperties({
-        resolveModal: null,
-        rejectModal: null,
         password: null,
         passwordError: null,
         'user.confirmEmail': null
@@ -109,49 +116,31 @@ export default Component.extend({
 
   actions: {
     save(changeset) {
-      let stepOne;
       let verifyEmail = get(this, 'verifyEmail');
-
+      let validations = [
+        changeset.validate('givenName'),
+        changeset.validate('familyName')
+      ];
       if (verifyEmail) {
-        // defer validating preferredUsername b/c it incurs a UI delay due to
-        // waiting on a network call
-        stepOne = RSVP.all([
-          changeset.validate('givenName'),
-          changeset.validate('familyName'),
+        validations.push(
           changeset.validate('email'),
-          changeset.validate('confirmEmail'),
-        ]);
-      } else {
-        // if email hasn't changed, no point verifying it
-        // but roll back errors in case confirmEmail is showing an error
-        this.rollbackEmailField(changeset);
-        stepOne = RSVP.all([
-          changeset.validate('givenName'),
-          changeset.validate('familyName'),
-          changeset.validate('preferredUsername'),
-        ]);
+          changeset.validate('confirmEmail')
+        );
       }
 
-      return stepOne.then(() => {
-        if (verifyEmail && get(changeset, 'isValid')) {
-          return this.emailRequirement()
-            .then(() => {
-              // now that the modal has passed, validate the username
-              // TODO: I think we can actually skip this
-              return changeset.validate('preferredUsername')
-                .then(() => {
-                  if (get(changeset, 'isValid')) {
-                    return this.commit(changeset);
-                  } else {
-                    // something's wrong, probably the preferredUsername
-                    this.closeModal();
-                  }
-                });
-            })
-            .catch(() => this.rollbackEmailField(changeset));
-        } else if (get(changeset, 'isValid')) {
-          // if we're not doing the verify email flow, just commit the changeset
-          return this.commit(changeset);
+      return RSVP.all(validations).then(() => {
+        if (get(changeset, 'isValid')) {
+          if (verifyEmail) {
+            return this.emailRequirement()
+              .then(() => {
+                this.closeModal();
+                return this.commit(changeset);
+              })
+              .catch(() => this.rollbackEmailField(changeset));
+          } else {
+            // if we're not doing the verify email flow, just commit the changeset
+            return this.commit(changeset);
+          }
         }
       });
     },
@@ -174,13 +163,10 @@ export default Component.extend({
           .catch(({error}) => set(this, 'passwordError', [error.message]));
       }
     },
-    closeModal() {
+    cancelModal() {
       get(this, 'rejectModal')();
-      this.setProperties({
-        resolveModal: null,
-        rejectModal: null,
-        password: null
-      });
+      this.closeModal();
+      this.set('password', null);
     },
 
     toggleEdit() {

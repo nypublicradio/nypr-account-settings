@@ -1,4 +1,7 @@
-{{#nypr-card class="nypr-basic-info" as |card|}}
+{{#nypr-card
+  class="nypr-basic-info"
+  isLoading=isLoading
+  classNameBindings='isLoading' as |card|}}
 
   {{#card.header as |header|}}
     {{header.title text="Personal Info"}}
@@ -75,13 +78,25 @@
         class="nypr-account-confirm"
         data-test-selector="save"
         {{action 'save' changeset}}>Save</button>
+        
+      {{#if isLoading}}
+        {{animated-loading-icon
+          color='#128cf4'
+          width=34
+          height=34
+          outerScale=12
+          innerScale=6
+          radius=0.0025
+          dotRadius=2
+          lineWidth=2}}
+      {{/if}}
     </div>
   </div>
   {{/if}}
 {{/nypr-card}}
 
 {{#if isShowingModal}}
-  {{#nypr-account-modal title="Re-enter Your Password" closeAction=(action 'closeModal') as |m|}}
+  {{#nypr-account-modal title="Re-enter Your Password" closeAction=(action 'cancelModal') as |m|}}
     {{#m.body}}
     <p>
       You must re-enter your password to make changes to your email. The email you are changing is the one you use to log into the site.

@@ -37,12 +37,20 @@ export default function() {
     id: 'current',
     attributes: {}
   }});
-  this.patch('/users/:id', () => new Response(401, {}, {
-    "error": {
-      "code": "AccountExists", 
-      "message": "Account with email exists. Please try another."
+  this.patch('/users/:id', () => new Response(409, {}, {
+    error: {
+      code: '', 
+      message: 'public handle exists',
+      values: ['preferred_username']
     }
-  }));
+  }), {timing: 2000});
+  this.patch('/users/:id', (schema, {params}) => {
+    return {data:{
+      type: 'user',
+      id: params.id,
+      attributes: {}
+    }};
+  }, {timing: 2000});
   
   this.post('/check-password', () => new Response(401, {}, {
     "error": {

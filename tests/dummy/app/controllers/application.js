@@ -7,7 +7,9 @@ export default Controller.extend({
   //   return fetch('/check-password', {method: 'POST'})
   //     .then(checkStatus);
   // }
-  authenticate: () => RSVP.Promise.resolve()
+  authenticate: () => RSVP.Promise.resolve(),
+  showFlash() {},
+  changePassword() {}
 });
 
 // function checkStatus(response) {
