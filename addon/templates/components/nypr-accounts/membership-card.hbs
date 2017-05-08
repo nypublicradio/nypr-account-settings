@@ -7,7 +7,7 @@
     {{/if}}
 
     {{#if pledges.isFulfilled}}
-      {{membership-card/current-status-detail
+      {{nypr-accounts/membership-card/current-status-detail
         pledges=pledges
         siteDomain=siteDomain
         siteName=siteName}}
@@ -28,7 +28,7 @@
       {{card.button text="Back" class="nypr-card-edit-btn pledge-payment-history-back-button"}}
       {{header.title}}
     {{/card.header}}
-    {{membership-card/giving-history
+    {{nypr-accounts/membership-card/giving-history
       pledges=pledges
       showPaymentHistory=showPaymentHistory
       enableModal=enableModal}}
@@ -36,5 +36,5 @@
 {{/nypr-multi-card}}
 
 {{#if enableModal}}
-  {{membership-card/help-modal enableModal=enableModal}}
+  {{nypr-accounts/membership-card/help-modal enableModal=enableModal}}
 {{/if}}

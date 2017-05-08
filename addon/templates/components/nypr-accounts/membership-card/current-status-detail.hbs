@@ -38,19 +38,19 @@ Possible user states to handle:
 {{else if activeOneTimePledges}}
   <div class="pledge-active-onetime-member">
     <p class="last-pledge-date">You last donated on <span class="pledge-date">{{moment-format mostRecentPledge.orderDate 'MMMM D, YYYY'}}</span>.</p>
-    {{#membership-card/donation-button siteDomain=siteDomain orderKey=mostRecentPledge.orderKey}}Make another donation{{/membership-card/donation-button}}
+    {{#nypr-accounts/membership-card/donation-button siteDomain=siteDomain orderKey=mostRecentPledge.orderKey}}Make another donation{{/nypr-accounts/membership-card/donation-button}}
   </div>
 
 {{else if isLapsedSustainer}}
   <div class="pledge-lapsed-sustainer">
     <p class="last-pledge-date">Your sustaining donations have expired.</p>
-    {{#membership-card/donation-button siteDomain=siteDomain}}Become a member{{/membership-card/donation-button}}
+    {{#nypr-accounts/membership-card/donation-button siteDomain=siteDomain}}Become a member{{/nypr-accounts/membership-card/donation-button}}
   </div>
 
 {{else if isLapsedOneTimeMember}}
   <div class="pledge-active-onetime-member">
     <p class="last-pledge-date">It looks like you haven’t given since {{moment-format mostRecentPledge.orderDate 'MMM. D, YYYY'}}.  Take a moment to renew your membership right now!</p>
-    {{#membership-card/donation-button siteDomain=siteDomain orderKey=mostRecentPledge.orderKey}}Donate to renew{{/membership-card/donation-button}}
+    {{#nypr-accounts/membership-card/donation-button siteDomain=siteDomain orderKey=mostRecentPledge.orderKey}}Donate to renew{{/nypr-accounts/membership-card/donation-button}}
   </div>
 
 {{else}} {{! i.e. isNonMember }}

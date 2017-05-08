@@ -1,1 +1,0 @@
-export { default } from 'nypr-account-settings/components/membership-card/current-status-detail';

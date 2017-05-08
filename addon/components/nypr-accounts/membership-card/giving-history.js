@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import layout from '../../templates/components/membership-card/giving-history';
+import layout from '../../../templates/components/nypr-accounts/membership-card/giving-history';
 import computed from "ember-computed";
 
 export default Ember.Component.extend({
