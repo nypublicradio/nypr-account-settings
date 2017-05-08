@@ -8,6 +8,13 @@
 @import "nypr-ui/z-index";
 @import "nypr-ui/buttons";
 
+@mixin small-gray-font {
+  font-size: 12px;
+  color: #888;
+  font-weight: 400;
+  font-family: $base-font-stack;
+}
+
 .nypr-account-settings-and-member-center {
   @include display-flex();
   @include flex-wrap(wrap);
@@ -89,9 +96,7 @@
 .pledge-order-cc-type,
 .pledge-help-link,
 .pledge-hyphen-separator {
-  font-size: 12px;
-  color: #888;
-  font-weight: 400;
+  @include small-gray-font;
 
   a {
     color: $blue;
@@ -193,4 +198,12 @@
 .membership-loading-animation {
   width: 68px;
   margin: 60px auto;
+}
+
+.giving-history-link {
+  @include small-gray-font;
+
+  border: none;
+  background: none;
+  cursor: pointer;
 }
