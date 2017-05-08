@@ -13,6 +13,10 @@
   color: #888;
   font-weight: 400;
   font-family: $base-font-stack;
+
+  a {
+    color: $blue;
+  }
 }
 
 .nypr-account-settings-and-member-center {
@@ -130,23 +134,18 @@
   }
 }
 
-.pledge-history {
-  font-size: 16px;
-  color: $darkergray;
+.nypr-tabs-tablist {
+  margin-bottom: 15px;
+}
 
-  .nypr-tabs-tablist {
-    margin-bottom: 15px;
-  }
+.pledge-payment-history-back-button {
+  width: 100px;
+}
 
-  .pledge-payment-history-back-button {
-    width: 100px;
-  }
-
-  .pledge-history-title {
-    margin: auto;
-    left: -50px;
-    position: relative;
-  }
+.giving-history-title {
+  margin: auto;
+  left: -50px;
+  position: relative;
 }
 
 .pledge-premium {
@@ -207,4 +206,14 @@
   border: none;
   background: none;
   cursor: pointer;
+}
+
+.nypr-tabs-tablist {
+  margin-bottom: 20px;
+}
+
+.giving-history-limit-notification {
+  @include small-gray-font;
+
+  font-style: italic;
 }
