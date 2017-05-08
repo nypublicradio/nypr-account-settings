@@ -8,34 +8,10 @@
 @import "nypr-ui/z-index";
 @import "nypr-ui/buttons";
 
-@mixin small-gray-font {
-  font-size: 12px;
-  color: #888;
-  font-weight: 400;
-  font-family: $base-font-stack;
-
-  a {
-    color: $blue;
-  }
-}
-
-.nypr-account-settings-and-member-center {
-  @include display-flex();
-  @include flex-wrap(wrap);
-
-  margin-left: -0.5rem;
-  margin-right: -0.5rem;
-}
-
-.nypr-account-settings-body,
-.nypr-membership-info-body {
-  @include flex-grow(1);
-  @include flex-shrink(1);
-  @include flex-basis(480px);
-
-  padding: 0.5rem;
-  min-width: 50%;
-}
+@import "nypr-member-center/mixins";
+@import "nypr-member-center/giving-history";
+@import "nypr-member-center/current-status-detail";
+@import "nypr-member-center/loading-animation";
 
 .pledge-container,
 .pledge-info,
@@ -46,10 +22,6 @@
 
 .pledge-info-container {
   @include flex(1 0 200px);
-}
-
-.pledge-update-link {
-  @include flex(0 1 100px);
 }
 
 .pledge-info,
@@ -65,33 +37,6 @@
   }
 }
 
-.pledge-hyphen-separator {
-  margin: 0.4rem 0;
-}
-
-.pledge-container {
-  border-bottom: 1px solid #f1f1f1;
-  margin-bottom: 1rem;
-}
-
-.pledge-update-link {
-  @include display-flex();
-  @include justify-content(flex-end);
-  @include align-items(center);
-}
-
-.pledge-payment-history,
-.pledge-help-link
-{
-  cursor: pointer;
-}
-
-.active-donations-header {
-    margin-top: 14px;
-    margin-bottom: 10px;
-    font-weight: 400;
-}
-
 .active-donations-header,
 .pledge-order-price,
 .pledge-update-link,
@@ -101,119 +46,26 @@
 .pledge-help-link,
 .pledge-hyphen-separator {
   @include small-gray-font;
-
-  a {
-    color: $blue;
-    text-decoration: none;
-  }
 }
 
-
-.pledge-fund {
-  font-size: $base-font + px;
+.pledge-hyphen-separator {
+  margin: 0.4rem 0;
 }
 
-.pledge-donate-button {
-  @include btn;
-  @include btn--red;
-
-  margin-top: 0;
-  text-decoration: none;
+.pledge-container {
+  border-bottom: 1px solid #f1f1f1;
+  margin-bottom: 1rem;
 }
 
-.last-pledge-date {
-  color: $darkergray;
-  font-size: $base-font*0.875 + px;
+.pledge-payment-history,
+.pledge-help-link {
+  cursor: pointer;
 }
 
 .pledge-tools {
   @include justify-content(flex-end);
-
-  a {
-    color: #888;
-  }
 }
-
-.nypr-tabs-tablist {
-  margin-bottom: 15px;
-}
-
-.pledge-payment-history-back-button {
-  width: 100px;
-}
-
-.giving-history-title {
-  margin: auto;
-  left: -50px;
-  position: relative;
-}
-
-.pledge-premium {
-  font-size: 12px;
-  color: $lightgray;
-}
-
-.pledge-history-container {
-  @include justify-content(space-between);
-  @include align-items(center);
-
-  margin-left: -4px;
-  margin-right: -4px;
-  padding-bottom: 10px;
-
-  div {
-    margin-left: 4px;
-    margin-right: 4px;
-  }
-
-  .pledge-date {
-    width: 100px;
-  }
-
-  .pledge-order-price {
-    width: 30px;
-  }
-
-  .pledge-fund-and-premium {
-    width: 180px;
-  }
-
-  .recurring-label {
-    font-size: 12px;
-    color: $lightgray;
-    width: 60px;
-  }
-}
-
 
 .pledge-order-info {
   animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0.0; }
-  to   { opacity: 1.0; }
-}
-
-.membership-loading-animation {
-  width: 68px;
-  margin: 60px auto;
-}
-
-.giving-history-link {
-  @include small-gray-font;
-
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-.nypr-tabs-tablist {
-  margin-bottom: 20px;
-}
-
-.giving-history-limit-notification {
-  @include small-gray-font;
-
-  font-style: italic;
 }

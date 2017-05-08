@@ -1,0 +1,64 @@
+.nypr-tabs-tablist {
+  margin-bottom: 20px;
+}
+
+.pledge-payment-history-back-button {
+  width: 100px;
+}
+
+.giving-history-title {
+  margin: auto;
+  left: -50px;
+  position: relative;
+}
+
+.pledge-premium {
+  font-size: 12px;
+  color: $lightgray;
+}
+
+.pledge-history-container {
+  @include justify-content(space-between);
+  @include align-items(center);
+
+  margin-left: -4px;
+  margin-right: -4px;
+  padding-bottom: 10px;
+
+  div {
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+
+  .pledge-date {
+    width: 100px;
+  }
+
+  .pledge-order-price {
+    width: 30px;
+  }
+
+  .pledge-fund-and-premium {
+    width: 180px;
+  }
+
+  .recurring-label {
+    font-size: 12px;
+    color: $lightgray;
+    width: 60px;
+  }
+}
+
+.giving-history-link {
+  @include small-gray-font;
+
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.giving-history-limit-notification {
+  @include small-gray-font;
+
+  font-style: italic;
+}

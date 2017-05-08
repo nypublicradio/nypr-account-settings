@@ -10,6 +10,24 @@
 
 @import "nypr-account-modal";
 
+.nypr-account-settings-and-member-center {
+  @include display-flex();
+  @include flex-wrap(wrap);
+
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
+.nypr-account-settings-body,
+.nypr-membership-info-body {
+  @include flex-grow(1);
+  @include flex-shrink(1);
+  @include flex-basis(480px);
+
+  padding: 0.5rem;
+  min-width: 50%;
+}
+
 .account-info {
   margin-bottom: 100px;
 }

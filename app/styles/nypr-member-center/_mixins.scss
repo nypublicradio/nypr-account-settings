@@ -1,0 +1,11 @@
+@mixin small-gray-font {
+  font-size: 12px;
+  color: #888;
+  font-weight: 400;
+  font-family: $base-font-stack;
+
+  a {
+    color: $blue;
+    text-decoration: none;
+  }
+}

@@ -1,0 +1,14 @@
+.membership-loading-animation {
+  width: 68px;
+  margin: 60px auto;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.0;
+  }
+
+  to {
+    opacity: 1.0;
+  }
+}
