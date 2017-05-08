@@ -137,8 +137,8 @@ test('displays most recent active pledge details if active onetime member', func
       'date is displayed'
     );
     assert.equal(
-      this.$('.pledge-donate-button-link').attr('href'),
-      `https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id=${pledges[0].orderKey}`,
+      this.$('.pledge-donate-button').attr('href'),
+      `https://pledge3.wnyc.org/donate/membership-sustainer/`,
       'donate links to correct sustainer form'
     );
     assert.ok(
@@ -162,13 +162,13 @@ test('displays renewal message if recent member', function(assert) {
 
   return wait().then(() => {
     assert.equal(
-      this.$('.pledge-donate-button').text(),
+      this.$('.pledge-donate-button').text().trim(),
       'Donate to renew',
       'Button callout  for renewal'
     );
     assert.equal(
-      this.$('.pledge-donate-button-link').attr('href'),
-      `https://pledge3.wnyc.org/donate/membership-sustainer/sustainer/?order_id=${pledges[0].orderKey}`,
+      this.$('.pledge-donate-button').attr('href'),
+      `https://pledge3.wnyc.org/donate/membership-sustainer/`,
       'donate links to correct recap form'
     );
   });
@@ -184,13 +184,13 @@ test('displays donation callout for non-members', function(assert) {
 
   return wait().then(() => {
     assert.equal(
-      this.$('.pledge-donate-button').text(),
+      this.$('.pledge-donate-button').text().trim(),
       'Become a member',
       'Button callout for non-member'
     );
     assert.equal(
-      this.$('.pledge-donate-button-link').attr('href'),
-      `https://pledge3.wnyc.org/donate/mc-main`,
+      this.$('.pledge-donate-button').attr('href'),
+      `https://pledge3.wnyc.org/donate/membership-sustainer/`,
       'donate button links to non sustainer version'
     );
   });

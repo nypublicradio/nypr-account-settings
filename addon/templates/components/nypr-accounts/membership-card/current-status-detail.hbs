@@ -38,27 +38,25 @@ Possible user states to handle:
 {{else if activeOneTimePledges}}
   <div class="pledge-active-onetime-member">
     <p class="last-pledge-date">You last donated on <span class="pledge-date">{{moment-format mostRecentPledge.orderDate 'MMMM D, YYYY'}}</span>.</p>
-    {{#nypr-accounts/membership-card/donation-button siteDomain=siteDomain orderKey=mostRecentPledge.orderKey}}Make another donation{{/nypr-accounts/membership-card/donation-button}}
+    {{#nypr-accounts/membership-card/donation-button siteDomain=siteDomain}}Make another donation{{/nypr-accounts/membership-card/donation-button}}
   </div>
 
 {{else if isLapsedSustainer}}
   <div class="pledge-lapsed-sustainer">
     <p class="last-pledge-date">Your sustaining donations have expired.</p>
-    {{#nypr-accounts/membership-card/donation-button siteDomain=siteDomain}}Become a member{{/nypr-accounts/membership-card/donation-button}}
+    {{#nypr-accounts/membership-card/donation-button siteDomain=siteDomain orderKey=mostRecentPledge.orderKey}}Renew your membership{{/nypr-accounts/membership-card/donation-button}}
   </div>
 
 {{else if isLapsedOneTimeMember}}
   <div class="pledge-active-onetime-member">
     <p class="last-pledge-date">It looks like you haven’t given since {{moment-format mostRecentPledge.orderDate 'MMM. D, YYYY'}}.  Take a moment to renew your membership right now!</p>
-    {{#nypr-accounts/membership-card/donation-button siteDomain=siteDomain orderKey=mostRecentPledge.orderKey}}Donate to renew{{/nypr-accounts/membership-card/donation-button}}
+    {{#nypr-accounts/membership-card/donation-button siteDomain=siteDomain}}Donate to renew{{/nypr-accounts/membership-card/donation-button}}
   </div>
 
 {{else}} {{! i.e. isNonMember }}
   <div class="pledge-non-member">
     <p class="last-pledge-date">Our records show you're not a member yet. How about changing that right now, and help pay for all of the great programming you hear on {{siteName}}.</p>
-    <a class="pledge-donate-button-link" href="https://{{pledgePrefix}}.{{siteDomain}}.org/donate/mc-main" target="_blank">
-      <p class="pledge-donate-button">Become a member</p>
-    </a>
+    {{#nypr-accounts/membership-card/donation-button siteDomain=siteDomain}}Become a member{{/nypr-accounts/membership-card/donation-button}}
   </div>
 {{/if}}
 
