@@ -347,18 +347,18 @@ test('can update them all', function(assert) {
 
 
 test('shows pending message for unverified email', function(assert) {
-  this.set('emailPendingVerification', true);
+  this.set('emailIsPendingVerification', true);
   this.set('user', userFields());
 
-  this.render(hbs`{{nypr-accounts/basic-card user=user emailPendingVerification=emailPendingVerification}}`);
+  this.render(hbs`{{nypr-accounts/basic-card user=user emailIsPendingVerification=emailIsPendingVerification}}`);
   assert.equal(this.$('.nypr-account-pending').length, 1);
 });
 
 
 test('does not show pending message for verified email', function(assert) {
-  this.set('emailPendingVerification', false);
+  this.set('emailIsPendingVerification', false);
   this.set('user', userFields());
 
-  this.render(hbs`{{nypr-accounts/basic-card user=user emailPendingVerification=emailPendingVerification}}`);
+  this.render(hbs`{{nypr-accounts/basic-card user=user emailIsPendingVerification=emailIsPendingVerification}}`);
   assert.equal(this.$('.nypr-account-pending').length, 0);
 });
