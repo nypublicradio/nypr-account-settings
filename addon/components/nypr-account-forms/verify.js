@@ -15,7 +15,7 @@ export default Component.extend({
   onFailure: () => {},
   onSuccess: () => {},
   APIUrl: computed('membershipAPI', 'email_id', function() {
-    return `${get(this, 'membershipAPI')}/membership/email/${get(this, 'emailId')}/verify`;
+    return `${get(this, 'membershipAPI')}/v1/emails/${get(this, 'emailId')}/verify`;
   }),
   didReceiveAttrs() {
     this.verifyEmail(get(this, 'APIUrl'), get(this, 'verificationCode'));
