@@ -11,11 +11,11 @@ export default Component.extend({
   session: null,
   verificationCode: null,
   emailId: null,
-  authAPI: null,
+  membershipAPI: null,
   onFailure: () => {},
   onSuccess: () => {},
-  APIUrl: computed('authAPI', 'email_id', function() {
-    return `${get(this, 'authAPI')}/membership/email/${get(this, 'emailId')}/verify`;
+  APIUrl: computed('membershipAPI', 'email_id', function() {
+    return `${get(this, 'membershipAPI')}/membership/email/${get(this, 'emailId')}/verify`;
   }),
   didReceiveAttrs() {
     this.verifyEmail(get(this, 'APIUrl'), get(this, 'verificationCode'));

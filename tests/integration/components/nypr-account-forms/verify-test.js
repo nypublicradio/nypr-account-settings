@@ -21,13 +21,13 @@ test('it sends the correct values to the endpoint to verify the account', functi
 
   const testEmailId = 'email';
   const testVerification = 'QWERTYUIOP';
-  let authAPI = 'http://example.com';
+  let membershipAPI = 'http://example.com';
   this.set('emailId', testEmailId);
   this.set('verificationCode', testVerification);
-  this.set('authAPI', authAPI);
+  this.set('membershipAPI', membershipAPI);
 
   let requestSpy = sinon.spy();
-  let url = `${authAPI}/membership/email/${testEmailId}/verify`;
+  let url = `${membershipAPI}/membership/email/${testEmailId}/verify`;
   this.server.patch(url, (schema, request) => {
     requestSpy(request);
     return {};
@@ -36,7 +36,7 @@ test('it sends the correct values to the endpoint to verify the account', functi
   this.render(hbs`{{nypr-account-forms/verify
     emailId=emailId
     verificationCode=verificationCode
-    authAPI=authAPI
+    membershipAPI=membershipAPI
     session=session}}`);
 
   return wait().then(() => {
@@ -51,23 +51,23 @@ test('it calls the onSuccess action on success', function(assert) {
 
   const testEmailId = 'email';
   const testVerification = 'QWERTYUIOP';
-  let authAPI = 'http://example.com';
+  let membershipAPI = 'http://example.com';
   let onSuccess = sinon.spy();
   let onFailure = sinon.spy();
 
   this.set('emailId', testEmailId);
   this.set('verificationCode', testVerification);
-  this.set('authAPI', authAPI);
+  this.set('membershipAPI', membershipAPI);
   this.set('onSuccess', onSuccess);
   this.set('onFailure', onFailure);
 
-  let url = `${authAPI}/membership/email/${testEmailId}/verify`;
+  let url = `${membershipAPI}/membership/email/${testEmailId}/verify`;
   this.server.patch(url, () => {return {};}, 200);
 
   this.render(hbs`{{nypr-account-forms/verify
     emailId=emailId
     verificationCode=verificationCode
-    authAPI=authAPI
+    membershipAPI=membershipAPI
     session=session
     onSuccess=onSuccess
     onFailure=onFailure}}`);
@@ -83,23 +83,23 @@ test('it calls the onFailure action on failure', function(assert) {
 
   const testEmailId = 'email';
   const testVerification = 'QWERTYUIOP';
-  let authAPI = 'http://example.com';
+  let membershipAPI = 'http://example.com';
   let onSuccess = sinon.spy();
   let onFailure = sinon.spy();
 
   this.set('emailId', testEmailId);
   this.set('verificationCode', testVerification);
-  this.set('authAPI', authAPI);
+  this.set('membershipAPI', membershipAPI);
   this.set('onSuccess', onSuccess);
   this.set('onFailure', onFailure);
 
-  let url = `${authAPI}/membership/email/${testEmailId}/verify`;
+  let url = `${membershipAPI}/membership/email/${testEmailId}/verify`;
   this.server.patch(url, () => {return {};}, 400);
 
   this.render(hbs`{{nypr-account-forms/verify
     emailId=emailId
     verificationCode=verificationCode
-    authAPI=authAPI
+    membershipAPI=membershipAPI
     session=session
     onSuccess=onSuccess
     onFailure=onFailure}}`);
@@ -116,23 +116,23 @@ test('it calls the onFailure action with the server error message', function(ass
   const testEmailId = 'email';
   const testVerification = 'QWERTYUIOP';
   const serverErrorMessage = 'something went wrong';
-  let authAPI = 'http://example.com';
+  let membershipAPI = 'http://example.com';
   let onSuccess = sinon.spy();
   let onFailure = sinon.spy();
 
   this.set('emailId', testEmailId);
   this.set('verificationCode', testVerification);
-  this.set('authAPI', authAPI);
+  this.set('membershipAPI', membershipAPI);
   this.set('onSuccess', onSuccess);
   this.set('onFailure', onFailure);
 
-  let url = `${authAPI}/membership/email/${testEmailId}/verify`;
+  let url = `${membershipAPI}/membership/email/${testEmailId}/verify`;
   this.server.patch(url, () => {return { errors: {code: 'ServerError', message: serverErrorMessage } };}, 400);
 
   this.render(hbs`{{nypr-account-forms/verify
     emailId=emailId
     verificationCode=verificationCode
-    authAPI=authAPI
+    membershipAPI=membershipAPI
     session=session
     onSuccess=onSuccess
     onFailure=onFailure}}`);
