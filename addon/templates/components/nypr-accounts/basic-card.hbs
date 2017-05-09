@@ -54,7 +54,7 @@
       disabled=(not isEditing)
       onChange=(action onEmailChange)
     }}
-    {{#if (and emailPendingVerification (not isEditing))}}
+    {{#if (and emailIsPendingVerification (not isEditing))}}
       <div class="nypr-account-pending">pending verification</div>
     {{/if}}
   </div>
