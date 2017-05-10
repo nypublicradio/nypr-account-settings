@@ -1,0 +1,21 @@
+{{#if hasBlock}}
+  {{yield}}
+{{else}}
+  {{#nypr-account-modal title="Membership Help" closeAction=(action (mut enableModal) false) as |m|}}
+    {{#m.body}}
+    <p>
+      If you've donated but don't see your donation info here, it may be because you've donated with a different email. You can change your donation email in your Personal Info section.
+    </p>
+    <p>
+      Other questions: <a href="/support/faq/">Check out our FAQs</a><br/>
+      Or contact us: <a href="/contact">wnyc.org/contact</a> or 646-829-4000
+    </p>
+    {{/m.body}}
+    {{#m.footer}}
+      <button
+        class="nypr-account-confirm"
+        data-test-selector="confirm-disable"
+        {{action (action (mut enableModal) false)}}>Got it!</button>
+    {{/m.footer}}
+  {{/nypr-account-modal}}
+{{/if}}

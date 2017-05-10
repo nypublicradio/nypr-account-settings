@@ -1,0 +1,10 @@
+{{#if orderKey}}
+<a class="pledge-donate-button" href="https://{{pledgePrefix}}.{{siteDomain}}.org/donate/membership-sustainer/sustainer/?order_id={{orderKey}}" target="_blank">
+  {{yield}}
+</a>
+{{else}}
+<a class="pledge-donate-button" href="https://{{pledgePrefix}}.{{siteDomain}}.org/donate/membership-sustainer/" target="_blank">
+  {{yield}}
+</a>
+{{/if}}
+

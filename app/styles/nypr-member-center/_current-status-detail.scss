@@ -1,0 +1,29 @@
+.pledge-update-link {
+  @include align-items(center);
+  @include display-flex;
+  @include flex(0 1 100px);
+  @include justify-content(flex-end);
+}
+
+.active-donations-header {
+  margin-top: 14px;
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+
+.pledge-fund {
+  font-size: $base-font + px;
+}
+
+.pledge-donate-button {
+  @include btn;
+  @include btn--red;
+
+  margin-top: 0;
+  text-decoration: none;
+}
+
+.last-pledge-date {
+  color: $darkergray;
+  font-size: $base-font * 0.875 + px;
+}

@@ -1,0 +1,43 @@
+  {{#nypr-tabs selection=selection as |tabs|}}
+    {{#tabs.tablist as |tablist|}}
+      {{#if sortedSustainingPledges}}
+        {{#tablist.tab "TabA" on-select=(action (mut selection))}}Sustaining donations{{/tablist.tab}}
+      {{/if}}
+      {{#if sortedOneTimePledges}}
+        {{#tablist.tab "TabB" on-select=(action (mut selection))}}One-time donations{{/tablist.tab}}
+      {{/if}}
+    {{/tabs.tablist}}
+
+    {{#tabs.tabpanel "TabA"}}
+      {{#each sortedSustainingPledges as |pledge|}}
+      <div class="pledge-container pledge-history-container">
+        <div class="pledge-date">{{moment-format pledge.orderDate 'MMM D, YYYY'}}</div>
+        <div class="pledge-fund-and-premium">
+          <div>{{pledge.fund}}</div>
+          <div class="pledge-premium">{{pledge.premium}}</div>
+        </div>
+        <div class="pledge-order-price">${{pledge.orderPrice}}</div>
+      </div>
+      {{/each}}
+      <p class="giving-history-limit-notification">For recurring payment records prior to one year ago, please contact us at <a href="tel:+16468294000">(646) 829-4000</a>.</p>
+    {{/tabs.tabpanel}}
+
+    {{#tabs.tabpanel "TabB"}}
+      {{#each sortedOneTimePledges as |pledge|}}
+      <div class="pledge-container pledge-history-container">
+        <div class="pledge-date">{{moment-format pledge.orderDate 'MMM D, YYYY'}}</div>
+        <div class="pledge-fund-and-premium">
+          <div>{{pledge.fund}}</div>
+          <div class="pledge-premium">{{pledge.premium}}</div>
+        </div>
+        <div class="pledge-order-price">${{pledge.orderPrice}}</div>
+      </div>
+      {{/each}}
+      <p class="giving-history-limit-notification">For one-time payment records prior to five years ago, please contact us at <a href="tel:+16468294000">(646) 829-4000</a>.</p>
+    {{/tabs.tabpanel}}
+
+  {{/nypr-tabs}}
+
+  <div class="pledge-tools">
+    <div class="pledge-help-link"><span {{action (action (mut enableModal) true)}}>Help</span></div>
+  </div>

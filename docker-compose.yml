@@ -1,0 +1,16 @@
+version: "2.1"
+
+services:
+  app:
+    build: .
+    hostname: nypr_account_settings
+    volumes:
+      - "/nypr-account-settings/node_modules"
+      - "/nypr-account-settings/bower_components"
+      - "/nypr-account-settings/dist"
+      - "/nypr-account-settings/vendor/modernizr"
+      - ".:/nypr-account-settings"
+    ports:
+      - "4201:4200"
+      - "49153:49152"
+    command: tail -f /dev/null
