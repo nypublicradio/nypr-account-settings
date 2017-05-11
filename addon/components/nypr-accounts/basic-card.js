@@ -38,8 +38,7 @@ export default Component.extend({
   }),
 
   onEmailChange() {
-    let newEmail = this.changeset.get('email');
-    if (newEmail !== undefined) {
+    if (get(this, 'emailWasChanged')) {
       this.changeset.validate('confirmEmail');
     } else {
       this.rollbackEmailField();
