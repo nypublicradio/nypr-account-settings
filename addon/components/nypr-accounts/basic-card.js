@@ -96,8 +96,6 @@ export default Component.extend({
         value,
         errorMessage: messages.emailExists
       });
-    } else {
-      yield;
     }
   }).restartable(),
 
@@ -110,8 +108,6 @@ export default Component.extend({
         value,
         errorMessage: messages.publicHandleExists
       });
-    } else {
-      yield;
     }
   }).restartable(),
 
