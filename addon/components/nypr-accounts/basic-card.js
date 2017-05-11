@@ -4,12 +4,12 @@ import layout from '../../templates/components/nypr-accounts/basic-card';
 import RSVP from 'rsvp';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
-import makeValidations from 'nypr-account-settings/validations/nypr-accounts/basic-card';
-import validateRemote from 'nypr-account-settings/validators/nypr-accounts/remote';
+import validations from 'nypr-account-settings/validations/nypr-accounts/basic-card';
 import messages from 'nypr-account-settings/validations/nypr-accounts/custom-messages';
 import getOwner from 'ember-owner/get';
 import get from 'ember-metal/get';
 import set from 'ember-metal/set';
+import fetch from 'fetch';
 import computed from 'ember-computed';
 import { decamelize } from 'ember-string';
 import { task, timeout, all, waitForEvent } from 'ember-concurrency';
@@ -23,7 +23,6 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     this.config = getOwner(this).resolveRegistration('config:environment');
-    let validations = makeValidations({validationPath: this.config.wnycAuthAPI});
 
     let user = get(this, 'user');
     let changeset = new Changeset(user, lookupValidator(validations), validations);
@@ -73,14 +72,18 @@ export default Component.extend({
   },
 
   checkForExistingAttribute: task(function * ({key, value, errorMessage}) {
-    let validator = validateRemote({
-      path: `${this.config.wnycAuthAPI}/v1/user/exists-by-attribute`,
-      filterKey: decamelize(key),
-      message: errorMessage,
-    });
-    let result = yield validator(decamelize(key), value);
-    if (result !== true) {
-      this.changeset.pushErrors(key, errorMessage);
+    let path = `${this.config.wnycAuthAPI}/v1/user/exists-by-attribute`;
+    let serverKey = decamelize(key);
+    try {
+      let response = yield fetch(`${path}?${serverKey}=${value}`);
+      let json = yield response.json();
+      if (json[serverKey]) {
+        this.changeset.pushErrors(key, errorMessage);
+      }
+    } catch(e) {
+      if (e && get(e, 'errors.message')) {
+        this.changeset.pushErrors(key, e.errors.message);
+      }
     }
   }),
 
