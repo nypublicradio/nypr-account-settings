@@ -22,7 +22,7 @@ export default Component.extend({
     let method = 'PATCH';
     let mode = 'cors';
     let body = JSON.stringify({ data: {
-      id: emailId,
+      id: Number(emailId),
       type: "EmailAddress",
       attributes: {
         "verification_token": verificationToken

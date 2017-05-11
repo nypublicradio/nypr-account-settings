@@ -41,7 +41,7 @@ test('it sends the correct values to the endpoint to verify the account', functi
 
   const expectedRequestPayload =  {
   data: {
-      id: testEmailId,
+      id: Number(testEmailId),
       type: "EmailAddress",
       attributes: {
         "verification_token": testVerification
