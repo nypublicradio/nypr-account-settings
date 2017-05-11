@@ -23,7 +23,7 @@ test('it sends the correct values to the endpoint to verify the account', functi
   const testVerification = 'QWERTYUIOP';
   let membershipAPI = 'http://example.com';
   this.set('emailId', testEmailId);
-  this.set('verificationCode', testVerification);
+  this.set('verificationToken', testVerification);
   this.set('membershipAPI', membershipAPI);
 
   let requestSpy = sinon.spy();
@@ -35,14 +35,14 @@ test('it sends the correct values to the endpoint to verify the account', functi
 
   this.render(hbs`{{nypr-account-forms/verify
     emailId=emailId
-    verificationCode=verificationCode
+    verificationToken=verificationToken
     membershipAPI=membershipAPI
     session=session}}`);
 
   return wait().then(() => {
     assert.equal(requestSpy.callCount, 1);
     assert.equal(requestSpy.firstCall.args[0].requestHeaders['authorization'], 'foo');
-    assert.deepEqual(JSON.parse(requestSpy.firstCall.args[0].requestBody), { verification_code: testVerification });
+    assert.deepEqual(JSON.parse(requestSpy.firstCall.args[0].requestBody), { verification_token: testVerification });
   });
 });
 
@@ -56,7 +56,7 @@ test('it calls the onSuccess action on success', function(assert) {
   let onFailure = sinon.spy();
 
   this.set('emailId', testEmailId);
-  this.set('verificationCode', testVerification);
+  this.set('verificationToken', testVerification);
   this.set('membershipAPI', membershipAPI);
   this.set('onSuccess', onSuccess);
   this.set('onFailure', onFailure);
@@ -66,7 +66,7 @@ test('it calls the onSuccess action on success', function(assert) {
 
   this.render(hbs`{{nypr-account-forms/verify
     emailId=emailId
-    verificationCode=verificationCode
+    verificationToken=verificationToken
     membershipAPI=membershipAPI
     session=session
     onSuccess=onSuccess
@@ -88,7 +88,7 @@ test('it calls the onFailure action on failure', function(assert) {
   let onFailure = sinon.spy();
 
   this.set('emailId', testEmailId);
-  this.set('verificationCode', testVerification);
+  this.set('verificationToken', testVerification);
   this.set('membershipAPI', membershipAPI);
   this.set('onSuccess', onSuccess);
   this.set('onFailure', onFailure);
@@ -98,7 +98,7 @@ test('it calls the onFailure action on failure', function(assert) {
 
   this.render(hbs`{{nypr-account-forms/verify
     emailId=emailId
-    verificationCode=verificationCode
+    verificationToken=verificationToken
     membershipAPI=membershipAPI
     session=session
     onSuccess=onSuccess
@@ -121,7 +121,7 @@ test('it calls the onFailure action with the server error message', function(ass
   let onFailure = sinon.spy();
 
   this.set('emailId', testEmailId);
-  this.set('verificationCode', testVerification);
+  this.set('verificationToken', testVerification);
   this.set('membershipAPI', membershipAPI);
   this.set('onSuccess', onSuccess);
   this.set('onFailure', onFailure);
@@ -131,7 +131,7 @@ test('it calls the onFailure action with the server error message', function(ass
 
   this.render(hbs`{{nypr-account-forms/verify
     emailId=emailId
-    verificationCode=verificationCode
+    verificationToken=verificationToken
     membershipAPI=membershipAPI
     session=session
     onSuccess=onSuccess

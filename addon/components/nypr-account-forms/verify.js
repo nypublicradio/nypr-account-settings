@@ -9,7 +9,7 @@ import messages from 'nypr-account-settings/validations/nypr-accounts/custom-mes
 export default Component.extend({
   layout,
   session: null,
-  verificationCode: null,
+  verificationToken: null,
   emailId: null,
   membershipAPI: null,
   onFailure: () => {},
@@ -18,16 +18,16 @@ export default Component.extend({
     return `${get(this, 'membershipAPI')}/v1/emails/${get(this, 'emailId')}/verify`;
   }),
   didReceiveAttrs() {
-    this.verifyEmail(get(this, 'APIUrl'), get(this, 'verificationCode'));
+    this.verifyEmail(get(this, 'APIUrl'), get(this, 'verificationToken'));
   },
-  verifyEmail(url, verificationCode) {
+  verifyEmail(url, verificationToken) {
     let method = 'PATCH';
     let mode = 'cors';
     let headers = {'Content-Type': 'application/json'};
     this.get('session').authorize('authorizer:nypr', (header, value) => {
         headers[header] = value;
     });
-    let body = JSON.stringify({verification_code: verificationCode});
+    let body = JSON.stringify({verification_token: verificationToken});
     fetch(url, {method, mode, headers, body})
     .then(rejectUnsuccessfulResponses)
     .then(() => {
