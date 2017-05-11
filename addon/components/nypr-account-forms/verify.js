@@ -1,10 +1,9 @@
 import Component from 'ember-component';
-import computed from 'ember-computed';
 import get from 'ember-metal/get';
 import fetch from 'fetch';
-import { rejectUnsuccessfulResponses } from 'nypr-account-settings/utils/fetch-utils';
 import layout from '../../templates/components/nypr-account-forms/verify';
 import messages from 'nypr-account-settings/validations/nypr-accounts/custom-messages';
+import { task } from 'ember-concurrency';
 
 export default Component.extend({
   layout,
@@ -14,31 +13,44 @@ export default Component.extend({
   membershipAPI: null,
   onFailure: () => {},
   onSuccess: () => {},
-  APIUrl: computed('membershipAPI', 'email_id', function() {
-    return `${get(this, 'membershipAPI')}/v1/emails/${get(this, 'emailId')}/verify`;
-  }),
   didReceiveAttrs() {
-    this.verifyEmail(get(this, 'APIUrl'), get(this, 'verificationToken'));
+    get(this, 'verifyEmail').perform(get(this, 'emailId'), get(this, 'verificationToken'));
   },
-  verifyEmail(url, verificationToken) {
+
+  verifyEmail: task(function * (emailId, verificationToken) {
+    let url = `${get(this, 'membershipAPI')}/v1/emails/${get(this, 'emailId')}/verify`;
     let method = 'PATCH';
     let mode = 'cors';
-    let headers = {'Content-Type': 'application/json'};
+    let body = JSON.stringify({ data: {
+      id: emailId,
+      type: "EmailAddress",
+      attributes: {
+        "verification_token": verificationToken
+      }
+    }});
+    let headers = {'Content-Type': 'application/vnd.api+json'};
     this.get('session').authorize('authorizer:nypr', (header, value) => {
         headers[header] = value;
     });
-    let body = JSON.stringify({verification_token: verificationToken});
-    fetch(url, {method, mode, headers, body})
-    .then(rejectUnsuccessfulResponses)
-    .then(() => {
-      get(this, 'onSuccess')();
-    })
-    .catch((e) => {
-      let errorMessage = messages.genericVerificationError;
-      if (e && get(e, 'errors.message')) {
-        errorMessage = e.errors.message;
+    try {
+      let response = yield fetch(url, {method, mode, headers, body});
+      if (response && response.ok) {
+        let json = yield response.json();
+        if (json.success) {
+          get(this, 'onSuccess')();
+        } else {
+          throw messages.genericVerificationError;
+        }
+      } else {
+        let json = yield response.json();
+        if (json && get(json, 'errors.message')) {
+          throw json.errors.message;
+        } else {
+          throw messages.genericVerificationError;
+        }
       }
-      get(this, 'onFailure')(errorMessage);
-    });
-  }
+    } catch(error) {
+      get(this, 'onFailure')(error || messages.genericVerificationError);
+    }
+  }).drop(),
 });

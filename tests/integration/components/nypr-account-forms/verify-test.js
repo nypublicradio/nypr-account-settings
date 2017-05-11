@@ -39,10 +39,20 @@ test('it sends the correct values to the endpoint to verify the account', functi
     membershipAPI=membershipAPI
     session=session}}`);
 
+  const expectedRequestPayload =  {
+  data: {
+      id: testEmailId,
+      type: "EmailAddress",
+      attributes: {
+        "verification_token": testVerification
+      }
+    }
+  };
+
   return wait().then(() => {
     assert.equal(requestSpy.callCount, 1);
     assert.equal(requestSpy.firstCall.args[0].requestHeaders['authorization'], 'foo');
-    assert.deepEqual(JSON.parse(requestSpy.firstCall.args[0].requestBody), { verification_token: testVerification });
+    assert.deepEqual(JSON.parse(requestSpy.firstCall.args[0].requestBody), expectedRequestPayload);
   });
 });
 
@@ -62,7 +72,7 @@ test('it calls the onSuccess action on success', function(assert) {
   this.set('onFailure', onFailure);
 
   let url = `${membershipAPI}/v1/emails/${testEmailId}/verify`;
-  this.server.patch(url, () => {return {};}, 200);
+  this.server.patch(url, () => {return {success: true};}, 200);
 
   this.render(hbs`{{nypr-account-forms/verify
     emailId=emailId
@@ -94,7 +104,7 @@ test('it calls the onFailure action on failure', function(assert) {
   this.set('onFailure', onFailure);
 
   let url = `${membershipAPI}/v1/emails/${testEmailId}/verify`;
-  this.server.patch(url, () => {return {};}, 400);
+  this.server.patch(url, () => {return {success: false};}, 200);
 
   this.render(hbs`{{nypr-account-forms/verify
     emailId=emailId
@@ -103,6 +113,7 @@ test('it calls the onFailure action on failure', function(assert) {
     session=session
     onSuccess=onSuccess
     onFailure=onFailure}}`);
+
   return wait().then(() => {
     assert.equal(onSuccess.callCount, 0);
     assert.equal(onFailure.callCount, 1);
