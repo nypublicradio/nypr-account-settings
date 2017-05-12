@@ -44,20 +44,18 @@
     showError=true
   }}
 
-  <div class='nypr-account-email-wrapper'>
-    {{nypr-input
-      label='Email'
-      placeholder='you@email.com'
-      fieldname='email'
-      value=changeset.email
-      errors=changeset.error.email.validation
-      disabled=(not isEditing)
-      onChange=(action onEmailChange)
-    }}
-    {{#if (and emailIsPendingVerification (not isEditing))}}
-      <div class="nypr-account-pending">pending verification</div>
-    {{/if}}
-  </div>
+  {{nypr-input
+    label='Email'
+    placeholder='you@email.com'
+    fieldname='email'
+    value=changeset.email
+    errors=changeset.error.email.validation
+    disabled=(not isEditing)
+    onChange=(action onEmailChange)
+  }}
+  {{#if (or emailIsPendingVerification (not isEditing))}}
+    <div class="nypr-account-pending">pending verification</div>
+  {{/if}}
 
 
   {{#if (and verifyEmail isEditing)}}
