@@ -27,7 +27,7 @@ test('it sends the correct values to the endpoint to verify the account', functi
   this.set('membershipAPI', membershipAPI);
 
   let requestSpy = sinon.spy();
-  let url = `${membershipAPI}/v1/emails/${testEmailId}/verify`;
+  let url = `${membershipAPI}/v1/emails/${testEmailId}/verify/`;
   this.server.patch(url, (schema, request) => {
     requestSpy(request);
     return {};
@@ -71,8 +71,8 @@ test('it calls the onSuccess action on success', function(assert) {
   this.set('onSuccess', onSuccess);
   this.set('onFailure', onFailure);
 
-  let url = `${membershipAPI}/v1/emails/${testEmailId}/verify`;
-  this.server.patch(url, () => {return {success: true};}, 200);
+  let url = `${membershipAPI}/v1/emails/${testEmailId}/verify/`;
+  this.server.patch(url, () => {return {data: {success: true}};}, 200);
 
   this.render(hbs`{{nypr-account-forms/verify
     emailId=emailId
@@ -103,8 +103,8 @@ test('it calls the onFailure action on failure', function(assert) {
   this.set('onSuccess', onSuccess);
   this.set('onFailure', onFailure);
 
-  let url = `${membershipAPI}/v1/emails/${testEmailId}/verify`;
-  this.server.patch(url, () => {return {success: false};}, 200);
+  let url = `${membershipAPI}/v1/emails/${testEmailId}/verify/`;
+  this.server.patch(url, () => {return {data: {success: false}};}, 200);
 
   this.render(hbs`{{nypr-account-forms/verify
     emailId=emailId
@@ -137,7 +137,7 @@ test('it calls the onFailure action with the server error message', function(ass
   this.set('onSuccess', onSuccess);
   this.set('onFailure', onFailure);
 
-  let url = `${membershipAPI}/v1/emails/${testEmailId}/verify`;
+  let url = `${membershipAPI}/v1/emails/${testEmailId}/verify/`;
   this.server.patch(url, () => {return { errors: {code: 'ServerError', message: serverErrorMessage } };}, 400);
 
   this.render(hbs`{{nypr-account-forms/verify

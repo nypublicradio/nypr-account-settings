@@ -18,7 +18,7 @@ export default Component.extend({
   },
 
   verifyEmail: task(function * (emailId, verificationToken) {
-    let url = `${get(this, 'membershipAPI')}/v1/emails/${get(this, 'emailId')}/verify`;
+    let url = `${get(this, 'membershipAPI')}/v1/emails/${get(this, 'emailId')}/verify/`;
     let method = 'PATCH';
     let mode = 'cors';
     let body = JSON.stringify({ data: {
@@ -36,7 +36,7 @@ export default Component.extend({
       let response = yield fetch(url, {method, mode, headers, body});
       if (response && response.ok) {
         let json = yield response.json();
-        if (json.success) {
+        if (get(json('data.success'))) {
           get(this, 'onSuccess')();
         } else {
           throw messages.genericVerificationError;
