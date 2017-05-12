@@ -36,7 +36,7 @@ export default Component.extend({
       let response = yield fetch(url, {method, mode, headers, body});
       if (response && response.ok) {
         let json = yield response.json();
-        if (get(json('data.success'))) {
+        if (get(json, ('data.success'))) {
           get(this, 'onSuccess')();
         } else {
           throw messages.genericVerificationError;

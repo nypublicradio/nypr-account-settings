@@ -2047,21 +2047,6 @@ ember-cli-babel@^6.0.0, ember-cli-babel@^6.0.0-beta.11, ember-cli-babel@^6.0.0-b
     clone "^2.0.0"
     ember-cli-version-checker "^1.2.0"
 
-ember-cli-babel@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/ember-cli-babel/-/ember-cli-babel-6.1.0.tgz#d9c83a7d0c67cc8a3ccb9bd082971c3593e54fad"
-  dependencies:
-    amd-name-resolver "0.0.6"
-    babel-plugin-debug-macros "^0.1.6"
-    babel-plugin-transform-es2015-modules-amd "^6.24.0"
-    babel-polyfill "^6.16.0"
-    babel-preset-env "^1.2.0"
-    broccoli-babel-transpiler "^6.0.0"
-    broccoli-funnel "^1.0.0"
-    broccoli-source "^1.1.0"
-    clone "^2.0.0"
-    ember-cli-version-checker "^1.2.0"
-
 ember-cli-broccoli-sane-watcher@^2.0.3:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/ember-cli-broccoli-sane-watcher/-/ember-cli-broccoli-sane-watcher-2.0.4.tgz#f43f42f75b7509c212fb926cd9aea86ae19264c6"
@@ -2403,15 +2388,6 @@ ember-cli@2.10.0:
     tree-sync "^1.1.4"
     walk-sync "^0.3.0"
     yam "0.0.22"
-
-ember-concurrency@0.8.3:
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-0.8.3.tgz#f3adc58bc7a69c7d9ec27fe9cbe75cb8c0adf3bf"
-  dependencies:
-    babel-core "^6.24.1"
-    ember-cli-babel "^6.1.0"
-    ember-getowner-polyfill "^1.1.0"
-    ember-maybe-import-regenerator "^0.1.5"
 
 ember-concurrency@^0.7.15:
   version "0.7.19"

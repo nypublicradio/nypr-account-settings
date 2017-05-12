@@ -19,7 +19,7 @@ moduleForComponent('nypr-account-forms/verify', 'Integration | Component | nypr 
 test('it sends the correct values to the endpoint to verify the account', function(assert) {
   this.set('session', this.session);
 
-  const testEmailId = 'email';
+  const testEmailId = '123';
   const testVerification = 'QWERTYUIOP';
   let membershipAPI = 'http://example.com';
   this.set('emailId', testEmailId);
@@ -59,7 +59,7 @@ test('it sends the correct values to the endpoint to verify the account', functi
 test('it calls the onSuccess action on success', function(assert) {
   this.set('session', this.session);
 
-  const testEmailId = 'email';
+  const testEmailId = '123';
   const testVerification = 'QWERTYUIOP';
   let membershipAPI = 'http://example.com';
   let onSuccess = sinon.spy();
@@ -91,7 +91,7 @@ test('it calls the onSuccess action on success', function(assert) {
 test('it calls the onFailure action on failure', function(assert) {
   this.set('session', this.session);
 
-  const testEmailId = 'email';
+  const testEmailId = '123';
   const testVerification = 'QWERTYUIOP';
   let membershipAPI = 'http://example.com';
   let onSuccess = sinon.spy();
@@ -124,7 +124,7 @@ test('it calls the onFailure action on failure', function(assert) {
 test('it calls the onFailure action with the server error message', function(assert) {
   this.set('session', this.session);
 
-  const testEmailId = 'email';
+  const testEmailId = '123';
   const testVerification = 'QWERTYUIOP';
   const serverErrorMessage = 'something went wrong';
   let membershipAPI = 'http://example.com';
