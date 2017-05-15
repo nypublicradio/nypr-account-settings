@@ -347,7 +347,7 @@ test('can save email', function(assert) {
 });
 
 
-test('shows an error message if password is rejected', function(assert) {
+test('shows an server error if password is rejected', function(assert) {
   let done = assert.async(2);
   assert.expect(2);
   const EMAIL = 'john@doe.com';
@@ -395,6 +395,48 @@ test('shows an error message if password is rejected', function(assert) {
   return wait();
 });
 
+test('shows an error message if password fails', function(assert) {
+  let done = assert.async(2);
+  assert.expect(2);
+  const EMAIL = 'john@doe.com';
+  const BAD_PW = '1234567890';
+
+  this.set('user', userFields());
+  this.set('authenticate', function() {
+    assert.ok('authenticate was called');
+    done();
+    return Promise.reject();
+  });
+
+  this.render(hbs`{{nypr-accounts/basic-card
+    authenticate=(action authenticate)
+    isEditing=true
+    user=user}}`);
+
+  this.$('input[name=email]').val(EMAIL);
+  this.$('input[name=email]').blur();
+  Test.registerWaiter(this, waiters.confirmEmailFieldIsVisible);
+  wait().then(() => {
+    Test.unregisterWaiter(this, waiters.confirmEmailFieldIsVisible);
+    this.$('input[name=confirmEmail]').val(EMAIL);
+    this.$('input[name=confirmEmail]').blur();
+  });
+  wait().then(() => {
+    this.$('[data-test-selector=save]').click();
+    Test.registerWaiter(this, waiters.modalIsVisible);
+  });
+  wait().then(() => {
+    Test.unregisterWaiter(this, waiters.modalIsVisible);
+    this.$().siblings('.ember-modal-wrapper').find('input[name=passwordForEmailChange]').val(BAD_PW);
+    this.$().siblings('.ember-modal-wrapper').find('input[name=passwordForEmailChange]').blur();
+    this.$().siblings('.ember-modal-wrapper').find('[data-test-selector="check-pw"]').click();
+  });
+  wait().then(() => {
+    assert.equal(this.$().siblings('.ember-modal-wrapper').find('.nypr-input-error').text().trim(), 'This password is incorrect.');
+    done();
+  });
+  return wait();
+});
 
 test('can update them all', function(assert) {
   let done = assert.async();

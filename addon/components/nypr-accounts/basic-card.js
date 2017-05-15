@@ -197,8 +197,12 @@ export default Component.extend({
       try {
         yield this.attrs.authenticate(password);
         this.trigger('passwordVerified');
-      } catch({error}) {
-        set(this, 'passwordError', [error.message]);
+      } catch(e) {
+        if (e && get(e, 'error.message')) {
+          set(this, 'passwordError', [get(e, 'error.message')]);
+        } else {
+          set(this, 'passwordError', [messages.passwordIncorrect]);
+        }
       }
     }
   }),
