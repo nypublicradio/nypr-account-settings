@@ -1,6 +1,7 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { startMirage }  from 'dummy/initializers/ember-cli-mirage';
+import RSVP from 'rsvp';
 import wait from 'ember-test-helpers/wait';
 
 moduleForComponent('nypr-accounts/resend-button', 'Integration | Component | resend button', {
@@ -81,6 +82,32 @@ test('it changes to the sent message when clicked', function(assert) {
     assert.equal(this.$().text().trim(), successMessage);
   });
 });
+
+test('it works with a passed in action', function(assert) {
+  let resendCalled = 0;
+  let resendAction = function() {
+    resendCalled++;
+    return RSVP.resolve();
+  };
+  let successMessage = 'Email Sent';
+
+  this.set('resendAction', resendAction);
+  this.set('successMessage', successMessage);
+
+  this.render(hbs`
+    {{#nypr-accounts/resend-button resendAction=(action resendAction) successMessage=successMessage autoReset=false }}
+      Resend Email.
+    {{/nypr-accounts/resend-button}}
+  `);
+
+  this.$('button').click();
+
+  return wait().then(() => {
+    assert.equal(resendCalled, 1, 'it should call the resend function once');
+    assert.equal(this.$().text().trim(), successMessage, 'it should display the success message');
+  });
+});
+
 
 test('it changes to the error message when clicked and endpoint returns an error', function(assert) {
   let fakeEndpoint = 'http://example.com/resender';
