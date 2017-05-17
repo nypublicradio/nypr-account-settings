@@ -3,6 +3,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import wait from 'ember-test-helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
+import run from 'ember-runloop';
 import moment from 'moment';
 import RSVP from 'rsvp';
 import testSelector from 'ember-test-selectors';
@@ -213,6 +214,46 @@ test('clicking help displays modal', function(assert) {
     );
   });
 });
+
+test('displays pending email notification and it works', function(assert) {
+  let pledges = server.createList('pledge', 8);
+  let user = server.create('user');
+  let pledgePromise = DS.PromiseArray.create({
+    promise: RSVP.Promise.resolve(pledges)
+  });
+  this.set('pledges', pledgePromise);
+  this.set('user', user);
+  let resendCalled = 0;
+  let resend = () => {
+    resendCalled++;
+    return(RSVP.resolve());
+  };
+  this.set('resendVerificationEmail', resend);
+
+  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges emailIsPendingVerification=true user=user resendVerificationEmail=resendVerificationEmail}}`);
+
+  wait().then(() => {
+    assert.equal(this.$('.nypr-card-alert').length, 1, 'alert should exists');
+    assert.ok(
+      this.$('.nypr-card-alert').text().includes('A verification email has been sent'),
+      'alert should contain verification message'
+    );
+    assert.ok(
+      this.$('.nypr-card-alert').text().includes(user.email),
+      'alert should contain user email address'
+    );
+    assert.equal(this.$('.nypr-card-alert .resend-button').length, 1, 'resend button should exist');
+
+    this.$('.nypr-card-alert .resend-button').click();
+    run.cancelTimers();
+  });
+
+  return wait().then(() => {
+    assert.equal(resendCalled, 1, 'clicking on resend button should call resend once');
+    assert.equal(this.$('.nypr-card-alert .resend-success').length, 1, 'resend success message should exist');
+  });
+});
+
 
 // test('displays expiring warning on near-expired membership', function(assert) {
 
