@@ -182,9 +182,11 @@ export default Component.extend({
   }).drop(),
 
   promptForPassword: task(function * () {
+    Ember.$('body').addClass('has-nypr-account-modal-open');
     try {
       yield waitForEvent(this, 'passwordVerified');
     } finally {
+      Ember.$('body').removeClass('has-nypr-account-modal-open');
       set(this, 'password', null);
     }
   }).drop(),
