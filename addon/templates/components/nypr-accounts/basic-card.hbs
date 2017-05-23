@@ -8,7 +8,7 @@
       text=(if isEditing 'Cancel' 'Edit')}}
   {{/card.header}}
 
-  <form disabled={{not isEditing}} {{action 'save' changeset on='submit'}}>
+  <form disabled={{not isEditing}} {{action (perform save changeset) on='submit'}}>
   {{#unless isEditing}}
     {{nypr-input
       label='Name'
@@ -37,9 +37,10 @@
     label='Public Handle<span> (visible when you comment on the site)</span>'
     placeholder='publichandle'
     fieldname='preferredUsername'
-    value=preferredUsername
+    value=changeset.preferredUsername
     errors=changeset.error.preferredUsername.validation
     disabled=(not isEditing)
+    onInput=(action onUsernameUpdate)
     validMark=true
     showError=true
   }}
@@ -52,13 +53,14 @@
     errors=changeset.error.email.validation
     disabled=(not isEditing)
     onChange=(action onEmailChange)
+    onInput=(action onEmailUpdate)
   }}
   {{#if (and emailIsPendingVerification (not isEditing))}}
     <div class="nypr-account-pending">pending verification</div>
   {{/if}}
 
 
-  {{#if (and verifyEmail isEditing)}}
+  {{#if (and emailWasChanged isEditing)}}
     {{nypr-input
       label='Confirm Email'
       fieldname='confirmEmail'
@@ -81,6 +83,7 @@
       <button
         class="nypr-account-confirm"
         data-test-selector="save"
+        disabled={{or changeset.isPristine changeset.isInvalid}}
         type="submit">Save</button>
     </div>
   </div>
@@ -88,9 +91,9 @@
   </form>
 {{/nypr-card}}
 
-{{#if isShowingModal}}
+{{#if promptForPassword.isRunning}}
   {{#nypr-account-modal title="Re-enter Your Password" closeAction=(action 'closeModal') as |m|}}
-    <form {{action 'verifyPassword' on='submit'}}>
+    <form {{action (perform verifyPassword) on='submit'}}>
     {{#m.body}}
     <p>
       You must re-enter your password to make changes to your email. The email you are changing is the one you use to log into the site.

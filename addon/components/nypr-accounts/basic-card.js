@@ -1,67 +1,62 @@
+import Ember from 'ember';
 import Component from 'ember-component';
-import { bool } from 'ember-computed';
 import layout from '../../templates/components/nypr-accounts/basic-card';
 import RSVP from 'rsvp';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
-import makeValidations from 'nypr-account-settings/validations/nypr-accounts/basic-card';
+import validations from 'nypr-account-settings/validations/nypr-accounts/basic-card';
+import messages from 'nypr-account-settings/validations/nypr-accounts/custom-messages';
 import getOwner from 'ember-owner/get';
-import observer from 'ember-metal/observer';
-import { debounce } from 'ember-runloop';
 import get from 'ember-metal/get';
 import set from 'ember-metal/set';
+import fetch from 'fetch';
 import computed from 'ember-computed';
+import { decamelize } from 'ember-string';
+import { task, timeout, all, waitForEvent } from 'ember-concurrency';
 
 export default Component.extend({
   layout,
   tagName: '',
-  isShowingModal: bool('resolveModal'),
   user: {},
-  emailIsPendingVerification: false,
-  verifyEmail: computed('user.email', 'changeset.email', function() {
-    return get(this, 'changeset.email') !== get(this, 'user.email');
-  }),
-
-  // until ember-changeset can handle debounce validations
-  // https://github.com/DockYard/ember-changeset/issues/102
-  // observe updates and debounce updating the changeset
-  // so that validations are run less frequently
-  // otherwise we get very unpleasant UI hiccups
-  usernameObserver: observer('preferredUsername', function() {
-    let newName = get(this, 'preferredUsername');
-    debounce(this, prefName => set(this, 'changeset.preferredUsername', prefName), newName, 150);
-  }),
+  debounceMs: Ember.testing ? 10 : 250,
 
   init() {
     this._super(...arguments);
-    let config = getOwner(this).resolveRegistration('config:environment');
-    let validations = makeValidations({usernamePath: config.wnycAuthAPI});
+    this.config = getOwner(this).resolveRegistration('config:environment');
 
     let user = get(this, 'user');
     let changeset = new Changeset(user, lookupValidator(validations), validations);
     this.changeset = changeset;
-
-    // provide a temporary binding for preferred username on the template
-    // so we can do remote async validations before setting to the
-    // changeset
-    this.preferredUsername = get(user, 'preferredUsername');
   },
 
+  emailWasChanged: computed('changeset.email', 'user.email', function() {
+    return get(this, 'changeset.email') !== get(this, 'user.email');
+  }),
+
+  usernameWasChanged: computed('changeset.preferredUsername', 'user.preferredUsername', function() {
+    return get(this, 'changeset.preferredUsername') !== get(this, 'user.preferredUsername');
+  }),
+
   onEmailChange() {
-    if (this.changeset.get('email')) {
+    if (get(this, 'emailWasChanged')) {
       this.changeset.validate('confirmEmail');
+    } else {
+      this.rollbackEmailField();
     }
   },
 
-  emailRequirement() {
-    return new RSVP.Promise((resolve, reject) => {
-      // resolved by verifyPassword
-      // setting resolveModal shows the modal
-      this.setProperties({
-        resolveModal: resolve,
-        rejectModal: reject
-      });
-    });
+  onEmailUpdate() {
+    let newEmail = this.changeset.get('email');
+    if (newEmail && get(this, 'emailWasChanged')) {
+      get(this,'checkForExistingEmail').perform(newEmail);
+    }
+  },
+
+  onUsernameUpdate() {
+    let newUsername = this.changeset.get('preferredUsername');
+    if (newUsername && get(this, 'usernameWasChanged')) {
+      get(this,'checkForExistingUsername').perform(newUsername);
+    }
   },
 
   rollbackEmailField(changeset) {
@@ -75,113 +70,151 @@ export default Component.extend({
     changeset.restore(snapshot);
   },
 
-  commit(changeset) {
+  checkForExistingAttribute: task(function * ({key, value, errorMessage}) {
+    let path = `${this.config.wnycAuthAPI}/v1/user/exists-by-attribute`;
+    let serverKey = decamelize(key);
+    try {
+      let response = yield fetch(`${path}?${serverKey}=${value}`);
+      let json = yield response.json();
+      if (json[serverKey]) {
+        this.changeset.pushErrors(key, errorMessage);
+      }
+    } catch(e) {
+      if (e && get(e, 'errors.message')) {
+        this.changeset.pushErrors(key, e.errors.message);
+      }
+    }
+  }),
+
+  checkForExistingEmail: task(function * (value) {
+    if (get(this, 'emailWasChanged')) {
+      let validator = get(this, 'checkForExistingAttribute');
+      yield timeout(this.get('debounceMs'));
+      yield validator.perform({
+        key: 'email',
+        value,
+        errorMessage: messages.emailExists
+      });
+    }
+  }).restartable(),
+
+  checkForExistingUsername: task(function * (value) {
+    if (get(this, 'usernameWasChanged')) {
+      let validator = get(this, 'checkForExistingAttribute');
+      yield timeout(this.get('debounceMs'));
+      yield validator.perform({
+        key: 'preferredUsername',
+        value,
+        errorMessage: messages.publicHandleExists
+      });
+    }
+  }).restartable(),
+
+  commit: task(function * (changeset) {
     let notifyEmail = get(changeset, 'change.email');
-    return changeset.save().then(() => {
+    try {
+      // confirm async validations
+      yield all([
+        get(this, 'checkForExistingUsername').perform(changeset.get('preferredUsername')),
+        get(this, 'checkForExistingEmail').perform(changeset.get('email')),
+      ]);
+      // save
+      yield changeset.save();
       set(this, 'isEditing', false);
       if (notifyEmail && this.attrs.emailUpdated) {
         this.attrs.emailUpdated();
       }
-    })
-    .catch(error => {
+    } catch(error) {
+      // handle  server errors
+      let errorObject;
       if (error.isAdapterError) {
-        error = error.errors;
+        errorObject = error.errors;
       }
-      let { code, message, values = [] } = error;
+      let { code, message, values = [] } = errorObject || error;
       if (values.includes('preferred_username')) {
-        changeset.pushErrors('preferredUsername', error.message);
+        changeset.pushErrors('preferredUsername', message);
       } else if (code === 'AccountExists') {
         get(this, 'user').rollbackAttributes();
         changeset.pushErrors('email', message);
         changeset.set('confirmEmail', null);
         changeset.set('error.confirmEmail', null);
       }
-    })
-    .finally(() => {
+    } finally {
       this.setProperties({
-        resolveModal: null,
-        rejectModal: null,
         password: null,
         passwordError: null,
         'user.confirmEmail': null
       });
-    });
-  },
+    }
+  }),
+
+  save: task(function * (changeset) {
+    let fieldsToValidate;
+    let emailWasChanged = get(this, 'emailWasChanged');
+    if (emailWasChanged) {
+      fieldsToValidate = ['givenName', 'familyName', 'email', 'confirmEmail', 'preferredUsername'];
+    } else {
+      fieldsToValidate = ['givenName', 'familyName', 'preferredUsername'];
+    }
+    let validationPromises = fieldsToValidate.map(field => changeset.validate(field));
+    yield RSVP.all(validationPromises);
+
+    if (emailWasChanged && get(changeset, 'isValid')) {
+      try {
+        yield get(this, 'promptForPassword').perform();
+
+        if (get(changeset, 'isValid')) {
+          get(this, 'commit').perform(changeset);
+        } else {
+          // something's wrong
+          get(this, 'closeModal')();
+        }
+      } finally {
+        if (get(this, 'promptForPassword.last.isSuccessful') === false) {
+          // modal was cancelled;
+          this.rollbackEmailField(changeset);
+        }
+      }
+    } else if (get(changeset, 'isValid')) {
+      // if we're not doing the validate email flow, just commit the changeset
+      get(this, 'commit').perform(changeset);
+    }
+  }).drop(),
+
+  promptForPassword: task(function * () {
+    try {
+      yield waitForEvent(this, 'passwordVerified');
+    } finally {
+      set(this, 'password', null);
+    }
+  }).drop(),
+
+  verifyPassword: task(function * () {
+    let password = get(this, 'password');
+    if (!password) {
+      set(this, 'passwordError', ["Password can't be blank."]);
+    } else {
+      try {
+        yield this.attrs.authenticate(password);
+        this.trigger('passwordVerified');
+      } catch(e) {
+        if (e && get(e, 'error.message')) {
+          set(this, 'passwordError', [get(e, 'error.message')]);
+        } else {
+          set(this, 'passwordError', [messages.passwordIncorrect]);
+        }
+      }
+    }
+  }),
 
   actions: {
-    save(changeset) {
-      let stepOne;
-      let verifyEmail = get(this, 'verifyEmail');
-
-      if (verifyEmail) {
-        // defer validating preferredUsername b/c it incurs a UI delay due to
-        // waiting on a network call
-        stepOne = RSVP.all([
-          changeset.validate('givenName'),
-          changeset.validate('familyName'),
-          changeset.validate('email'),
-          changeset.validate('confirmEmail'),
-        ]);
-      } else {
-        // if email hasn't changed, no point verifying it
-        // but roll back errors in case confirmEmail is showing an error
-        this.rollbackEmailField(changeset);
-        stepOne = RSVP.all([
-          changeset.validate('givenName'),
-          changeset.validate('familyName'),
-          changeset.validate('preferredUsername'),
-        ]);
-      }
-
-      return stepOne.then(() => {
-        if (verifyEmail && get(changeset, 'isValid')) {
-          return this.emailRequirement()
-            .then(() => {
-              // now that the modal has passed, validate the username
-              // TODO: I think we can actually skip this
-              return changeset.validate('preferredUsername')
-                .then(() => {
-                  if (get(changeset, 'isValid')) {
-                    return this.commit(changeset);
-                  } else {
-                    // something's wrong, probably the preferredUsername
-                    this.closeModal();
-                  }
-                });
-            })
-            .catch(() => this.rollbackEmailField(changeset));
-        } else if (get(changeset, 'isValid')) {
-          // if we're not doing the verify email flow, just commit the changeset
-          return this.commit(changeset);
-        }
-      });
-    },
-
     rollback(changeset) {
       changeset.rollback();
-      // manually reset preferredUsername b/c template binds to this
-      // value
-      set(this, 'preferredUsername', get(changeset, 'preferredUsername'));
       set(this, 'isEditing', false);
     },
 
-    verifyPassword() {
-      let password = get(this, 'password');
-      if (!password) {
-        set(this, 'passwordError', ["Password can't be blank."]);
-      } else {
-        this.attrs.authenticate(password)
-          .then(get(this, 'resolveModal'))
-          .catch(({error}) => set(this, 'passwordError', [error.message]));
-      }
-    },
     closeModal() {
-      get(this, 'rejectModal')();
-      this.setProperties({
-        resolveModal: null,
-        rejectModal: null,
-        password: null
-      });
+      get(this, 'promptForPassword').cancelAll();
     },
 
     toggleEdit() {
