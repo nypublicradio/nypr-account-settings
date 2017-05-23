@@ -331,16 +331,34 @@ test('can update them all', function(assert) {
   this.$('input[name=email]').click();
   this.$('input[name=confirmEmail]').val(EMAIL);
   this.$('input[name=confirmEmail]').blur();
-  
+
   return wait().then(() => {
     this.$('button[data-test-selector=save]').click();
     return wait().then(() => {
       assert.equal(this.$('input').length, 3, 'should see 3 fields');
       assert.ok(this.$('input').get().every(i => i.disabled), 'all inputs should be disabled');
-      
+
       assert.equal(this.$('input[name=fullName]').val(), `${FIRST_NAME} ${LAST_NAME}`, 'displays new fullname');
       assert.equal(this.$('input[name=preferredUsername]').val(), USERNAME, 'displays new username');
       assert.equal(this.$('input[name=email]').val(), EMAIL, 'displays new email');
     });
   });
+});
+
+
+test('shows pending message for unverified email', function(assert) {
+  this.set('emailIsPendingVerification', true);
+  this.set('user', userFields());
+
+  this.render(hbs`{{nypr-accounts/basic-card user=user emailIsPendingVerification=emailIsPendingVerification}}`);
+  assert.equal(this.$('.nypr-account-pending').length, 1);
+});
+
+
+test('does not show pending message for verified email', function(assert) {
+  this.set('emailIsPendingVerification', false);
+  this.set('user', userFields());
+
+  this.render(hbs`{{nypr-accounts/basic-card user=user emailIsPendingVerification=emailIsPendingVerification}}`);
+  assert.equal(this.$('.nypr-account-pending').length, 0);
 });

@@ -53,6 +53,11 @@
     disabled=(not isEditing)
     onChange=(action onEmailChange)
   }}
+  {{#if (and emailIsPendingVerification (not isEditing))}}
+    <div class="nypr-account-pending">pending verification</div>
+  {{/if}}
+
+
   {{#if (and verifyEmail isEditing)}}
     {{nypr-input
       label='Confirm Email'

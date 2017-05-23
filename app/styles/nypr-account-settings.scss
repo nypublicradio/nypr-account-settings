@@ -45,6 +45,11 @@
     -webkit-text-fill-color: $darkergray;
     opacity: 1;
   }
+  .nypr-account-pending {
+    font-size: 12px;
+    width: 100%;
+    color: $lightgreen;
+  }
 }
 
 .nypr-input-label[for="preferredUsername"] > span {

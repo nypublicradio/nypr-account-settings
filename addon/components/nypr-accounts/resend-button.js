@@ -1,13 +1,15 @@
 import Ember from 'ember';
 import layout from '../../templates/components/nypr-accounts/resend-button';
 import fetch from 'fetch';
-import { later } from 'ember-runloop';
+import { task, timeout } from 'ember-concurrency';
+import { rejectUnsuccessfulResponses } from 'nypr-account-settings/utils/fetch-utils';
 
 export default Ember.Component.extend({
   layout,
   tagName: '',
   target: null,
   email: null,
+  resendAction: null,
   ready: true,
   success: false,
   error: false,
@@ -17,29 +19,26 @@ export default Ember.Component.extend({
   errorMessage: 'Email not resent. Try again later',
   actions: {
     resend(target, email) {
-      let delay = this.get('resetDelay');
-      let reset = this.reset;
-      fetch(`${target}?email=${email}`, {method: 'GET', mode: 'cors'})
-        .then((response) => {
-          this.set('ready', false);
-          if (response.ok) {
-            this.set('success', true);
-          } else {
-            this.set('error', true);
-          }
-          if (this.get('autoReset')) {
-            later(this, reset, delay);
-          }
-        })
-        .catch(() => {
-          this.set('ready', false);
-          this.set('error', true);
-          if (this.get('autoReset')) {
-            later(this, reset, delay);
-          }
-        });
+      let resendAction = () => fetch(`${target}?email=${email}`, {method: 'GET', mode: 'cors'})
+      .then(rejectUnsuccessfulResponses);
+      this.get('tryResend').perform(resendAction);
     }
   },
+  tryResend: task(function * (resendAction) {
+    try {
+      yield resendAction();
+      this.set('ready', false);
+      this.set('success', true);
+    } catch(e) {
+      this.set('ready', false);
+      this.set('error', true);
+    } finally {
+      if (this.get('autoReset')) {
+        yield timeout(this.get('resetDelay'));
+        this.reset();
+      }
+    }
+  }).drop(),
   reset() {
     this.set('success', false);
     this.set('error', false);

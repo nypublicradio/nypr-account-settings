@@ -73,3 +73,26 @@
 .pledge-order-info .nypr-notification {
   margin-bottom: 15px;
 }
+
+.nypr-card-alert {
+  .resend-button {
+    color: white;
+
+    &:active {
+      color: rgba(white, 0.8);
+    }
+
+    &:hover,
+    &:focus {
+      border-bottom-color: white;
+    }
+  }
+
+  .resend-success {
+    color: white;
+  }
+
+  .resend-error {
+    color: white;
+  }
+}

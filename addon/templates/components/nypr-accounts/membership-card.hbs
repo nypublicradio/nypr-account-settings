@@ -2,6 +2,18 @@
   {{#m.panel to=1 classNames="nypr-membership-info" title="Membership Info" as |card|}}
     {{card.header title="Membership Info"}}
 
+    {{#if emailIsPendingVerification}}
+      {{#card.alert}}
+        A verification email has been sent to {{user.email}}. To view any membership info associated with this email address, you must click the button in your email.
+        <div>
+        {{#nypr-accounts/resend-button
+          resendAction=resendVerificationEmail}}
+          Resend email
+        {{/nypr-accounts/resend-button}}
+        </div>
+      {{/card.alert}}
+    {{/if}}
+
     {{#if pledges.isPending}}
       {{animated-loading-icon color="#CCC" classNames="membership-loading-animation"}}
     {{/if}}
