@@ -8,7 +8,7 @@
       text=(if isEditing 'Cancel' 'Edit')}}
   {{/card.header}}
 
-  <form disabled={{not isEditing}} {{action 'save' changeset on='submit'}}>
+  <form disabled={{not isEditing}} {{action (perform save changeset) on='submit'}}>
   {{#unless isEditing}}
     {{nypr-input
       label='Name'
@@ -60,7 +60,7 @@
   {{/if}}
 
 
-  {{#if (and verifyEmail isEditing)}}
+  {{#if (and emailWasChanged isEditing)}}
     {{nypr-input
       label='Confirm Email'
       fieldname='confirmEmail'
@@ -93,7 +93,7 @@
 
 {{#if promptForPassword.isRunning}}
   {{#nypr-account-modal title="Re-enter Your Password" closeAction=(action 'closeModal') as |m|}}
-    <form {{action 'verifyPassword' on='submit'}}>
+    <form {{action (perform verifyPassword) on='submit'}}>
     {{#m.body}}
     <p>
       You must re-enter your password to make changes to your email. The email you are changing is the one you use to log into the site.
