@@ -1993,6 +1993,15 @@ ember-basic-dropdown@^0.31.0:
     ember-native-dom-helpers "^0.3.9"
     ember-wormhole "^0.5.1"
 
+ember-basic-dropdown@^0.32.5:
+  version "0.32.6"
+  resolved "https://registry.yarnpkg.com/ember-basic-dropdown/-/ember-basic-dropdown-0.32.6.tgz#4c95b2f10847a35d9b9386c7be7b01090ca2eb52"
+  dependencies:
+    ember-cli-babel "^6.1.0"
+    ember-cli-htmlbars "^1.1.1"
+    ember-native-dom-helpers "^0.4.0"
+    ember-wormhole "^0.5.1"
+
 ember-changeset-validations@^1.2.6:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/ember-changeset-validations/-/ember-changeset-validations-1.2.7.tgz#5791fef334b2693165017d82c091f3a6c6a6f184"
@@ -2534,6 +2543,13 @@ ember-native-dom-helpers@^0.3.9:
     broccoli-funnel "^1.1.0"
     ember-cli-babel "^6.0.0-beta.9"
 
+ember-native-dom-helpers@^0.4.0:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/ember-native-dom-helpers/-/ember-native-dom-helpers-0.4.1.tgz#c4db7afa25dbe3efd84f36376f1ede2678cd7bb0"
+  dependencies:
+    broccoli-funnel "^1.1.0"
+    ember-cli-babel "^6.1.0"
+
 ember-power-select@1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/ember-power-select/-/ember-power-select-1.6.0.tgz#8533037b10a39f95732d8e138b038970a78b451a"
@@ -2542,6 +2558,17 @@ ember-power-select@1.6.0:
     ember-cli-babel "^6.0.0-beta.4"
     ember-cli-htmlbars "^1.1.1"
     ember-concurrency "^0.7.15"
+    ember-text-measurer "^0.3.3"
+    ember-truth-helpers "^1.3.0"
+
+ember-power-select@^1.8.2:
+  version "1.8.4"
+  resolved "https://registry.yarnpkg.com/ember-power-select/-/ember-power-select-1.8.4.tgz#1da93713600a98e7a93e88d2e5d2070160e86061"
+  dependencies:
+    ember-basic-dropdown "^0.32.5"
+    ember-cli-babel "^6.1.0"
+    ember-cli-htmlbars "^1.1.1"
+    ember-concurrency "^0.8.1"
     ember-text-measurer "^0.3.3"
     ember-truth-helpers "^1.3.0"
 
@@ -4654,14 +4681,14 @@ number-is-nan@^1.0.0:
 
 nypr-ui@nypublicradio/nypr-ui:
   version "0.0.0"
-  resolved "https://codeload.github.com/nypublicradio/nypr-ui/tar.gz/b7b70a515b69339f406aea197bd1f6df669654bf"
+  resolved "https://codeload.github.com/nypublicradio/nypr-ui/tar.gz/853d67dcfe115fcfb9fffc9cb4e6d6fbfaa14a6b"
   dependencies:
     ember-cli-babel "^5.1.7"
     ember-cli-compass-compiler "^0.5.0"
     ember-cli-htmlbars "^1.1.1"
     ember-cli-htmlbars-inline-precompile "^0.3.6"
     ember-holygrail-layout "^0.1.4"
-    ember-power-select "1.6.0"
+    ember-power-select "^1.8.2"
     ivy-tabs "3.1.0"
 
 oauth-sign@~0.8.1:
