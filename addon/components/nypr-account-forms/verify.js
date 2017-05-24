@@ -20,7 +20,6 @@ export default Component.extend({
   verifyEmail: task(function * (emailId, verificationToken) {
     let url = `${get(this, 'membershipAPI')}/v1/emails/${get(this, 'emailId')}/verify/`;
     let method = 'PATCH';
-    let mode = 'cors';
     let body = JSON.stringify({ data: {
       id: Number(emailId),
       type: "EmailAddress",
@@ -33,7 +32,7 @@ export default Component.extend({
         headers[header] = value;
     });
     try {
-      let response = yield fetch(url, {method, mode, headers, body});
+      let response = yield fetch(url, {method, headers, body});
       if (response && response.ok) {
         let json = yield response.json();
         if (get(json, ('data.success'))) {
