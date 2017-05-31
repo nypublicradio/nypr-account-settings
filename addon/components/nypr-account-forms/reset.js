@@ -37,10 +37,9 @@ export default Component.extend({
   resetPassword(email, new_password, confirmation) {
     let url = `${get(this, 'authAPI')}/v1/confirm/password-reset`;
     let method = 'POST';
-    let mode = 'cors';
     let headers = { "Content-Type" : "application/json" };
     let body = JSON.stringify({email, new_password, confirmation});
-    return fetch(url, {method, mode, headers, body})
+    return fetch(url, {method, headers, body})
     .then(rejectUnsuccessfulResponses)
     .catch(e => {
       if (get(e, 'errors.code') === 'ExpiredCodeException') {
