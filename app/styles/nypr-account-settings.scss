@@ -8,6 +8,8 @@
 @import "nypr-ui/z-index";
 @import "nypr-ui/buttons";
 
+@import "lib/animations";
+
 @import "nypr-account-modal";
 
 .nypr-account-settings-and-member-center {
@@ -26,6 +28,10 @@
 
   padding: 0.5rem;
   min-width: 50%;
+}
+
+.nypr-membership-info-body {
+  position: relative;
 }
 
 .account-info {
@@ -227,4 +233,13 @@
   padding: 0.5rem;
   min-width: 50%;
   @include flex-grow(1);
+}
+
+.nypr-survey-banner {
+  position: absolute;
+  width: 100%;
+
+  animation-duration: 3s;
+  animation-name: fade-up-and-in;
+  animation-fill-mode: forwards;
 }
