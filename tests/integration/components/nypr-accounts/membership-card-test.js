@@ -115,6 +115,30 @@ test('displays sustaining pledge details', function(assert) {
   });
 });
 
+test('update link contains order id, aka order key', function(assert) {
+  let pledges = server.createList('pledge', 1, {
+    isActiveMember: true,
+    isSustainer: true,
+    orderType: 'sustainer'
+  });
+  let pledgePromise = DS.PromiseArray.create({
+    promise: RSVP.Promise.resolve(pledges)
+  });
+  this.set('pledges', pledgePromise);
+
+  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
+
+  return wait().then(() => {
+    assert.notEqual(
+      this.$('.pledge-update-link')
+        .find('a')
+        .attr('href')
+        .indexOf(pledges[0].orderKey),
+      -1
+    );
+  });
+});
+
 // Active one-time member tests
 
 test('displays most recent active pledge details if active onetime member', function(assert) {
