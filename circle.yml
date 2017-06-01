@@ -3,14 +3,19 @@ machine:
     version: 6.9.2
 
 dependencies:
-  pre:
+  ov
     - sudo apt-get update && sudo apt-get install ruby-sass
     - gem update --system
     - gem install compass --no-ri --no-rdoc
-    - npm install -g bower
+    - yarn global add bower
     - bower install
   post:
-    - npm i nypr-ui
+    - yarn add nypr-ui
   cache_directories:
     - /opt/circleci/nodejs/v6.9.2/bin/
     - /opt/circleci/nodejs/v6.9.2/lib/node_modules
+
+test:
+  override:
+    - npm test:
+        timeout: 1200
