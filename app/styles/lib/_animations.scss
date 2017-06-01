@@ -1,11 +1,11 @@
 @keyframes fade-up-and-in {
-  from {
+  0% {
     opacity: 0;
-    transform: translateY(0);
+    transform: translateY(-95%);
   }
   
-  to {
+  100% {
     opacity: 1;
-    transform: translateY(-95px);
+    transform: translateY(-125%);
   }
 }
