@@ -236,10 +236,49 @@
 }
 
 .nypr-survey-banner {
-  position: absolute;
-  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 15px 20px;
+  margin: 0;
+}
 
-  animation-duration: 3s;
-  animation-name: fade-up-and-in;
-  animation-fill-mode: forwards;
+.nypr-survey-banner__icon {
+  flex-basis: 50px;
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+
+.nypr-survey-banner__close {
+  @include blank-button;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 10px;
+  
+  > svg > path {
+    fill: $lightgray;
+  }
+}
+
+.nypr-survey-banner__text {
+  flex: 0 1 auto;
+  margin: 0;
+  @include fontsize(12);
+  line-height: 1.5;
+  
+  @media screen and (min-width: 960px) {
+    @include fontsize(14);
+  }
+  
+  > a {
+    text-decoration: none;
+    color: $blue;
+    border-bottom: 1px solid rgba($blue, 0);
+    transition: 125ms ease border-bottom-color;
+    
+    &:hover {
+      border-bottom-color: $blue;
+    }
+  }
 }

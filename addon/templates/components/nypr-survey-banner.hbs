@@ -1,0 +1,15 @@
+{{#unless hideSurveyBanner}}
+  <div class="nypr-survey-banner__wrapper">
+    {{#nypr-card class='nypr-survey-banner'}}
+      {{nypr-svg className="nypr-survey-banner__icon" icon="people-in-circles"}}
+      
+      <p class="nypr-survey-banner__text">
+        We’re experimenting with a new way for you to manage your membership online. <a href="https://wnyc.typeform.com/to/aoSJfN" target="_blank" rel="noopener noreferrer">Tell us what you think &gt;</a>
+      </p>
+    
+      <button class="nypr-survey-banner__close" {{action (mut hideSurveyBanner) true}}>
+        {{nypr-svg icon="close"}}
+      </button>
+    {{/nypr-card}}
+  </div>
+{{/unless}}
