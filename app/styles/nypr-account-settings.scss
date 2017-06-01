@@ -8,8 +8,6 @@
 @import "nypr-ui/z-index";
 @import "nypr-ui/buttons";
 
-@import "lib/animations";
-
 @import "nypr-account-modal";
 
 .nypr-account-settings-and-member-center {
@@ -235,78 +233,20 @@
   @include flex-grow(1);
 }
 
-.nypr-survey-banner {
+.nypr-survey {
   display: flex;
   align-items: center;
   position: relative;
-  padding: 15px 20px;
-  margin: 0;
 }
 
-.nypr-survey-banner__wrapper {
-  margin-bottom: 15px;
-  position: relative;
-  
-  @media screen and (min-width: 960px) {
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin: 0 0.5rem;
 
-    animation-duration: 1s;
-    animation-name: fade-up-and-in;
-    animation-fill-mode: forwards;
-  }
-
-  // arrow
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: -14px;
-    left: 20px;
-  
-    height: 0;
-    width: 0;
-    border: 7px solid white;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-  }
-  
-  // arrow shadow
-  &:before {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 22px;
-  
-    width: 10px;
-    height: 10px;
-    box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.15);
-    
-    transform: rotate(45deg);
-  }
-}
-
-.nypr-survey-banner__icon {
+.nypr-survey__icon {
   flex-basis: 50px;
   flex-shrink: 0;
   margin-right: 15px;
 }
 
-.nypr-survey-banner__close {
-  @include blank-button;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 10px;
-  
-  > svg > path {
-    fill: $lightgray;
-  }
-}
-
-.nypr-survey-banner__text {
+.nypr-survey__text {
   flex: 0 1 auto;
   margin: 0;
   @include fontsize(12);
