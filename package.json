@@ -16,7 +16,7 @@
     "build": "ember build",
     "start": "ember server",
     "test": "ember try:each",
-    "upgrade-nypr": "yarn upgrade nypr-ui"
+    "upgrade-nypr": "yarn upgrade nypublicradio/nypr-ui"
   },
   "dependencies": {
     "ember-changeset": "^1.2.3",
