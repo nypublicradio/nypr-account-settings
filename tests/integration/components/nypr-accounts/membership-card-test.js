@@ -40,7 +40,7 @@ test('it renders', function(assert) {
 
   return wait().then(() => {
     assert.ok(
-      this.$().text().trim().match(/Membership Info/),
+      this.$().text().trim().match(/My Donation Status/),
       'has membership header'
     );
     assert.ok(this.$('span').text().trim().match(/Help/), 'has help link');
