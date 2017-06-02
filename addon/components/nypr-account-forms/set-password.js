@@ -39,14 +39,18 @@ export default Component.extend({
     let method = 'POST';
     let headers = { "Content-Type" : "application/json" };
     let body = JSON.stringify({username, temp, "new": new_password});
+    let changeset = get(this, 'changeset');
     return fetch(url, {method, headers, body})
     .then(rejectUnsuccessfulResponses)
     .catch(e => {
       if (get(e, 'errors.code') === 'ExpiredCodeException') {
         set (this, 'codeExpired', true);
+      } else if (get(e, 'errors.message')) {
+        changeset.validate('password');
+        changeset.pushErrors('password', get(e, 'errors.message'));
       } else {
-        get(this, 'changeset').validate('password');
-        get(this, 'changeset').pushErrors('password', 'There was a problem setting your password.');
+        changeset.validate('password');
+        changeset.pushErrors('password', 'There was a problem setting your password.');
       }
       return RSVP.Promise.reject(e);
     });
