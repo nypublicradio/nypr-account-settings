@@ -139,7 +139,7 @@ test('displays most recent active pledge details if active onetime member', func
     );
     assert.equal(
       this.$('.pledge-donate-button').attr('href'),
-      `https://pledge3.wnyc.org/donate/membership-sustainer/`,
+      `https://pledge3.wnyc.org/donate/mc-main/`,
       'donate links to correct sustainer form'
     );
     assert.ok(
@@ -169,7 +169,7 @@ test('displays renewal message if recent member', function(assert) {
     );
     assert.equal(
       this.$('.pledge-donate-button').attr('href'),
-      `https://pledge3.wnyc.org/donate/membership-sustainer/`,
+      `https://pledge3.wnyc.org/donate/mc-main/`,
       'donate links to correct recap form'
     );
   });
@@ -191,7 +191,7 @@ test('displays donation callout for non-members', function(assert) {
     );
     assert.equal(
       this.$('.pledge-donate-button').attr('href'),
-      `https://pledge3.wnyc.org/donate/membership-sustainer/`,
+      `https://pledge3.wnyc.org/donate/mc-main/`,
       'donate button links to non sustainer version'
     );
   });
