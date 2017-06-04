@@ -1,11 +1,24 @@
 import Ember from "ember";
 import computed from "ember-computed";
 import { getCookie } from "nypr-account-settings/utils/cookies";
-import layout
-  from "../../../templates/components/nypr-accounts/membership-card/current-status-detail";
+import layout from "../../../templates/components/nypr-accounts/membership-card/current-status-detail";
 
 export default Ember.Component.extend({
   layout,
+  willRender() {
+    // When the tab or window gains focus, re-run the hasMadeRecentPledge
+    // computed function to check if, while the tab was unfocused, the user
+    // completed a pledge.
+    window.onfocus = () => this.notifyPropertyChange("hasMadeRecentPledge");
+
+    this._super(...arguments);
+  },
+  willClearRender() {
+    // Clear the pledge noficiation function from onfocus when component is
+    // destroyed.
+    window.onfocus = null;
+    this._super(...arguments);
+  },
   pledgePrefix: computed(function() {
     let { environment } = Ember.getOwner(this).resolveRegistration(
       "config:environment"
