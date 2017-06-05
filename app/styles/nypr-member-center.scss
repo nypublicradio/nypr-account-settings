@@ -38,12 +38,12 @@
 }
 
 .active-donations-header,
-.pledge-order-price,
 .pledge-update-link,
 .pledge-payment-history,
 .pledge-tax-receipt,
 .pledge-order-cc-type,
 .pledge-help-link,
+.pledge-info-container .pledge-order-price,
 .pledge-hyphen-separator {
   @include small-gray-font;
 }
