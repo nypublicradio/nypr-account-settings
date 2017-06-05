@@ -12,6 +12,7 @@ import { rejectUnsuccessfulResponses } from 'nypr-account-settings/utils/fetch-u
 export default Component.extend({
   layout,
   authAPI: null,
+  triedUnverifiedAccount: false,
   resendUrl: computed('authAPI', function() {
     return `${get(this, 'authAPI')}/v1/password/forgot`;
   }),
@@ -30,7 +31,11 @@ export default Component.extend({
     },
     onFailure(e) {
       if (e) {
-        this.applyErrorToChangeset(e.errors, get(this, 'changeset'));
+        if (get(e, 'errors.code') === 'UserNotConfirmedException') {
+          set(this, 'triedUnverifiedAccount', true);
+        } else {
+          this.applyErrorToChangeset(e.errors, get(this, 'changeset'));
+        }
       }
     },
   },
