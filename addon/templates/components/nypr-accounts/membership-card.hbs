@@ -1,4 +1,15 @@
 {{#nypr-multi-card as |m|}}
+
+  {{#nypr-floating-banner}}
+    <div class="nypr-survey">
+      {{nypr-svg className="nypr-survey__icon" icon="people-in-circles"}}
+      
+      <div class="nypr-survey__text">
+        We’re experimenting with a new way for you to manage your membership online. <a href="https://wnyc.typeform.com/to/aoSJfN" target="_blank" rel="noopener noreferrer">Tell us what you think &gt;</a>
+      </div>
+    </div>
+  {{/nypr-floating-banner}}
+
   {{#m.panel to=1 classNames="nypr-membership-info" title="My Donation Status" as |card|}}
     {{card.header title="My Donation Status"}}
 

@@ -28,6 +28,10 @@
   min-width: 50%;
 }
 
+.nypr-membership-info-body {
+  position: relative;
+}
+
 .account-info {
   margin-bottom: 100px;
 }
@@ -227,4 +231,39 @@
   padding: 0.5rem;
   min-width: 50%;
   @include flex-grow(1);
+}
+
+.nypr-survey {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+
+.nypr-survey__icon {
+  flex-basis: 50px;
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+
+.nypr-survey__text {
+  flex: 0 1 auto;
+  margin: 0;
+  @include fontsize(12);
+  line-height: 1.5;
+  
+  @media screen and (min-width: 960px) {
+    @include fontsize(14);
+  }
+  
+  > a {
+    text-decoration: none;
+    color: $blue;
+    border-bottom: 1px solid rgba($blue, 0);
+    transition: 125ms ease border-bottom-color;
+    
+    &:hover {
+      border-bottom-color: $blue;
+    }
+  }
 }
