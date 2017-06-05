@@ -56,3 +56,13 @@
 
   font-style: italic;
 }
+
+.nypr-membership-info-body .nypr-tabs .nypr-tabs-tablist {
+  .ivy-tabs-tab {
+    border-color: $lightestgray;
+  }
+
+  .tablist-buffer {
+    border-bottom: 1px solid $lightestgray;
+  }
+}
