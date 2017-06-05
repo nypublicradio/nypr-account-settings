@@ -10,7 +10,6 @@ dependencies:
     - yarn global add bower
     - bower install
     - yarn
-    - yarn upgrade-nypr
   cache_directories:
     - /opt/circleci/nodejs/v6.9.2/bin/
     - /opt/circleci/nodejs/v6.9.2/lib/node_modules
