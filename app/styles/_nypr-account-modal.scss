@@ -8,6 +8,7 @@
 .nypr-account-overlay.ember-modal-overlay {
   z-index: $zIndex--modal;
   background-color: rgba(0,0,0,0.8);
+  height: 100%;
 }
 
 .nypr-account-modal-title {
@@ -50,4 +51,8 @@
   @include blank-button;
   width: 15px;
   height: 15px;
+}
+
+body.has-nypr-account-modal-open {
+  overflow: hidden;
 }
