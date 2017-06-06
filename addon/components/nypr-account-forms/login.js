@@ -53,7 +53,10 @@ export default Component.extend({
     },
     loginWithFacebook() {
       get(this, 'session').authenticate('authenticator:torii', 'facebook-connect')
-      .catch(() => this.onFacebookLoginFailure());
+      .catch((error, data) => {
+        console.log(error, data);
+        return this.onFacebookLoginFailure()
+      });
     }
   },
   onFacebookLoginFailure() {
