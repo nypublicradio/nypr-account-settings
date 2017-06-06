@@ -52,20 +52,30 @@ export default Component.extend({
       }
     },
     loginWithFacebook() {
-      get(this, 'session').authenticate('authenticator:torii', 'facebook-connect')
-      .catch((error, data) => {
-        console.log(error, data);
-        return this.onFacebookLoginFailure()
+      let authOptions = {};
+      if (get(this, 'emailWasDeclined')) {
+        authOptions = {authType: 'rerequest'};
+        //reset emailWasDeclined on a new attempt
+        set(this, 'emailWasDeclined', false);
+      }
+      get(this, 'session').authenticate('authenticator:torii', 'facebook-connect', authOptions)
+      .catch(({error, data}) => {
+        if (data && data.permissions && data.permissions.email === 'declined') {
+          set(this, 'emailWasDeclined', true);
+          return this.onFacebookLoginFailure(messages.socialAuthNoEmail);
+        } else {
+          return this.onFacebookLoginFailure();
+        }
       });
     }
   },
-  onFacebookLoginFailure() {
+  onFacebookLoginFailure(message) {
     // because we clear flash messages when clicking this form,
     // wait a tick when we add one in an action that can
     // be triggered with a click
     next(() => {
       this.get('flashMessages').add({
-        message: messages.socialAuthCancelled,
+        message: message || messages.socialAuthCancelled,
         type: 'warning',
         sticky: true,
       });
