@@ -64,7 +64,7 @@ export default Component.extend({
           set(this, 'emailWasDeclined', true);
           return this.onFacebookLoginFailure(messages.socialAuthNoEmail);
         } else {
-          return this.onFacebookLoginFailure();
+          return this.onFacebookLoginFailure(messages.socialAuthCancelled);
         }
       });
     }
@@ -74,11 +74,13 @@ export default Component.extend({
     // wait a tick when we add one in an action that can
     // be triggered with a click
     next(() => {
-      this.get('flashMessages').add({
-        message: message || messages.socialAuthCancelled,
-        type: 'warning',
-        sticky: true,
-      });
+      if (message) {
+        this.get('flashMessages').add({
+          message: message,
+          type: 'warning',
+          sticky: true,
+        });
+      }
     });
   },
   authenticate(email, password) {
