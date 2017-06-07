@@ -60,7 +60,7 @@ export default Component.extend({
       }
       get(this, 'session').authenticate('authenticator:torii', 'facebook-connect', authOptions)
       .catch((e) => {
-        if (e && e.data && e.data.permissions && e.data.permissions.email === 'declined') {
+        if (e && e.code === 'MissingAttributeException' && e.values && e.values.includes("email")) {
           set(this, 'emailWasDeclined', true);
           return this.onFacebookLoginFailure(messages.socialAuthNoEmail);
         } else {
