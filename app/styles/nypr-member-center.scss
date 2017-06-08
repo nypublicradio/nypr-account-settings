@@ -64,6 +64,8 @@
 
 .pledge-tools {
   @include justify-content(flex-end);
+
+  margin-top: 50px;
 }
 
 .pledge-order-info {
