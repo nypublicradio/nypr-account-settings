@@ -4,6 +4,11 @@
 
 .pledge-payment-history-back-button {
   width: 100px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #888888;
+  text-transform: uppercase;
 }
 
 .giving-history-header > span {
@@ -23,7 +28,7 @@
 
   margin-left: -4px;
   margin-right: -4px;
-  padding-bottom: 10px;
+  padding-bottom: 1rem;
 
   div {
     margin-left: 4px;
@@ -49,10 +54,21 @@
   border: none;
   background: none;
   cursor: pointer;
+  padding-right: 12px;
 }
 
 .giving-history-limit-notification {
   @include small-gray-font;
 
   font-style: italic;
+}
+
+.nypr-membership-info-body .nypr-tabs .nypr-tabs-tablist {
+  .ivy-tabs-tab {
+    border-color: $lightestgray;
+  }
+
+  .tablist-buffer {
+    border-bottom: 1px solid $lightestgray;
+  }
 }
