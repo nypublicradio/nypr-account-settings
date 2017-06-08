@@ -24,7 +24,7 @@ Possible user states to handle:
           <div class="pledge-fund">{{pledge.fund}}</div>
         </div>
         <div class="pledge-info">
-          <div class="pledge-order-price">${{pledge.orderPrice}}{{if pledge.isSustainer ' / month' }}</div>
+          <div class="pledge-order-price">${{cents-or-whole-number pledge.orderPrice}}{{if pledge.isSustainer ' / month' }}</div>
           <div class="pledge-hyphen-separator">-</div>
           <div class="pledge-order-cc-type">{{pledge.creditCardType}} {{pledge.creditCardLast4Digits}}</div>
         </div>

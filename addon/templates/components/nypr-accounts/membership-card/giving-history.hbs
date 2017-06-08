@@ -16,7 +16,7 @@
           <div>{{pledge.fund}}</div>
           <div class="pledge-premium">{{pledge.premium}}</div>
         </div>
-        <div class="pledge-order-price">${{pledge.orderPrice}}</div>
+        <div class="pledge-order-price">${{cents-or-whole-number pledge.orderPrice}}</div>
       </div>
       {{/each}}
       <p class="giving-history-limit-notification">For recurring payment records prior to one year ago, please contact us <a href="https://nypublicradio.zendesk.com/hc/en-us/categories/202586738-Contact-Membership">here</a>.</p>
@@ -30,7 +30,7 @@
           <div>{{pledge.fund}}</div>
           <div class="pledge-premium">{{pledge.premium}}</div>
         </div>
-        <div class="pledge-order-price">${{pledge.orderPrice}}</div>
+        <div class="pledge-order-price">${{cents-or-whole-number pledge.orderPrice}}</div>
       </div>
       {{/each}}
       <p class="giving-history-limit-notification">For one-time payment records prior to five years ago, please contact us <a href="https://nypublicradio.zendesk.com/hc/en-us/categories/202586738-Contact-Membership">here</a>.</p>
