@@ -50,9 +50,9 @@
       helplinkText='Forgot Password?'
       submitted=form.status.tried
     }}
-    {{#if showLoginError}}
+    {{#if loginError}}
       <div class='account-form-error'>
-        {{{messages.loginError}}}
+        {{{loginError}}}
       </div>
     {{/if}}
     <button type="submit" class="account-form-btn" disabled={{form.status.processing}}>Log in</button>
