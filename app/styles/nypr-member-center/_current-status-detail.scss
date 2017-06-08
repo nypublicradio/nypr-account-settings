@@ -27,8 +27,15 @@
 }
 
 .wqxr-pledge-donate-button {
-  background-color: #2064b4;
-  border-color: #2064b4;
+  $wqxr-blue: #2064b4;
+
+  background-color: $wqxr-blue;
+  border-color: $wqxr-blue;
+
+  &:not([disabled]):hover {
+    background-color: darken($wqxr-blue, 10%);
+    border-color: darken($wqxr-blue, 10%);
+  }
 }
 
 .last-pledge-date {
