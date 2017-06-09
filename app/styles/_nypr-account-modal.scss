@@ -1,8 +1,15 @@
-.nypr-account-container {
+.nypr-account-container-outer {
+  padding: 15px;
+  max-width: 457px;
+  background-color: transparent;
+}
+
+.nypr-account-container-inner {
   padding: 0;
   border-radius: 3px;
   overflow: hidden;
-  max-width: 457px;
+  background-color: white;
+  box-shadow: 0 0 10px #222;
 }
 
 .nypr-account-wrapper .nypr-account-overlay.ember-modal-overlay {
