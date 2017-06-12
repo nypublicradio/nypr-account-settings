@@ -42,12 +42,16 @@ export default Component.extend({
     },
     onFailure(e) {
       if (e) {
-        if (get(e, 'errors.code') === 'AccountNotConfirmed') {
-          set(this, 'triedUnconfirmedAccount', true);
-        } else if (get(e, 'errors.code') === 'UnauthorizedAccess') {
-          set(this, 'showLoginError', true);
-        } else {
-          this.applyErrorToChangeset(e.errors, get(this, 'changeset'));
+        let errorCode = get(e, 'errors.code');
+        switch (errorCode) {
+          case 'AccountNotConfirmed':
+            set(this, 'triedUnconfirmedAccount', true);
+            break;
+          case 'UnauthorizedAccess':
+            set(this, 'showLoginError', true);
+            break;
+          default:
+            this.applyErrorToChangeset(e.errors, get(this, 'changeset'));
         }
       }
     },
