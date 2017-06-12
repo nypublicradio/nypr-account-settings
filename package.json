@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "ember-changeset": "^1.2.3",
-    "ember-changeset-validations": "nypublicradio/ember-changeset-validations",
+    "ember-changeset-validations": "^1.2.7",
     "ember-cli-babel": "^5.1.7",
     "ember-cli-compass-compiler": "^0.5.0",
     "ember-cli-htmlbars": "^1.1.1",

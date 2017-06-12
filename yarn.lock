@@ -1993,14 +1993,14 @@ ember-basic-dropdown@^0.32.5:
     ember-native-dom-helpers "^0.4.0"
     ember-wormhole "^0.5.1"
 
-ember-changeset-validations@nypublicradio/ember-changeset-validations:
+ember-changeset-validations@^1.2.7:
   version "1.2.7"
-  resolved "https://codeload.github.com/nypublicradio/ember-changeset-validations/tar.gz/235a2d0749157541eebb4f9d10ed61d7b7cb283a"
+  resolved "https://registry.yarnpkg.com/ember-changeset-validations/-/ember-changeset-validations-1.2.7.tgz#5791fef334b2693165017d82c091f3a6c6a6f184"
   dependencies:
     ember-changeset "1.2.3"
     ember-cli-babel "^6.0.0"
     ember-cli-htmlbars "^1.1.1"
-    ember-validators "^1.0.0"
+    ember-validators "1.0.0"
 
 ember-changeset@1.2.3:
   version "1.2.3"
@@ -2543,9 +2543,9 @@ ember-qunit@^2.0.0-beta.1:
   dependencies:
     ember-test-helpers "^0.6.0-beta.1"
 
-ember-require-module@^0.1.1:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/ember-require-module/-/ember-require-module-0.1.2.tgz#fdffdcf86745d601009211c1b41907395a4d081e"
+ember-require-module@0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/ember-require-module/-/ember-require-module-0.1.1.tgz#5a2130f691ad1578b1d236dd11196721fd5526b2"
   dependencies:
     ember-cli-babel "^5.1.7"
 
@@ -2636,12 +2636,12 @@ ember-try@^0.2.6:
     semver "^5.1.0"
     sync-exec "^0.6.2"
 
-ember-validators@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/ember-validators/-/ember-validators-1.0.2.tgz#860dec5f98a92973fe09522a72a273a110076967"
+ember-validators@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ember-validators/-/ember-validators-1.0.0.tgz#c432e9f9afc41ebc5be3870a8417818866cfd213"
   dependencies:
     ember-cli-babel "^5.1.6"
-    ember-require-module "^0.1.1"
+    ember-require-module "0.1.1"
 
 ember-wormhole@^0.5.1:
   version "0.5.1"
