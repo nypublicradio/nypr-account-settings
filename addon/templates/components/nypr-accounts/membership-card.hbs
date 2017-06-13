@@ -26,7 +26,17 @@
     {{/if}}
 
     {{#if pledges.isPending}}
-      {{animated-loading-icon color="#CCC" classNames="membership-loading-animation"}}
+      {{animated-loading-icon
+        color='#CCC'
+        width=34
+        height=34
+        outerScale=12
+        innerScale=6
+        radius=0.0025
+        dotRadius=2
+        lineWidth=4
+        classNames="membership-loading-animation"
+      }}
     {{/if}}
 
     {{#if pledges.isFulfilled}}
