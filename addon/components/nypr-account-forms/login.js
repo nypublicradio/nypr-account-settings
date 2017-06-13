@@ -64,7 +64,7 @@ export default Component.extend({
       }
       get(this, 'session').authenticate('authenticator:torii', 'facebook-connect', authOptions)
       .catch((e) => {
-        if (e && get(e, 'errors.code') === 'MissingAttributeException' && e.values && e.values.includes("email")) {
+        if (e && get(e, 'errors.code') === 'MissingAttributeException') {
           set(this, 'emailWasDeclined', true);
           return this.onFacebookLoginFailure(messages.socialAuthNoEmail);
         } else {
