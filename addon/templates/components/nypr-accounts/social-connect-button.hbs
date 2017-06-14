@@ -4,7 +4,10 @@
 
 {{else}}
 
-  <button class="nypr-social-connect__button {{buttonClass}}" {{action buttonAction}}>
+  <button
+    class="nypr-social-connect__button {{buttonClass}}"
+    data-test-selector="social-connect-{{providerName}}"
+    {{action buttonAction}}>
   {{#if providerIcon}}
     <i class="nypr-social-connect__icon fa fa-{{providerIcon}}"></i>
   {{/if}}
