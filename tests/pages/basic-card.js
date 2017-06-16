@@ -3,8 +3,7 @@ import {
   fillable,
   clickable,
   value,
-  text,
-  isVisible
+  text
 } from 'ember-cli-page-object';
 
 export default create({
