@@ -81,3 +81,21 @@ test("it shows the 'oops' page when api returns an expired error", function(asse
     assert.equal(this.$('.account-form-heading:contains(Oops!)').length, 1, 'the heading should say oops');
   });
 });
+
+test("it shows the 'oops' page when api returns a 401", function(assert) {
+  this.set('authAPI', authAPI);
+  this.set('username', testUsername);
+  this.set('code', testCode);
+  this.render(hbs`{{nypr-account-forms/set-password username=username code=code authAPI=authAPI}}`);
+
+  let url = `${authAPI}/v1/password/change-temp`;
+  this.server.post(url, {}, 401);
+
+  this.$('label:contains(New Password) + input').val(testPassword);
+  this.$('label:contains(New Password) + input').blur();
+  this.$('button:contains(Create password)').click();
+
+  return wait().then(() => {
+    assert.equal(this.$('.account-form-heading:contains(Oops!)').length, 1, 'the heading should say oops');
+  });
+});

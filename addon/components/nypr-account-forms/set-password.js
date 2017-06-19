@@ -43,7 +43,9 @@ export default Component.extend({
     return fetch(url, {method, headers, body})
     .then(rejectUnsuccessfulResponses)
     .catch(e => {
-      if (get(e, 'errors.code') === 'ExpiredCodeException') {
+      // the expired state for a expired temp password is a wrong password we get a 401 with no error
+      // so treat an empty error object as expired
+      if (!e.errors || get(e, 'errors.code') === 'ExpiredCodeException') {
         set (this, 'codeExpired', true);
       } else if (get(e, 'errors.message')) {
         changeset.validate('password');
