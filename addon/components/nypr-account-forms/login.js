@@ -58,6 +58,7 @@ export default Component.extend({
     loginWithFacebook() {
       let authOptions = {};
       if (get(this, 'emailWasDeclined')) {
+        //we need to send this option with the fb login request to re-request the email permission
         authOptions = {authType: 'rerequest'};
         //reset emailWasDeclined on a new attempt
         set(this, 'emailWasDeclined', false);
