@@ -1,14 +1,9 @@
 @import "compass/css3/flexbox";
 
-@import "ember-modal-dialog/ember-modal-structure";
-@import "ember-modal-dialog/ember-modal-appearance";
-
 @import "nypr-ui/vars";
 @import "nypr-ui/colors";
 @import "nypr-ui/z-index";
 @import "nypr-ui/buttons";
-
-@import "nypr-account-modal";
 
 .nypr-account-settings-and-member-center {
   @include display-flex();
@@ -251,17 +246,17 @@
   margin: 0;
   @include fontsize(12);
   line-height: 1.5;
-  
+
   @media screen and (min-width: 960px) {
     @include fontsize(14);
   }
-  
+
   > a {
     text-decoration: none;
     color: $blue;
     border-bottom: 1px solid rgba($blue, 0);
     transition: 125ms ease border-bottom-color;
-    
+
     &:hover {
       border-bottom-color: $blue;
     }

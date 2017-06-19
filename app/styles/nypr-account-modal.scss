@@ -1,7 +1,18 @@
+@import "compass/css3/flexbox";
+
+@import "ember-modal-dialog/ember-modal-structure";
+@import "ember-modal-dialog/ember-modal-appearance";
+
+@import "nypr-ui/vars";
+@import "nypr-ui/colors";
+@import "nypr-ui/z-index";
+@import "nypr-ui/buttons";
+
 .nypr-account-container-outer {
   padding: 15px;
   max-width: 457px;
   background-color: transparent;
+  box-shadow: none;
 }
 
 .nypr-account-container-inner {
