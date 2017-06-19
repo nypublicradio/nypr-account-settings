@@ -24,7 +24,7 @@ export default Component.extend({
     return `${get(this, 'authAPI')}/v1/password/forgot`;
   }),
   allowedKeys: ['password'],
-  codeExpired: false,
+  passwordExpired: false,
   passwordWasSet: false,
   init() {
     this._super(...arguments);
@@ -43,10 +43,8 @@ export default Component.extend({
     return fetch(url, {method, headers, body})
     .then(rejectUnsuccessfulResponses)
     .catch(e => {
-      // the expired state for a expired temp password is a wrong password we get a 401 with no error
-      // so treat an empty error object as expired
-      if (!e.errors || get(e, 'errors.code') === 'ExpiredCodeException') {
-        set (this, 'codeExpired', true);
+      if (get(e, 'errors.code') === 'UnauthorizedAccess') {
+        set (this, 'passwordExpired', true);
       } else if (get(e, 'errors.message')) {
         changeset.validate('password');
         changeset.pushErrors('password', get(e, 'errors.message'));

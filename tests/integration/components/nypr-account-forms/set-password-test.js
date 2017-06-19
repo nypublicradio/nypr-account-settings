@@ -54,7 +54,8 @@ test('submitting the form sends the correct values to the correct endpoint', fun
   });
 });
 
-test("it shows the 'oops' page when api returns an expired error", function(assert) {
+
+test("it shows the 'oops' page when api returns an unauthorized error", function(assert) {
   this.set('authAPI', authAPI);
   this.set('username', testUsername);
   this.set('code', testCode);
@@ -66,11 +67,11 @@ test("it shows the 'oops' page when api returns an expired error", function(asse
     requests.push(request);
     return {
       "errors": {
-        "code": "ExpiredCodeException",
-        "message": "Invalid code provided, please request a code again."
+        "code": "UnauthorizedAccess",
+        "message": "Incorrect username or password."
       }
     };
-  }, 400);
+  }, 401);
 
   this.$('label:contains(New Password) + input').val(testPassword);
   this.$('label:contains(New Password) + input').blur();
@@ -82,20 +83,3 @@ test("it shows the 'oops' page when api returns an expired error", function(asse
   });
 });
 
-test("it shows the 'oops' page when api returns a 401", function(assert) {
-  this.set('authAPI', authAPI);
-  this.set('username', testUsername);
-  this.set('code', testCode);
-  this.render(hbs`{{nypr-account-forms/set-password username=username code=code authAPI=authAPI}}`);
-
-  let url = `${authAPI}/v1/password/change-temp`;
-  this.server.post(url, {}, 401);
-
-  this.$('label:contains(New Password) + input').val(testPassword);
-  this.$('label:contains(New Password) + input').blur();
-  this.$('button:contains(Create password)').click();
-
-  return wait().then(() => {
-    assert.equal(this.$('.account-form-heading:contains(Oops!)').length, 1, 'the heading should say oops');
-  });
-});
