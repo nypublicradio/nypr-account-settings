@@ -35,8 +35,9 @@ test('it shows the correct message', function(assert) {
 test('submitting the form sends the correct values to the correct endpoint', function(assert) {
   this.set('authAPI', authAPI);
   this.set('username', testUsername);
+  this.set('email', testEmail);
   this.set('code', testCode);
-  this.render(hbs`{{nypr-account-forms/set-password username=username code=code authAPI=authAPI}}`);
+  this.render(hbs`{{nypr-account-forms/set-password username=username email=email code=code authAPI=authAPI}}`);
 
   let requests = [];
   let url = `${authAPI}/v1/password/change-temp`;
@@ -50,7 +51,7 @@ test('submitting the form sends the correct values to the correct endpoint', fun
 
   return wait().then(() => {
     assert.equal(requests.length, 1);
-    assert.deepEqual(JSON.parse(requests[0].requestBody), {username: testUsername, temp: testCode, new: testPassword});
+    assert.deepEqual(JSON.parse(requests[0].requestBody), {username: testUsername, email: testEmail, temp: testCode, new: testPassword});
   });
 });
 
