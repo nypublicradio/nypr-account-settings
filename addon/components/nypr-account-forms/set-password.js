@@ -11,10 +11,6 @@ import RSVP from 'rsvp';
 import fetch from 'fetch';
 import { rejectUnsuccessfulResponses } from 'nypr-account-settings/utils/fetch-utils';
 
-const FLASH_MESSAGES = {
-  set: 'Your password has been successfully updated.'
-};
-
 export default Component.extend({
   layout,
   store: service(),
@@ -55,20 +51,13 @@ export default Component.extend({
       return RSVP.Promise.reject(e);
     });
   },
-  showFlash(type) {
-    this.get('flashMessages').add({
-      message: FLASH_MESSAGES[type],
-      type: 'success',
-      sticky: true
-    });
-  },
   actions: {
     onSubmit() {
       return this.setPassword(get(this, 'username'), get(this, 'email'), get(this, 'code'), get(this, 'fields.password'));
     },
     onSuccess() {
       this.set('passwordWasSet', true);
-      return this.showFlash('set');
+      return this.sendAction('afterSetPassword');
     }
   },
 });

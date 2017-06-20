@@ -55,6 +55,27 @@ test('submitting the form sends the correct values to the correct endpoint', fun
   });
 });
 
+test('submitting the form calls the afterSetPassword action', function(assert) {
+  this.set('authAPI', authAPI);
+  this.set('username', testUsername);
+  this.set('email', testEmail);
+  this.set('code', testCode);
+  let afterSetPasswordCalls = 0;
+  this.set('afterSetPassword', () => afterSetPasswordCalls++);
+
+  this.render(hbs`{{nypr-account-forms/set-password username=username email=email code=code authAPI=authAPI afterSetPassword=afterSetPassword}}`);
+
+  let url = `${authAPI}/v1/password/change-temp`;
+  this.server.post(url, {}, 200);
+  this.$('label:contains(New Password) + input').val(testPassword);
+  this.$('label:contains(New Password) + input').blur();
+  this.$('button:contains(Create password)').click();
+
+  return wait().then(() => {
+    assert.equal(afterSetPasswordCalls, 1);
+  });
+});
+
 
 test("it shows the 'oops' page when api returns an unauthorized error", function(assert) {
   this.set('authAPI', authAPI);
