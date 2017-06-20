@@ -42,30 +42,50 @@ export default Component.extend({
     },
     onFailure(e) {
       if (e) {
-        if (get(e, 'errors.code') === 'AccountNotConfirmed') {
-          set(this, 'triedUnconfirmedAccount', true);
-        } else if (get(e, 'errors.code') === 'UnauthorizedAccess') {
-          set(this, 'showLoginError', true);
-        } else {
-          this.applyErrorToChangeset(e.errors, get(this, 'changeset'));
+        let errorCode = get(e, 'errors.code');
+        switch (errorCode) {
+          case 'AccountNotConfirmed':
+            set(this, 'triedUnconfirmedAccount', true);
+            break;
+          case 'UnauthorizedAccess':
+            set(this, 'showLoginError', true);
+            break;
+          default:
+            this.applyErrorToChangeset(e.errors, get(this, 'changeset'));
         }
       }
     },
     loginWithFacebook() {
-      get(this, 'session').authenticate('authenticator:torii', 'facebook-connect')
-      .catch(() => this.onFacebookLoginFailure());
+      let authOptions = {};
+      if (get(this, 'emailWasDeclined')) {
+        //we need to send this option with the fb login request to re-request the email permission
+        authOptions = {authType: 'rerequest'};
+        //reset emailWasDeclined on a new attempt
+        set(this, 'emailWasDeclined', false);
+      }
+      get(this, 'session').authenticate('authenticator:torii', 'facebook-connect', authOptions)
+      .catch((e) => {
+        if (e && get(e, 'errors.code') === 'MissingAttributeException') {
+          set(this, 'emailWasDeclined', true);
+          return this.onFacebookLoginFailure(messages.socialAuthNoEmail);
+        } else {
+          return this.onFacebookLoginFailure(messages.socialAuthCancelled);
+        }
+      });
     }
   },
-  onFacebookLoginFailure() {
+  onFacebookLoginFailure(message) {
     // because we clear flash messages when clicking this form,
     // wait a tick when we add one in an action that can
     // be triggered with a click
     next(() => {
-      this.get('flashMessages').add({
-        message: messages.socialAuthCancelled,
-        type: 'warning',
-        sticky: true,
-      });
+      if (message) {
+        this.get('flashMessages').add({
+          message: message,
+          type: 'warning',
+          sticky: true,
+        });
+      }
     });
   },
   authenticate(email, password) {

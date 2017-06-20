@@ -19,5 +19,6 @@ export default {
   emailExists:           'an account with this email address already exists',
   genericVerificationError: 'There was a problem verifying your email address. Please try again later.',
   socialAuthCancelled:    "We're sorry, but we weren't able to log you in through Facebook.",
+  socialAuthNoEmail:      "Unfortunately, we can't authorize your account without permission to view your email address.",
   passwordIncorrect:      "This password is incorrect.",
 };
