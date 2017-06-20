@@ -231,7 +231,7 @@ export default Component.extend({
 
   verifyEmail: task(function * () {
     try {
-      yield RSVP.resolve('this is to make jshint happy');
+      yield this.attrs.requestTempPassword(get(this, 'connectEmailChangeset.email'));
       this.get('connectEmailChangeset').validate();
       this.trigger('emailVerified');
       get(this, 'showCheckEmailModal').perform();
