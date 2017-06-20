@@ -1,8 +1,26 @@
-.nypr-account-container {
+@import "compass/css3/flexbox";
+
+@import "ember-modal-dialog/ember-modal-structure";
+@import "ember-modal-dialog/ember-modal-appearance";
+
+@import "nypr-ui/vars";
+@import "nypr-ui/colors";
+@import "nypr-ui/z-index";
+@import "nypr-ui/buttons";
+
+.nypr-account-container-outer {
+  padding: 15px;
+  max-width: 457px;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.nypr-account-container-inner {
   padding: 0;
   border-radius: 3px;
   overflow: hidden;
-  max-width: 457px;
+  background-color: white;
+  box-shadow: 0 0 10px #222;
 }
 
 .nypr-account-wrapper .nypr-account-overlay.ember-modal-overlay {

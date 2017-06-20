@@ -2,20 +2,22 @@
   close=closeAction
   clickOutsideToClose=true
   wrapper-class="nypr-account-wrapper"
-  container-class="nypr-account-container"
+  container-class="nypr-account-container-outer"
   overlay-class="nypr-account-overlay"
   translucentOverlay=true
   targetAttachment="center"}}
+  <div class="nypr-account-container-inner">
   {{#if title}}
   <div class="nypr-account-modal-title">
     <span>{{title}}</span>
-    
+
     <button class="nypr-account-modal-close" {{action closeAction}}>{{nypr-svg icon='close'}}</button>
   </div>
   {{/if}}
-  
+
   {{yield (hash
     body=(component 'nypr-account-modal/body')
     footer=(component 'nypr-account-modal/footer')
   )}}
+  </div>
 {{/modal-dialog}}
