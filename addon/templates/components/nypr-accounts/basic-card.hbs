@@ -92,7 +92,7 @@
 {{/nypr-card}}
 
 {{#if promptForPassword.isRunning}}
-  {{#nypr-account-modal title="Re-enter Your Password" closeAction=(action 'closeModal') as |m|}}
+  {{#nypr-account-modal title="Re-enter Your Password" closeAction=(action 'endTask' 'promptForPassword') as |m|}}
     <form {{action (perform verifyPassword) on='submit'}}>
     {{#m.body}}
     <p>
@@ -116,6 +116,67 @@
         class="nypr-account-confirm"
         data-test-selector="check-pw"
         >Submit</button>
+    {{/m.footer}}
+    </form>
+  {{/nypr-account-modal}}
+{{/if}}
+
+{{#if promptForEmail.isRunning}}
+  {{#nypr-account-modal title="Enter Your Email" closeAction=(action 'endTask' 'promptForEmail') as |m|}}
+    <form {{action (perform verifyEmail) on='submit'}}>
+    {{#m.body}}
+    <p>
+      To edit your info, you need to create a {{siteName}} password. Enter your email and we'll send you a link to create the password.
+    </p>
+    {{nypr-input
+      label='Email'
+      type='email'
+      fieldname='connectEmail'
+      placeholder='you@email.com'
+      value=connectEmailChangeset.email
+      errors=connectEmailChangeset.error.email.validation
+      showError=true
+    }}
+    {{nypr-input
+      label='Confirm Email'
+      type='email'
+      fieldname='connectEmailConfirmation'
+      placeholder='you@email.com'
+      value=connectEmailChangeset.confirmEmail
+      errors=connectEmailChangeset.error.confirmEmail.validation
+      showError=true
+    }}
+    {{/m.body}}
+
+    {{#m.footer}}
+      <button
+        class="nypr-account-confirm"
+        data-test-selector="enter-email"
+        type="submit"
+        >Submit</button>
+    {{/m.footer}}
+    </form>
+  {{/nypr-account-modal}}
+{{/if}}
+
+{{#if showCheckEmailModal.isRunning}}
+  {{#nypr-account-modal title="Check Your Email" closeAction=(action 'endTask' 'showCheckEmailModal') as |m|}}
+    <form {{action 'endTask' 'showCheckEmailModal' on='submit'}}>
+    {{#m.body}}
+      <p>
+        We've sent an email to {{connectEmailChangeset.email}} with a link to create a {{siteName}} password. Once you create this password, you will be able to edit your information.
+      </p>
+      <p>
+        Usually, the email is sent very quickly, but in rare circumstances it could take a minute or two.
+      </p>
+    {{/m.body}}
+
+    {{#m.footer}}
+      <button
+        class="nypr-account-confirm"
+        data-test-selector="got-it"
+        {{action 'endTask' 'showCheckEmailModal'}}
+        >Got it!</button>
     {{/m.footer}}
     </form>
   {{/nypr-account-modal}}

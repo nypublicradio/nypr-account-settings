@@ -568,3 +568,36 @@ test('shows error for taken email', function(assert) {
   });
   return wait();
 });
+
+test('edit for an account with no password prompts for email address...', function(assert) {
+  let user = userFields();
+  user.hasPassword = false;
+  user.socialOnly = true;
+  this.set('user', user);
+  this.render(hbs`{{nypr-accounts/basic-card user=user}}`);
+
+  card.clickEdit();
+
+  assert.equal(card.currentModal.title, 'Enter Your Email');
+});
+
+test('...and after submitting email address, calls requestTempPassword with email', function(assert) {
+  let requestTempPassword = sinon.stub().returns(Promise.resolve());
+  const EMAIL = 'newmail@example.com';
+  let user = userFields();
+  user.hasPassword = false;
+  user.socialOnly = true;
+  this.set('user', user);
+  this.set('requestTempPassword', requestTempPassword);
+  this.render(hbs`{{nypr-accounts/basic-card user=user requestTempPassword=(action requestTempPassword)}}`);
+
+  card.clickEdit();
+  card.emailModal
+    .fillInEmail(EMAIL)
+    .fillInConfirmEmail(EMAIL)
+    .clickSubmit();
+
+  assert.ok(requestTempPassword.calledOnce);
+  assert.ok(requestTempPassword.calledWith(EMAIL));
+  assert.equal(card.currentModal.title, 'Check Your Email');
+});
