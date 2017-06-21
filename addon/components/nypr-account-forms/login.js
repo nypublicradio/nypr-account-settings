@@ -22,7 +22,7 @@ export default Component.extend({
   }),
   allowedKeys: ['email', 'password'],
   triedUnverifiedAccount: false,
-  showLoginError: false,
+  loginError: null,
   init() {
     this._super(...arguments);
     set(this, 'fields', {
@@ -37,7 +37,7 @@ export default Component.extend({
   },
   actions: {
     onSubmit() {
-      set(this, 'showLoginError', false);
+      set(this, 'loginError', null);
       return this.authenticate(get(this, 'fields.email'), get(this, 'fields.password'));
     },
     onFailure(e) {
@@ -48,7 +48,10 @@ export default Component.extend({
             set(this, 'triedUnconfirmedAccount', true);
             break;
           case 'UnauthorizedAccess':
-            set(this, 'showLoginError', true);
+            set(this, 'loginError', messages.genericLoginError);
+            break;
+          case 'UserNoPassword':
+            set(this, 'loginError', messages.noPasswordLoginError);
             break;
           default:
             this.applyErrorToChangeset(e.errors, get(this, 'changeset'));
