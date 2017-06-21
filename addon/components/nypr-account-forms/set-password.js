@@ -30,11 +30,11 @@ export default Component.extend({
     set(this, 'changeset', new Changeset(get(this, 'fields'), lookupValidator(PasswordValidations), PasswordValidations));
     get(this, 'changeset').validate();
   },
-  setPassword(username, email, temp, new_password) {
+  setPassword(username, email, temp, newPassword) {
     let url = `${get(this, 'authAPI')}/v1/password/change-temp`;
     let method = 'POST';
     let headers = { "Content-Type" : "application/json" };
-    let body = JSON.stringify({username, email, temp, "new": new_password});
+    let body = JSON.stringify({username, email, temp, "new": newPassword});
     let changeset = get(this, 'changeset');
     return fetch(url, {method, headers, body})
     .then(rejectUnsuccessfulResponses)
