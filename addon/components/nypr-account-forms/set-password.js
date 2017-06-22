@@ -1,6 +1,6 @@
 import layout from '../../templates/components/nypr-account-forms/set-password';
 import Component from 'ember-component';
-import get from 'ember-metal/get';
+import get, { getProperties } from 'ember-metal/get';
 import set from 'ember-metal/set';
 import computed from 'ember-computed';
 import service from 'ember-service/inject';
@@ -33,7 +33,7 @@ export default Component.extend({
     let url = `${get(this, 'authAPI')}/v1/password/change-temp`;
     let method = 'POST';
     let headers = { "Content-Type" : "application/json" };
-    let body = JSON.stringify({username, email, temp, "new": newPassword});
+    let body = JSON.stringify({username, email, temp, new: newPassword});
     let response = yield fetch(url, {method, headers, body});
     if (!response || response && !response.ok) {
       throw yield response.json();
@@ -61,10 +61,18 @@ export default Component.extend({
   
   doSubmit: task(function * () {
     let changeset = get(this, 'changeset');
+    let {
+      username,
+      email,
+      code,
+      'fields.password':password,
+      emailId,
+      verificationToken
+    } = getProperties(this, 'username', 'email', 'code', 'fields.password', 'emailId', 'verificationToken');
     try {
       return yield all([
-        get(this, 'setPassword').perform(get(this, 'username'), get(this, 'email'), get(this, 'code'), get(this, 'fields.password')),
-        get(this, 'claimEmail').perform(get(this, 'emailId'), get(this, 'verificationToken'))
+        get(this, 'setPassword').perform(username, email, code, password),
+        get(this, 'claimEmail').perform(emailId, verificationToken)
       ]);
     } catch(error) {
       if (get(error, 'errors.code') === 'UnauthorizedAccess') {
