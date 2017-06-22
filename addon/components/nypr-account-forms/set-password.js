@@ -82,7 +82,7 @@ export default Component.extend({
   
   actions: {
     onSubmit() {
-      return this.setPassword(get(this, 'username'), get(this, 'email'), get(this, 'code'), get(this, 'fields.password'));
+      return get(this, 'doSubmit').perform();
     },
     onSuccess() {
       this.set('passwordWasSet', true);
