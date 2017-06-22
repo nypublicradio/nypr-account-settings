@@ -59,22 +59,27 @@ export default Component.extend({
     }
   }),
   
+  doSubmit: task(function * () {
     let changeset = get(this, 'changeset');
-    return fetch(url, {method, headers, body})
-    .then(rejectUnsuccessfulResponses)
-    .catch(e => {
-      if (get(e, 'errors.code') === 'UnauthorizedAccess') {
+    try {
+      return yield all([
+        get(this, 'setPassword').perform(get(this, 'username'), get(this, 'email'), get(this, 'code'), get(this, 'fields.password')),
+        get(this, 'claimEmail').perform(get(this, 'emailId'), get(this, 'verificationToken'))
+      ]);
+    } catch(error) {
+      if (get(error, 'errors.code') === 'UnauthorizedAccess') {
         set (this, 'passwordExpired', true);
-      } else if (get(e, 'errors.message')) {
+      } else if (get(error, 'errors.message')) {
         changeset.validate('password');
-        changeset.pushErrors('password', get(e, 'errors.message'));
+        changeset.pushErrors('password', get(error, 'errors.message'));
       } else {
         changeset.validate('password');
         changeset.pushErrors('password', 'There was a problem setting your password.');
       }
-      return RSVP.Promise.reject(e);
-    });
-  },
+      throw error;
+    }
+  }).drop(),
+  
   actions: {
     onSubmit() {
       return this.setPassword(get(this, 'username'), get(this, 'email'), get(this, 'code'), get(this, 'fields.password'));
