@@ -39,6 +39,26 @@ export default Component.extend({
       throw yield response.json();
     }
   }),
+  claimEmail: task(function * (emailId, token) {
+    let url = `${get(this, 'membershipAPI')}/v1/emails/${emailId}/verify/`;
+    let method = 'PATCH';
+    let body = JSON.stringify({ data: {
+      id: Number(emailId),
+      type: "EmailAddress",
+      attributes: {
+        "verification_token": token
+      }
+    }});
+    let headers = {'Content-Type': 'application/vnd.api+json'};
+    this.get('session').authorize('authorizer:nypr', (header, value) => {
+      headers[header] = value;
+    });
+    let response = yield fetch(url, {method, headers, body});
+    if (!response || response && !response.ok) {
+      throw yield response.json();
+    }
+  }),
+  
     let changeset = get(this, 'changeset');
     return fetch(url, {method, headers, body})
     .then(rejectUnsuccessfulResponses)
