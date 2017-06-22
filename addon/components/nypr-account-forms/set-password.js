@@ -7,9 +7,8 @@ import service from 'ember-service/inject';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
 import PasswordValidations from 'nypr-account-settings/validations/nypr-accounts/password';
-import RSVP from 'rsvp';
 import fetch from 'fetch';
-import { rejectUnsuccessfulResponses } from 'nypr-account-settings/utils/fetch-utils';
+import { all, task } from 'ember-concurrency';
 
 export default Component.extend({
   layout,
@@ -30,11 +29,16 @@ export default Component.extend({
     set(this, 'changeset', new Changeset(get(this, 'fields'), lookupValidator(PasswordValidations), PasswordValidations));
     get(this, 'changeset').validate();
   },
-  setPassword(username, email, temp, newPassword) {
+  setPassword: task(function * (username, email, temp, newPassword) {
     let url = `${get(this, 'authAPI')}/v1/password/change-temp`;
     let method = 'POST';
     let headers = { "Content-Type" : "application/json" };
     let body = JSON.stringify({username, email, temp, "new": newPassword});
+    let response = yield fetch(url, {method, headers, body});
+    if (!response || response && !response.ok) {
+      throw yield response.json();
+    }
+  }),
     let changeset = get(this, 'changeset');
     return fetch(url, {method, headers, body})
     .then(rejectUnsuccessfulResponses)
