@@ -14,7 +14,7 @@ export default Ember.Component.extend({
   success: false,
   error: false,
   autoReset: true,
-  resetDelay: 10000,
+  resetDelay: Ember.testing ? 10 : 10000,
   successMessage: 'Email resent',
   errorMessage: 'Email not resent. Try again later',
   actions: {
