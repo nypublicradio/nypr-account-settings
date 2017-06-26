@@ -53,6 +53,9 @@ export default Component.extend({
           case 'UserNoPassword':
             set(this, 'loginError', messages.noPasswordLoginError);
             break;
+          case 'UserNotFoundException':
+            set(this, 'loginError', messages.emailNotFound( get(this, 'changeset.email') ));
+            break;
           default:
             this.applyErrorToChangeset(e.errors, get(this, 'changeset'));
         }
@@ -99,9 +102,6 @@ export default Component.extend({
       changeset.rollback(); // so errors don't stack up
       if (error.message === 'User is disabled') {
         changeset.pushErrors('email', messages.userDisabled);
-      } else if (error.code === "UserNotFoundException") {
-        changeset.validate('email');
-        changeset.pushErrors('password', messages.emailNotFound( changeset.get('email') ));
       }
     }
   }
