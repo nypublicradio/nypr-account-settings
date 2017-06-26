@@ -1,10 +1,12 @@
 import Ember from "ember";
 import computed from "ember-computed";
-import { getCookie } from "nypr-account-settings/utils/cookies";
+import service from "ember-service/inject";
 import layout from "../../../templates/components/nypr-accounts/membership-card/current-status-detail";
 
 export default Ember.Component.extend({
   layout,
+  cookies: service(),
+
   willRender() {
     // When the tab or window gains focus, re-run the hasMadeRecentPledge
     // computed function to check if, while the tab was unfocused, the user
@@ -74,6 +76,8 @@ export default Ember.Component.extend({
     "orderCode"
   ),
   hasMadeRecentPledge: computed(function() {
-    return getCookie("recentPledge") === "true";
+    let cookieService = this.get('cookies');
+    let cookies = cookieService.read();
+    return cookies["recentPledge"] === "true";
   })
 });
