@@ -65,8 +65,7 @@ export default Component.extend({
       if (message) {
         this.get('flashMessages').add({
           message: message,
-          type: 'warning',
-          sticky: true,
+          type: 'warning'
         });
       }
     });

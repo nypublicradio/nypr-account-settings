@@ -54,8 +54,7 @@ export default Component.extend({
   showFlash(type) {
     this.get('flashMessages').add({
       message: FLASH_MESSAGES[type],
-      type: 'success',
-      sticky: true
+      type: 'success'
     });
   },
   actions: {
