@@ -1,15 +1,14 @@
 import layout from '../../templates/components/nypr-account-forms/set-password';
 import Component from 'ember-component';
-import get from 'ember-metal/get';
+import get, { getProperties } from 'ember-metal/get';
 import set from 'ember-metal/set';
 import computed from 'ember-computed';
 import service from 'ember-service/inject';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
 import PasswordValidations from 'nypr-account-settings/validations/nypr-accounts/password';
-import RSVP from 'rsvp';
 import fetch from 'fetch';
-import { rejectUnsuccessfulResponses } from 'nypr-account-settings/utils/fetch-utils';
+import { all, task } from 'ember-concurrency';
 
 export default Component.extend({
   layout,
@@ -30,30 +29,68 @@ export default Component.extend({
     set(this, 'changeset', new Changeset(get(this, 'fields'), lookupValidator(PasswordValidations), PasswordValidations));
     get(this, 'changeset').validate();
   },
-  setPassword(username, email, temp, newPassword) {
+  setPassword: task(function * (username, email, temp, newPassword) {
     let url = `${get(this, 'authAPI')}/v1/password/change-temp`;
     let method = 'POST';
     let headers = { "Content-Type" : "application/json" };
-    let body = JSON.stringify({username, email, temp, "new": newPassword});
+    let body = JSON.stringify({username, email, temp, new: newPassword});
+    let response = yield fetch(url, {method, headers, body});
+    if (!response || response && !response.ok) {
+      throw yield response.json();
+    }
+  }),
+  claimEmail: task(function * (emailId, token) {
+    let url = `${get(this, 'membershipAPI')}/v1/emails/${emailId}/verify/`;
+    let method = 'PATCH';
+    let body = JSON.stringify({ data: {
+      id: Number(emailId),
+      type: "EmailAddress",
+      attributes: {
+        "verification_token": token
+      }
+    }});
+    let headers = {'Content-Type': 'application/vnd.api+json'};
+    this.get('session').authorize('authorizer:nypr', (header, value) => {
+      headers[header] = value;
+    });
+    let response = yield fetch(url, {method, headers, body});
+    if (!response || response && !response.ok) {
+      throw yield response.json();
+    }
+  }),
+  
+  doSubmit: task(function * () {
     let changeset = get(this, 'changeset');
-    return fetch(url, {method, headers, body})
-    .then(rejectUnsuccessfulResponses)
-    .catch(e => {
-      if (get(e, 'errors.code') === 'UnauthorizedAccess') {
+    let {
+      username,
+      email,
+      code,
+      'fields.password':password,
+      emailId,
+      verificationToken
+    } = getProperties(this, 'username', 'email', 'code', 'fields.password', 'emailId', 'verificationToken');
+    try {
+      return yield all([
+        get(this, 'setPassword').perform(username, email, code, password),
+        get(this, 'claimEmail').perform(emailId, verificationToken)
+      ]);
+    } catch(error) {
+      if (get(error, 'errors.code') === 'UnauthorizedAccess') {
         set (this, 'passwordExpired', true);
-      } else if (get(e, 'errors.message')) {
+      } else if (get(error, 'errors.message')) {
         changeset.validate('password');
-        changeset.pushErrors('password', get(e, 'errors.message'));
+        changeset.pushErrors('password', get(error, 'errors.message'));
       } else {
         changeset.validate('password');
         changeset.pushErrors('password', 'There was a problem setting your password.');
       }
-      return RSVP.Promise.reject(e);
-    });
-  },
+      throw error;
+    }
+  }).drop(),
+  
   actions: {
     onSubmit() {
-      return this.setPassword(get(this, 'username'), get(this, 'email'), get(this, 'code'), get(this, 'fields.password'));
+      return get(this, 'doSubmit').perform();
     },
     onSuccess() {
       this.set('passwordWasSet', true);
