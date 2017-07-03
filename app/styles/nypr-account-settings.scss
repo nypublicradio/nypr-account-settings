@@ -61,13 +61,13 @@
   @include btn;
   @include btn--blue;
   @include btn--large;
-  @include btn--strongtext
+  @include btn--strongtext;
 }
 
 .nypr-account-cancel {
   @include blank-button;
-  @include btn--large
-  @include btn--strongtext
+  @include btn--large;
+  @include btn--strongtext;
   color: $blue;
 }
 
