@@ -66,6 +66,7 @@
 
 .nypr-account-cancel {
   @include blank-button;
+  @include btn--large
   @include btn--strongtext
   color: $blue;
 }
