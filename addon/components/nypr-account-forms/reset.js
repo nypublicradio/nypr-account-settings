@@ -18,6 +18,7 @@ const FLASH_MESSAGES = {
 export default Component.extend({
   layout,
   store: service(),
+  flashMessages: service(),
   authAPI: null,
   session: null,
   resendUrl: computed('authAPI', function() {

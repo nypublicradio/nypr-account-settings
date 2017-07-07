@@ -14,7 +14,7 @@ test('it renders', function(assert) {
 });
 
 test('submitting the form passes the login values to the authenticator', function(assert) {
-  let authenticate = sinon.stub().returns(RSVP.Promise.reject({}));
+  let authenticate = sinon.stub().returns(RSVP.Promise.resolve({}));
   let session = {authenticate};
   this.set('session', session);
   this.render(hbs`{{nypr-account-forms/login session=session}}`);
