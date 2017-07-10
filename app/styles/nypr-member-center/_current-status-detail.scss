@@ -36,6 +36,11 @@
     background-color: darken($wqxr-blue, 10%);
     border-color: darken($wqxr-blue, 10%);
   }
+
+  &:not([disabled]):focus {
+    background-color: darken($wqxr-blue, 10%);
+    border-color: darken($wqxr-blue, 10%);
+  }
 }
 
 .last-pledge-date {
