@@ -18,6 +18,7 @@ export default {
   publicHandleRequired:  'public handle cannot be blank',
   publicHandleExists:    'public handle already exists',
   emailExists:           'an account with this email address already exists',
+  signupNoPassword:      'It looks like you previously signed up through Facebook. You can log in via the <a href="/login">Facebook button here</a>.',
   genericVerificationError: 'There was a problem verifying your email address. Please try again later.',
   socialAuthCancelled:    "We're sorry, but we weren't able to log you in through Facebook.",
   socialAuthNoEmail:      "Unfortunately, we can't authorize your account without permission to view your email address.",

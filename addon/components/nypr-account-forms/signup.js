@@ -31,11 +31,16 @@ export default Component.extend({
   },
   actions: {
     onSubmit() {
+      set(this, 'signupError', null);
       return this.signUp();
     },
     onFailure(e) {
       if (e) {
-        this.applyErrorToChangeset(e.errors, get(this, 'changeset'));
+        if (e.errors && e.errors.code === 'UserNoPassword') {
+          set(this, 'signupError', messages.signupNoPassword);
+        } else {
+          this.applyErrorToChangeset(e.errors, get(this, 'changeset'));
+        }
       }
     },
     signupWithFacebook() {

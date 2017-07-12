@@ -79,6 +79,12 @@
       submitted=form.status.tried
     }}
 
+    {{#if signupError}}
+      <div class='account-form-error'>
+        {{{signupError}}}
+      </div>
+    {{/if}}
+
     <div class="account-form-notice">
       By proceeding to create your account, you are agreeing to New York Public Radio’s <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a>.
     </div>

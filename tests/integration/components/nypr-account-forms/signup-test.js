@@ -1,4 +1,4 @@
-import { moduleForComponent, test, skip } from 'ember-qunit';
+import { moduleForComponent, test } from 'ember-qunit';
 import wait from 'ember-test-helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
 import { startMirage }  from 'dummy/initializers/ember-cli-mirage';
@@ -56,22 +56,15 @@ test('submitting the form tries to save values on a new user model', function(as
   });
 });
 
-skip('submitting the form sends a post to the api', function(assert) {
+test('submitting the form in noPassword state shows an error', function(assert) {
   let testFirstName = 'Test';
   let testLastName = 'User';
   let testEmail = 'test@email.com';
   let testPassword = 'password123';
-  let authAPI = 'http://example.com';
-  this.set('authAPI', authAPI);
+  let signUp = () => RSVP.reject({errors: {code: 'UserNoPassword'} });
+  this.set('signUp', signUp);
 
-  let requests = [];
-  let url = `${authAPI}/v1/user`;
-  this.server.post(url, (schema, request) => {
-    requests.push(request);
-    return {};
-  }, 200);
-
-  this.render(hbs`{{nypr-account-forms/signup authAPI=authAPI}}`);
+  this.render(hbs`{{nypr-account-forms/signup signUp=signUp}}`);
 
   this.$('label:contains(First Name) + input').val(testFirstName).blur();
   this.$('label:contains(Last Name) + input').val(testLastName).blur();
@@ -81,13 +74,6 @@ skip('submitting the form sends a post to the api', function(assert) {
   this.$('button:contains(Sign up)').click();
 
   return wait().then(() => {
-    assert.equal(requests.length, 1);
-    assert.deepEqual(JSON.parse(requests[0].requestBody), {
-      given_name: testFirstName,
-      family_name: testLastName,
-      email: testEmail,
-      password: testPassword,
-      preferred_username: null
-    });
+    assert.equal(this.$('.account-form-error').length, 1);
   });
 });
