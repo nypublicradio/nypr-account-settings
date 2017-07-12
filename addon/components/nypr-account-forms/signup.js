@@ -88,7 +88,7 @@ export default Component.extend({
       changeset.rollback(); // so errors don't stack up
       if (error.code === "AccountExists") {
         changeset.validate('email');
-        changeset.pushErrors('email', `An account already exists for the email ${changeset.get('email')}.<br/> <a href="/login">Log in?</a> <a href="/forgot">Forgot password?</a>`);
+        changeset.pushErrors('email', messages.signupAccountExists(changeset.get('email')));
       } else if (error.message === 'User is disabled') {
         changeset.pushErrors('email', messages.userDisabled);
       }
