@@ -1,0 +1,9 @@
+{{#nypr-card class="nypr-social-card" as |card|}}
+
+  {{card.header class="nypr-social-card__header" title="Social"}}
+
+  {{yield (hash
+    connect-button=(component 'nypr-accounts/social-connect-button')
+  )}}
+
+{{/nypr-card}}

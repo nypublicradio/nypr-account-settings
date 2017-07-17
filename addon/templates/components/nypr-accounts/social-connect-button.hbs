@@ -1,0 +1,17 @@
+{{#if connected}}
+
+  <a class="nypr-social-connect__link" href={{manageUrl}} target="_blank" rel="noopener noreferrer">Manage {{providerName}} connection</a>
+
+{{else}}
+
+  <button
+    class="nypr-social-connect__button {{buttonClass}}"
+    data-test-selector="social-connect-{{providerName}}"
+    {{action buttonAction}}>
+  {{#if providerIcon}}
+    <i class="nypr-social-connect__icon fa fa-{{providerIcon}}"></i>
+  {{/if}}
+    Connect with {{providerName}}
+  </button>
+
+{{/if}}
