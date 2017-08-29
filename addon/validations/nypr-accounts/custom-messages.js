@@ -14,7 +14,7 @@ export default {
   userDisabled:          'This email is associated with a disabled account. If you would like to re-enable it, please contact listener services at <a href="http://www.wnyc.org/feedback" target="_blank">http://www.wnyc.org/feedback</a>.',
   genericLoginError:     "There's an error logging in.</br><a href='/forgot'>Forget your password</a>? Need to <a href='/signup'>create an account</a>?",
   noPasswordLoginError:  "It looks like you previously signed up through Facebook. You can log in via the Facebook button above or <a href='/signup'>sign up for an account</a> using this email.",
-  emailNotFound:         email => `We can't find an account for the email ${email}.</br>Need to <a href='/signup'>create an account</a>?`,
+  emailNotFound:         email => `We can't find an account for the email ${email}. Please note that email addresses are case sensitive. </br>Need to <a href='/signup'>create an account</a>?`,
   publicHandleRequired:  'public handle cannot be blank',
   publicHandleExists:    'public handle already exists',
   emailExists:           'an account with this email address already exists',
