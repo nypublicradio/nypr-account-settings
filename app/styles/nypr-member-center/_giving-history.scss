@@ -23,8 +23,8 @@
 }
 
 .pledge-history-container {
-  @include justify-content(space-between);
-  @include align-items(center);
+  justify-content: space-between;
+  align-items: center;
 
   margin-left: -4px;
   margin-right: -4px;

@@ -1,8 +1,8 @@
 .pledge-update-link {
-  @include align-items(center);
-  @include display-flex;
-  @include flex(0 1 100px);
-  @include justify-content(flex-end);
+  align-items: center;
+  display: flex;
+  flex: 0 1 100px;
+  justify-content: flex-end;
 }
 
 .active-donations-header {
