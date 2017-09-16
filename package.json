@@ -26,6 +26,7 @@
     "ember-cli-htmlbars": "^2.0.1",
     "ember-concurrency": "^0.8.1",
     "ember-cookies": "0.0.13",
+    "ember-data": "^2.15.0",
     "ember-modal-dialog": "0.9.1",
     "nypr-auth": "nypublicradio/nypr-auth"
   },
