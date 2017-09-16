@@ -235,9 +235,7 @@ export default Component.extend({
       this.get('connectEmailChangeset').validate();
       this.trigger('emailVerified');
       get(this, 'showCheckEmailModal').perform();
-    } catch(e) {
-
-    }
+    } catch(e) { } // eslint-disable-line
   }),
 
   showCheckEmailModal: task(function * () {

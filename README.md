@@ -6,7 +6,6 @@
 * `git clone <repository-url>` this repository
 * `cd nypr-account-settings`
 * `npm install`
-* `bower install`
 
 ## Running
 
