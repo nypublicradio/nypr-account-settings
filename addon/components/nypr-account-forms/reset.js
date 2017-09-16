@@ -20,7 +20,7 @@ export default Component.extend({
   store: service(),
   flashMessages: service(),
   authAPI: null,
-  session: null,
+  session: service(),
   resendUrl: computed('authAPI', function() {
     return `${get(this, 'authAPI')}/v1/password/forgot`;
   }),

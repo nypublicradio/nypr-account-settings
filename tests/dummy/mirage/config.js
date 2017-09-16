@@ -39,13 +39,13 @@ export default function() {
       return {};
     }
   });
-  this.get('/users', schema => schema.users.first());
-  this.post('/users', {data: {
+  this.get('/v1/session', schema => schema.users.first());
+  this.post('/v1/user', {data: {
     type: 'user',
     id: 'current',
     attributes: {}
   }});
-  this.patch('/users/:id', () => new Response(401, {}, {
+  this.patch('/v1/user', () => new Response(401, {}, {
     "error": {
       "code": "AccountExists",
       "message": "Account with email exists. Please try another."

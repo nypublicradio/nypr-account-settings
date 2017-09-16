@@ -13,9 +13,9 @@ import lookupValidator from 'ember-changeset-validations';
 export default Component.extend({
   layout,
   messages,
+  session: service(),
   flashMessages: service(),
   authAPI: null,
-  session: null,
   showSocialLogin: false,
   resendUrl: computed('authAPI', function() {
     return `${get(this, 'authAPI')}/v1/confirm/resend`;

@@ -31,8 +31,8 @@ test('server errors when updating user model', function(assert) {
   const ERROR_MESSAGE = 'Account with email exists. Please try another.';
   
   server.create('user');
-  server.patch('/users/:id', () => new Response(401, {}, {
-    "error": {
+  server.patch('/v1/user', () => new Response(401, {}, {
+    "errors": {
       "code": "AccountExists", 
       "message": ERROR_MESSAGE
     }

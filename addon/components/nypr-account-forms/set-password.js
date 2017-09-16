@@ -14,7 +14,7 @@ export default Component.extend({
   layout,
   store: service(),
   authAPI: null,
-  session: null,
+  session: service(),
   resendUrl: computed('authAPI', function() {
     return `${get(this, 'authAPI')}/v1/password/forgot`;
   }),

@@ -17,7 +17,7 @@ export default Component.extend({
   flashMessages: service(),
   showSocialSignup: false,
   authApi: null,
-  session: null,
+  session: service(),
   allowedKeys: ['email','emailConfirmation','givenName','familyName','typedPassword'],
 
   init() {

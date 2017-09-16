@@ -16,8 +16,8 @@ const FLASH_MESSAGES = {
 export default Ember.Component.extend({
   layout,
   flashMessages: service(),
+  session: service(),
   authAPI: null,
-  session: null,
   accountValidated: false,
   codeExpired: false,
   allowedKeys: ['email'],
