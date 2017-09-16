@@ -620,6 +620,10 @@ babel-plugin-filter-imports@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/babel-plugin-filter-imports/-/babel-plugin-filter-imports-0.3.1.tgz#e7859b56886b175dd2616425d277b219e209ea8b"
 
+babel-plugin-htmlbars-inline-precompile@^0.1.0:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-htmlbars-inline-precompile/-/babel-plugin-htmlbars-inline-precompile-0.1.1.tgz#a878c1771224429dd6e546ba6d39c2c35073be92"
+
 babel-plugin-htmlbars-inline-precompile@^0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/babel-plugin-htmlbars-inline-precompile/-/babel-plugin-htmlbars-inline-precompile-0.2.3.tgz#cd365e278af409bfa6be7704c4354beee742446b"
@@ -2371,7 +2375,7 @@ ember-changeset@1.3.0, ember-changeset@^1.2.3:
   dependencies:
     ember-cli-babel "^5.1.7"
 
-ember-cli-babel@^5.0.0, ember-cli-babel@^5.1.5, ember-cli-babel@^5.1.6, ember-cli-babel@^5.1.7:
+ember-cli-babel@^5.0.0, ember-cli-babel@^5.1.3, ember-cli-babel@^5.1.5, ember-cli-babel@^5.1.6, ember-cli-babel@^5.1.7:
   version "5.2.4"
   resolved "https://registry.yarnpkg.com/ember-cli-babel/-/ember-cli-babel-5.2.4.tgz#5ce4f46b08ed6f6d21e878619fb689719d6e8e13"
   dependencies:
@@ -2467,6 +2471,19 @@ ember-cli-get-dependency-depth@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/ember-cli-get-dependency-depth/-/ember-cli-get-dependency-depth-1.0.0.tgz#e0afecf82a2d52f00f28ab468295281aec368d11"
 
+ember-cli-htmlbars-inline-precompile@^0.3.6:
+  version "0.3.13"
+  resolved "https://registry.yarnpkg.com/ember-cli-htmlbars-inline-precompile/-/ember-cli-htmlbars-inline-precompile-0.3.13.tgz#942285711900408acd1e6ee1e7c6ce8114306edb"
+  dependencies:
+    babel-plugin-htmlbars-inline-precompile "^0.1.0"
+    ember-cli-babel "^5.1.3"
+    ember-cli-htmlbars "^1.0.0"
+    hash-for-dep "^1.0.2"
+    heimdalljs-logger "^0.1.7"
+    resolve "^1.3.3"
+    semver "^5.3.0"
+    silent-error "^1.1.0"
+
 ember-cli-htmlbars-inline-precompile@^0.4.3:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/ember-cli-htmlbars-inline-precompile/-/ember-cli-htmlbars-inline-precompile-0.4.4.tgz#24a7617152630d64a047e553b72e00963a4f8d73"
@@ -2485,6 +2502,16 @@ ember-cli-htmlbars-inline-precompile@^1.0.0:
     hash-for-dep "^1.0.2"
     heimdalljs-logger "^0.1.7"
     silent-error "^1.1.0"
+
+ember-cli-htmlbars@^1.0.0:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/ember-cli-htmlbars/-/ember-cli-htmlbars-1.3.4.tgz#461289724b34af372a6a0c4b6635819156963353"
+  dependencies:
+    broccoli-persistent-filter "^1.0.3"
+    ember-cli-version-checker "^1.0.2"
+    hash-for-dep "^1.0.2"
+    json-stable-stringify "^1.0.0"
+    strip-bom "^2.0.0"
 
 ember-cli-htmlbars@^1.0.10, ember-cli-htmlbars@^1.0.3, ember-cli-htmlbars@^1.0.8, ember-cli-htmlbars@^1.1.1:
   version "1.3.0"
@@ -2968,7 +2995,7 @@ ember-native-dom-helpers@^0.5.0, ember-native-dom-helpers@^0.5.3:
     broccoli-funnel "^1.1.0"
     ember-cli-babel "^6.6.0"
 
-ember-power-select@^1.9.2:
+ember-power-select@^1.8.2, ember-power-select@^1.9.2:
   version "1.9.6"
   resolved "https://registry.yarnpkg.com/ember-power-select/-/ember-power-select-1.9.6.tgz#3cb5245932db9174801c830497750b5e5c9dc786"
   dependencies:
@@ -5089,7 +5116,7 @@ number-is-nan@^1.0.0:
 
 nypr-auth@nypublicradio/nypr-auth:
   version "0.0.0"
-  resolved "https://codeload.github.com/nypublicradio/nypr-auth/tar.gz/a43a71fbaf4f44b4299323bfcfd0927de5b598f4"
+  resolved "https://codeload.github.com/nypublicradio/nypr-auth/tar.gz/36bc52bd52b5292f512b8f6be31b2a52316e6405"
   dependencies:
     ember-cli-babel "^6.3.0"
     ember-get-config "^0.2.2"
@@ -5097,14 +5124,17 @@ nypr-auth@nypublicradio/nypr-auth:
 
 nypr-ui@nypublicradio/nypr-ui:
   version "0.0.0"
-  resolved "https://codeload.github.com/nypublicradio/nypr-ui/tar.gz/1f5ca26fb7da44445e33279f6c3a5ab19a07e7c6"
+  resolved "https://codeload.github.com/nypublicradio/nypr-ui/tar.gz/cab9362b6c7498998f759b1237b8c9642d6af876"
   dependencies:
-    ember-cli-babel "^5.1.7"
+    ember-basic-dropdown "0.33.1"
+    ember-cli-babel "^6.6.0"
     ember-cli-compass-compiler "^0.5.0"
-    ember-cli-htmlbars "^1.1.1"
-    ember-cli-htmlbars-inline-precompile "^0.3.6"
+    ember-cli-htmlbars "^2.0.1"
+    ember-cli-htmlbars-inline-precompile "^0.4.3"
+    ember-click-outside "0.1.9"
+    ember-composable-helpers "2.0.1"
     ember-holygrail-layout "^0.1.4"
-    ember-power-select "^1.8.2"
+    ember-power-select "^1.9.2"
     ivy-tabs "3.1.0"
 
 oauth-sign@~0.8.1:
