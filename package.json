@@ -53,6 +53,7 @@
     "ember-moment": "7.3.0",
     "ember-resolver": "^4.0.0",
     "ember-sinon": "0.7.0",
+    "ember-source": "~2.15.0",
     "ember-test-selectors": "0.3.3",
     "ember-truth-helpers": "1.2.0",
     "ember-try": "ember-cli/ember-try#master",
