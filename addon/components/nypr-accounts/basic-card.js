@@ -77,7 +77,7 @@ export default Component.extend({
   },
 
   checkForExistingAttribute: task(function * ({key, value, errorMessage}) {
-    let path = `${this.config.wnycAuthAPI}/v1/user/exists-by-attribute`;
+    let path = `${this.config.authAPI}/v1/user/exists-by-attribute`;
     let serverKey = decamelize(key);
     try {
       let response = yield fetch(`${path}?${serverKey}=${value}`);
