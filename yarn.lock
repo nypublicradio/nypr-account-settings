@@ -2937,6 +2937,24 @@ ember-try@^0.2.15:
     rsvp "^3.0.17"
     semver "^5.1.0"
 
+ember-try@ember-cli/ember-try#master:
+  version "0.2.17"
+  resolved "https://codeload.github.com/ember-cli/ember-try/tar.gz/41d98917e3b21236b85e9d209c30552fd6f7712a"
+  dependencies:
+    chalk "^1.0.0"
+    cli-table2 "^0.2.0"
+    core-object "^1.1.0"
+    debug "^2.2.0"
+    ember-cli-version-checker "^1.1.6"
+    ember-try-config "^2.0.1"
+    extend "^3.0.0"
+    fs-extra "^0.26.0"
+    promise-map-series "^0.2.1"
+    resolve "^1.1.6"
+    rimraf "^2.3.2"
+    rsvp "^3.0.17"
+    semver "^5.1.0"
+
 ember-validators@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/ember-validators/-/ember-validators-1.0.3.tgz#cef76b6526d12011ab685238762e3256dad812b4"
