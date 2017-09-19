@@ -28,7 +28,7 @@
     "ember-cookies": "0.0.13",
     "ember-data": "2.14.10",
     "ember-modal-dialog": "0.9.1",
-    "nypr-auth": "nypublicradio/nypr-auth"
+    "nypr-auth": "nypublicradio/nypr-auth#migrate-envvars"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.5",
