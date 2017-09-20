@@ -56,7 +56,6 @@
     "ember-source": "~2.15.0",
     "ember-test-selectors": "0.3.3",
     "ember-truth-helpers": "1.2.0",
-    "ember-try": "ember-cli/ember-try#master",
     "loader.js": "^4.2.3",
     "nypr-ui": "nypublicradio/nypr-ui"
   },
