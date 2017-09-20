@@ -5,6 +5,8 @@
 @import "nypr-ui/z-index";
 @import "nypr-ui/buttons";
 
+@import "nypr-member-center/index";
+
 .nypr-account-settings-and-member-center {
   @include display-flex();
   @include flex-wrap(wrap);
