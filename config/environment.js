@@ -3,6 +3,6 @@
 
 module.exports = function(environment, appConfig) {
   return {
-    authService: appConfig.wnycAuthAPI
+    authService: appConfig.authAPI
   };
 };
