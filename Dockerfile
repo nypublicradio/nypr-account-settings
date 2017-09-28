@@ -6,10 +6,6 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-RUN apt-get update && apt-get install -y ruby ruby-dev
-RUN gem install sass
-RUN gem install compass
-
 RUN npm install -g bower ember ember-cli
 
 WORKDIR /nypr-account-settings

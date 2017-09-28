@@ -1,13 +1,11 @@
-@import "compass/css3/flexbox";
-
 @import "nypr-ui/vars";
 @import "nypr-ui/colors";
 @import "nypr-ui/z-index";
 @import "nypr-ui/buttons";
 
 .nypr-account-settings-and-member-center {
-  @include display-flex();
-  @include flex-wrap(wrap);
+  display: flex;
+  flex-wrap: wrap;
 
   margin-left: -0.5rem;
   margin-right: -0.5rem;
@@ -15,9 +13,9 @@
 
 .nypr-account-settings-body,
 .nypr-membership-info-body {
-  @include flex-grow(1);
-  @include flex-shrink(1);
-  @include flex-basis(480px);
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 480px;
 
   padding: 0.5rem;
   min-width: 50%;
@@ -72,22 +70,18 @@
 }
 
 .nypr-account-footer {
-  @include flexbox((
-    display: flex,
-    justify-content: center
-  ));
+  display: flex;
+  justify-content: center;
 
   @include mq($medium-and-up) {
-    @include justify-content(flex-end);
+    justify-content: flex-end;
   }
 }
 
 .nypr-account-footer-wrapper {
-  @include flexbox((
-    display: flex,
-    justify-content: space-between,
-    flex-basis: 150px
-  ));
+  display: flex;
+  justify-content: space-between;
+  flex-basis: 150px;
 }
 
 .nypr-account-link {
@@ -96,7 +90,7 @@
 }
 
 .nypr-account-settings-and-member-center {
-  @include display-flex();
+  display: flex;
 
   margin-left: -0.5rem;
   margin-right: -0.5rem;
@@ -107,18 +101,14 @@
   margin: 0 auto 75px;
   padding: 100px 30px 0 30px;
 
-  @include flexbox((
-    display: flex,
-    flex-direction: column,
-    justify-content: center
-  ));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   @include mq($middle-narrow-and-up) {
     .account-form-row {
-      @include flexbox((
-        display: flex,
-        justify-content: space-between
-      ));
+      display: flex;
+      justify-content: space-between;
 
       .account-form-col2 {
         width: 48%;
@@ -228,7 +218,7 @@
 .nypr-membership-info-body {
   padding: 0.5rem;
   min-width: 50%;
-  @include flex-grow(1);
+  flex-grow: 1;
 }
 
 .nypr-survey {
