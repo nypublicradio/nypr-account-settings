@@ -57,7 +57,7 @@
     "ember-test-selectors": "0.3.3",
     "ember-truth-helpers": "1.2.0",
     "loader.js": "^4.2.3",
-    "nypr-ui": "nypublicradio/nypr-ui#node-sass"
+    "nypr-ui": "nypublicradio/nypr-ui"
   },
   "engines": {
     "node": "^4.5 || 6.* || >= 7.*"
