@@ -52,6 +52,12 @@
         <span data-test-giving-history-button>Giving History</span>
       {{/card.button}}
       {{/if}}
+      {{#if hasPledgesInPastTaxYear}}
+        <a href="{{taxLetterUrl}}" class="tax-letter-link">
+          {{nypr-svg className="tax-letter__download-icon" icon="download-arrow"}}
+          {{previousYear}} Tax Receipt
+        </a>
+      {{/if}}
       <div class="pledge-help-link"><span {{action (action (mut enableModal) true)}}>Help</span></div>
     </div>
   {{/m.panel}}

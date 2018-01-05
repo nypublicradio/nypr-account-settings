@@ -57,6 +57,20 @@
   padding-right: 12px;
 }
 
+.tax-letter-link {
+  @extend .giving-history-link;
+
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.tax-letter__download-icon {
+  fill: #8f8f8f;
+  height: 15px;
+  margin-right: 3px;
+}
+
 .giving-history-limit-notification {
   @include small-gray-font;
 
