@@ -1,5 +1,8 @@
 # nypr-account-settings Changelog
 
+## 0.0.2
+- [CHORE] bump nypr-ui
+
 ## 0.0.1
 
 - [CHORE] adds versioning
