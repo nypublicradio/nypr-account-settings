@@ -53,10 +53,10 @@
       {{/card.button}}
       {{/if}}
       {{#if hasPledgesInPastTaxYear}}
-        <a href="{{taxLetterUrl}}" class="tax-letter-link">
+        <button class="tax-letter-link" {{action 'downloadTaxLetter'}}>
           {{nypr-svg className="tax-letter__download-icon" icon="download-arrow"}}
           {{previousYear}} Tax Receipt
-        </a>
+        </button>
       {{/if}}
       <div class="pledge-help-link"><span {{action (action (mut enableModal) true)}}>Help</span></div>
     </div>
