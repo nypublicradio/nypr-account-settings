@@ -65,10 +65,15 @@
   align-items: center;
 }
 
+.tax-letter-link span {
+  pointer-events: none;
+}
+
 .tax-letter__download-icon {
   fill: #8f8f8f;
   height: 15px;
   margin-right: 3px;
+  pointer-events: none;
 }
 
 .giving-history-limit-notification {
