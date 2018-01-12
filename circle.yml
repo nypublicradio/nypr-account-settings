@@ -1,5 +1,14 @@
 machine:
   node:
-    version: 7.10.0
+    version: 8
   environment:
     JOBS: 2
+
+dependencies:
+  override:
+    - yarn --pure-lockfile
+
+
+test:
+  override:
+    - yarn test
