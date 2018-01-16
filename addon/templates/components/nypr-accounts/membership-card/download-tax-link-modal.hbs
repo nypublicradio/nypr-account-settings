@@ -1,0 +1,24 @@
+{{#if hasBlock}}
+  {{yield}}
+{{else}}
+  {{#nypr-account-modal title="Tax Receipt" closeAction=(action (mut enableModal) false) as |m|}}
+    {{#m.body}}
+      <div id="tax-receipt-modal-body" class="tax-receipt-modal-body">
+        {{#unless taxReceiptReady}}
+          <p>Generating your {{previousYear}} tax receipt link</p>
+          {{animated-loading-icon
+          color='#888'
+          width=34
+          height=34
+          outerScale=12
+          innerScale=6
+          radius=0.0025
+          dotRadius=2
+          lineWidth=2}}
+        {{else}}
+          <p>Your {{previousYear}} tax receipt is ready to download:</p>
+        {{/unless}}
+      </div>
+    {{/m.body}}
+  {{/nypr-account-modal}}
+{{/if}}

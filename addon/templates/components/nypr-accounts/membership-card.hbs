@@ -53,10 +53,11 @@
       {{/card.button}}
       {{/if}}
       {{#if hasPledgesInPastTaxYear}}
-        <button class="gtm__click-tracking tax-letter-link" {{action 'downloadTaxLetter'}}>
-          {{nypr-svg className="tax-letter__download-icon" icon="download-arrow"}}
-          <span> {{previousYear}} Tax Receipt </span>
-        </button>
+        <div class="gtm__click-tracking tax-letter-link" {{action (action (mut enableDownloadModal) true)}}>
+          <span>
+            {{nypr-svg className="tax-letter__download-icon" icon="download-arrow"}} <span>{{previousYear}} Tax Receipt</span>
+          </span>
+        </div>
       {{/if}}
       <div class="pledge-help-link"><span {{action (action (mut enableModal) true)}}>Help</span></div>
     </div>
@@ -76,4 +77,11 @@
 
 {{#if enableModal}}
   {{nypr-accounts/membership-card/help-modal siteDomain=siteDomain enableModal=enableModal}}
+{{/if}}
+
+{{#if enableDownloadModal}}
+  {{nypr-accounts/membership-card/download-tax-link-modal
+    siteDomain=siteDomain
+    previousYear=previousYear
+    enableModal=enableDownloadModal}}
 {{/if}}
