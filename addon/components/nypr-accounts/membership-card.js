@@ -26,8 +26,8 @@ export default Ember.Component.extend({
     downloadTaxLetter() {
       this.get('session').authorize('authorizer:nypr', (header, value) => {
         let taxLetterUrl = this.get("taxLetterUrl");
-        let fetchOptions = {};
-        fetchOptions[header] = value;
+        let fetchOptions = {headers: {}};
+        fetchOptions.headers[header] = value;
 
         fetch(taxLetterUrl, fetchOptions).then(response => {
           response.arrayBuffer().then(data =>{
