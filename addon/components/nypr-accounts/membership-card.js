@@ -25,26 +25,24 @@ export default Ember.Component.extend({
   actions: {
     downloadTaxLetter() {
       this.get('session').authorize('authorizer:nypr', (header, value) => {
-        Ember.$.ajax({
-          url: "https://api.demo.nypr.digital/membership/v1/taxes",
-          beforeSend: function(xhr){xhr.setRequestHeader(header, value);},
-          type: "GET",
-          success: function(data, textStatus, jqxhr) {
-            // Create data blob from response
+        let taxLetterUrl = this.get("taxLetterUrl");
+        let fetchOptions = {};
+        fetchOptions[header] = value;
+
+        fetch(taxLetterUrl, fetchOptions).then(response => {
+          response.arrayBuffer().then(data =>{
             var blob = new Blob([data], {type: "application/pdf"});
             var url = window.URL.createObjectURL(blob);
 
             // Create hidden <a>, click on it, remove it
             var a = document.createElement("a");
             document.body.appendChild(a);
-            a.style = "display: none";
             a.href = url;
             a.download = "NYPR_Tax_Documentation.pdf";
             a.click();
             window.URL.revokeObjectURL(url);
-
-          }
-        });
+          });
+        })
       });
     }
   }
