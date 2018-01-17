@@ -53,7 +53,12 @@
       {{/card.button}}
       {{/if}}
       {{#if hasPledgesInPastTaxYear}}
-        <div class="gtm__click-tracking tax-letter-link" {{action (action (mut enableDownloadModal) true)}}>
+        <div
+          class="gtm__click-tracking tax-letter-link"
+          data-category="Account"
+          data-action="Member Center"
+          data-label="Tax Document"
+          {{action (action (mut enableDownloadModal) true)}} >
           <span>
             {{nypr-svg className="tax-letter__download-icon" icon="download-arrow"}} <span>{{previousYear}} Tax Receipt</span>
           </span>
