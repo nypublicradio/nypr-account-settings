@@ -20,19 +20,6 @@ test("tax letter link is visible", function(assert) {
   });
 });
 
-test("tax letter links to the expected url endpoint", function(assert) {
-  server.create("user");
-  server.createList("pledge", 20);
-  visit("/");
-
-  andThen(function() {
-    assert.equal(
-      find(".tax-letter-link").attr("href"),
-      "http://api.example.org/v1/taxes"
-    );
-  });
-});
-
 test("tax letter is not visible if no pledges", function(assert) {
   server.create("user");
   server.createList('pledge', 0);

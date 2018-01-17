@@ -1,6 +1,5 @@
 import Ember from "ember";
 import computed from "ember-computed";
-import fetch from "fetch";
 import layout from "../../../templates/components/nypr-accounts/membership-card/download-tax-link-modal";
 import service from "ember-service/inject";
 
