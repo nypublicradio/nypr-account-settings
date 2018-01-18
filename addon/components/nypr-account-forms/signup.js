@@ -22,7 +22,14 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    set(this, 'newUser', this.get('store').createRecord('user'));
+    set(this, 'newUser', this.get('store').createRecord('user',
+      {
+        'givenName': get(this, 'givenName'),
+        'familyName': get(this, 'familyName'),
+        'email': get(this, 'email'),
+        'emailConfirmation': get(this, 'email'),
+      }
+    ));
     set(this, 'changeset', new Changeset(get(this, 'newUser'), lookupValidator(SignupValidations), SignupValidations));
     get(this, 'changeset').validate();
   },
