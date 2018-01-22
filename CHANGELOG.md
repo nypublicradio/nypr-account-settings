@@ -1,5 +1,8 @@
 # nypr-account-settings Changelog
 
+## 0.0.4
+- [FEATURE] adds tax letter download options
+
 ## 0.0.3
 - [ENHANCEMENT] adds prefilled signup form from query string
 
