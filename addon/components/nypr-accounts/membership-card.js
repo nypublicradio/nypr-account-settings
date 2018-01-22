@@ -1,6 +1,33 @@
 import Ember from "ember";
 import layout from "../../templates/components/nypr-accounts/membership-card";
+import computed from "ember-computed";
+import moment from "moment";
+import service from "ember-service/inject";
 
 export default Ember.Component.extend({
   layout,
+  session: service(),
+  previousYear: computed(function() {
+    return moment()
+      .subtract(1, "year")
+      .year();
+  }),
+  pledgesFromLastYear: computed.filter("pledges", function(pledge) {
+    let previousYear = moment()
+      .subtract(1, "year")
+      .year();
+
+    let pledgeYear = null;
+    if (pledge["get"] && pledge.get("orderDate")) {
+      pledgeYear = moment(pledge.get("orderDate")).year();
+    } else if (typeof pledge.orderDate === "object") {
+      pledgeYear = moment(pledge.orderDate).year();
+    }
+
+    return pledgeYear == previousYear;
+  }),
+  hasPledgesInPastTaxYear: computed('pledgesFromLastYear', function() {
+    let lastYearsPledges = this.get('pledgesFromLastYear');
+    return !!lastYearsPledges.length;
+  })
 });
