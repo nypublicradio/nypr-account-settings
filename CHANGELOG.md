@@ -1,5 +1,8 @@
 # nypr-account-settings Changelog
 
+## 0.0.5
+- [ENHANCEMENT] hotfix for tax letter
+
 ## 0.0.4
 - [FEATURE] adds tax letter download options
 
