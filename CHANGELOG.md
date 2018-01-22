@@ -1,5 +1,8 @@
 # nypr-account-settings Changelog
 
+## 0.0.6
+- [BUGFIX] facebook fix for tax letter generation
+
 ## 0.0.5
 - [ENHANCEMENT] hotfix for tax letter
 
