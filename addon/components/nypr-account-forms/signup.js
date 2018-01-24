@@ -25,13 +25,13 @@ export default Component.extend({
     set(this, 'newUser', this.get('store').createRecord('user',
       {
         'givenName': get(this, 'givenName'),
-        'familyName': get(this, 'familyName'),
-        'email': get(this, 'email'),
-        'emailConfirmation': get(this, 'email'),
+        'familyName': get(this, 'familyName')
       }
     ));
     set(this, 'changeset', new Changeset(get(this, 'newUser'), lookupValidator(SignupValidations), SignupValidations));
     get(this, 'changeset').validate();
+    set(this, 'changeset.email', get(this, 'email'));
+    set(this, 'changeset.emailConfirmation', get(this, 'email'));
   },
   click() {
     get(this, 'flashMessages').clearMessages();
