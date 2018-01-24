@@ -1,5 +1,8 @@
 # nypr-account-settings Changelog
 
+## 0.0.7
+- [BUGFIX] update user changeset with prefilled emails on init
+
 ## 0.0.6
 - [BUGFIX] facebook fix for tax letter generation
 
