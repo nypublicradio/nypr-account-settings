@@ -1,5 +1,9 @@
 # nypr-account-settings Changelog
 
+## 0.1.0
+- [ENHANCEMENT] upgrade to ember 3.0
+- [ENHANCEMENT] port tests to new syntax and api
+
 ## 0.0.7
 - [BUGFIX] update user changeset with prefilled emails on init
 
