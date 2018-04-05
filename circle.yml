@@ -3,14 +3,16 @@ version: 2
 jobs:
   install:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:8.7
 
     steps:
       - checkout
 
+      - restore_cache:
+          key: node-deps-{{ checksum "package-lock.json" }}
       - run:
           name: Install node dependencies
-          command: npm ci
+          command: npm i --no-package-lock
       - save_cache:
           key: node-deps-{{ checksum "package-lock.json" }}
           paths:
@@ -18,14 +20,14 @@ jobs:
 
   test:
     docker:
-      - image: circleci/node:latest-browsers
+      - image: circleci/node:8.7-browsers
         environment:
           JOBS: 2
 
     steps:
       - checkout
       - restore_cache:
-          key: node-deps-{{ checksum "package-lock.json" }}
+          key: node-deps-{{ checksum "yarn.lock" }}
       - run:
           name: Test
           command: npm test
