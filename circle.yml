@@ -27,7 +27,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: node-deps-{{ checksum "yarn.lock" }}
+          key: node-deps-{{ checksum "package-lock.json" }}
       - run:
           name: Test
           command: ./node_modules/ember-cli/bin/ember test
