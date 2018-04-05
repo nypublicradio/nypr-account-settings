@@ -1,13 +1,12 @@
 import layout from '../../templates/components/nypr-account-forms/signup';
-import Component from 'ember-component';
-import get from 'ember-metal/get';
-import set from 'ember-metal/set';
-import { next } from 'ember-runloop';
+import Component from '@ember/component';
+import { get, set } from '@ember/object';
+import { next } from '@ember/runloop';
 import Changeset from 'ember-changeset';
 import SignupValidations from 'nypr-account-settings/validations/nypr-accounts/signup';
 import messages from 'nypr-account-settings/validations/nypr-accounts/custom-messages';
 import lookupValidator from 'ember-changeset-validations';
-import service from 'ember-service/inject';
+import { inject as service } from '@ember/service';
 import fetch from 'fetch';
 import { rejectUnsuccessfulResponses } from 'nypr-account-settings/utils/fetch-utils';
 
@@ -18,7 +17,7 @@ export default Component.extend({
   showSocialSignup: false,
   authApi: null,
   session: service(),
-  allowedKeys: ['email','emailConfirmation','givenName','familyName','typedPassword'],
+  allowedKeys: null,
 
   init() {
     this._super(...arguments);
@@ -28,6 +27,7 @@ export default Component.extend({
         'familyName': get(this, 'familyName')
       }
     ));
+    set(this, 'allowedKeys', ['email','emailConfirmation','givenName','familyName','typedPassword']);
     set(this, 'changeset', new Changeset(get(this, 'newUser'), lookupValidator(SignupValidations), SignupValidations));
     get(this, 'changeset').validate();
     set(this, 'changeset.email', get(this, 'email'));

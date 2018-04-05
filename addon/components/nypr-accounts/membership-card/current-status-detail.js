@@ -1,11 +1,18 @@
-import Ember from "ember";
-import computed from "ember-computed";
-import service from "ember-service/inject";
+import { get } from '@ember/object';
+import { getOwner } from '@ember/application';
+import Component from '@ember/component';
+import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 import layout from "../../../templates/components/nypr-accounts/membership-card/current-status-detail";
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   cookies: service(),
+
+  init() {
+    this._super(...arguments);
+    this.set('orderDateSorting', ["orderDate:desc"]);
+  },
 
   willRender() {
     // When the tab or window gains focus, re-run the hasMadeRecentPledge
@@ -22,12 +29,12 @@ export default Ember.Component.extend({
     this._super(...arguments);
   },
   pledgePrefix: computed(function() {
-    let { environment } = Ember.getOwner(this).resolveRegistration(
+    let { environment } = getOwner(this).resolveRegistration(
       "config:environment"
     );
     return environment === "development" ? "pledge-demo" : "pledge3";
   }),
-  orderDateSorting: ["orderDate:desc"],
+  orderDateSorting: null,
   sortedPledges: computed.sort("pledges", "orderDateSorting"),
   sortedSustainingPledges: computed.filterBy(
     "sortedPledges",
@@ -43,10 +50,8 @@ export default Ember.Component.extend({
   activePledges: computed.filterBy("sortedPledges", "isActiveMember", true),
   activeSustainingPledges: computed("activePledges", function() {
     return this.get("activePledges").filter(pledge => {
-      return (
-        Ember.get(pledge, "orderType") === "sustainer" &&
-        Ember.get(pledge, "isSustainer") === true
-      );
+      return get(pledge, "orderType") === "sustainer" &&
+      get(pledge, "isSustainer") === true;
     });
   }),
   activeOneTimePledges: computed.filterBy(

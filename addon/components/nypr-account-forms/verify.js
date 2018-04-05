@@ -1,6 +1,6 @@
-import Component from 'ember-component';
-import get from 'ember-metal/get';
-import service from 'ember-service/inject';
+import Component from '@ember/component';
+import { get } from '@ember/object';
+import { inject as service } from '@ember/service';
 import fetch from 'fetch';
 import layout from '../../templates/components/nypr-account-forms/verify';
 import messages from 'nypr-account-settings/validations/nypr-accounts/custom-messages';

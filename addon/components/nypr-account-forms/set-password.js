@@ -1,9 +1,8 @@
 import layout from '../../templates/components/nypr-account-forms/set-password';
-import Component from 'ember-component';
-import get, { getProperties } from 'ember-metal/get';
-import set from 'ember-metal/set';
-import computed from 'ember-computed';
-import service from 'ember-service/inject';
+import Component from '@ember/component';
+import { get, set, getProperties } from '@ember/object';
+import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
 import PasswordValidations from 'nypr-account-settings/validations/nypr-accounts/password';
@@ -18,7 +17,7 @@ export default Component.extend({
   resendUrl: computed('authAPI', function() {
     return `${get(this, 'authAPI')}/v1/password/forgot`;
   }),
-  allowedKeys: ['password'],
+  allowedKeys: null,
   passwordExpired: false,
   passwordWasSet: false,
   init() {
@@ -26,6 +25,7 @@ export default Component.extend({
     set(this, 'fields', {
       password: ''
     });
+    set(this, 'allowedKeys', ['password']);
     set(this, 'changeset', new Changeset(get(this, 'fields'), lookupValidator(PasswordValidations), PasswordValidations));
     get(this, 'changeset').validate();
   },
@@ -58,7 +58,7 @@ export default Component.extend({
       throw yield response.json();
     }
   }),
-  
+
   doSubmit: task(function * () {
     let changeset = get(this, 'changeset');
     let {
@@ -87,14 +87,17 @@ export default Component.extend({
       throw error;
     }
   }).drop(),
-  
+
   actions: {
     onSubmit() {
       return get(this, 'doSubmit').perform();
     },
     onSuccess() {
       this.set('passwordWasSet', true);
-      return this.sendAction('afterSetPassword');
+      let afterSetPassword = this.afterSetPassword;
+      if (afterSetPassword) {
+        return afterSetPassword();
+      }
     }
   },
 });

@@ -1,13 +1,15 @@
-import Ember from 'ember';
-import computed from 'ember-computed';
+import { run } from '@ember/runloop';
+import { getOwner } from '@ember/application';
+import Component from '@ember/component';
+import { computed } from '@ember/object';
 import layout from '../../../templates/components/nypr-accounts/membership-card/download-tax-link-modal';
-import service from 'ember-service/inject';
+import { inject as service } from '@ember/service';
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   session: service(),
   taxLetterUrl: computed(function() {
-    let config = Ember.getOwner(this).resolveRegistration('config:environment');
+    let config = getOwner(this).resolveRegistration('config:environment');
     let urlRoot = config.membershipAPI || 'https://api.wnyc.org';
     return `${urlRoot}/v1/taxes`;
   }),
@@ -24,7 +26,7 @@ export default Ember.Component.extend({
     });
 
     xhr.responseType = 'arraybuffer';
-    Ember.run(() => {
+    run(() => {
       xhr.onload = function() {
         if (this.status === 200) {
           var filename = '';

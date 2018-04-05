@@ -1,10 +1,10 @@
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from '../../templates/components/nypr-accounts/resend-button';
 import fetch from 'fetch';
 import { task, timeout } from 'ember-concurrency';
 import { rejectUnsuccessfulResponses } from 'nypr-account-settings/utils/fetch-utils';
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   tagName: '',
   target: null,
@@ -14,9 +14,19 @@ export default Ember.Component.extend({
   success: false,
   error: false,
   autoReset: true,
-  resetDelay: Ember.testing ? 10 : 10000,
+  resetDelay: 10000,
   successMessage: 'Email resent',
   errorMessage: 'Email not resent. Try again later',
+  init() {
+    this._super(...arguments);
+    if (typeof this.resetDelay === 'undefined') {
+      this.set('resetDelay', 10000);
+    }
+
+    if (typeof this.autoReset === 'undefined') {
+      this.set('autoReset', true);
+    }
+  },
   actions: {
     resend(target, email) {
       let resendAction = () => fetch(`${target}?email=${email}`, {method: 'GET', mode: 'cors'})

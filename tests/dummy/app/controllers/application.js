@@ -1,6 +1,6 @@
-import Controller from 'ember-controller';
+import Controller from '@ember/controller';
 // import fetch from 'fetch';
-import computed from 'ember-computed';
+import { computed } from '@ember/object';
 import RSVP from 'rsvp';
 
 export default Controller.extend({

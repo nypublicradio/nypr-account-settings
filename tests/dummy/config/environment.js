@@ -18,6 +18,9 @@ module.exports = function(environment) {
     },
     authAPI: '',
     membershipAPI: 'http://api.example.org',
+    'ember-cli-mirage': {
+      autostart: true
+    },
 
     APP: {
       // Here you can pass flags/options to your application instance

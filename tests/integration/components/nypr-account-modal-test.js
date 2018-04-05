@@ -1,51 +1,53 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, find, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('nypr-account-modal', 'Integration | Component | account modal', {
-  integration: true
-});
+module('Integration | Component | account modal', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function(assert) {
+  test('it renders', async function(assert) {
 
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
 
-  this.render(hbs`{{nypr-account-modal}}`);
+    await render(hbs`{{nypr-account-modal}}`);
 
-  assert.equal(this.$().text().trim(), '');
+    assert.equal(find('.nypr-account-wrapper').textContent.trim(), '');
 
-  // Template block usage:
-  this.render(hbs`
-    {{#nypr-account-modal as |m|}}
-      {{#m.body}}
-        body
-      {{/m.body}}
-      {{#m.footer}}
-        footer
-      {{/m.footer}}
-    {{/nypr-account-modal}}
-  `);
+    // Template block usage:
+    await render(hbs`
+      {{#nypr-account-modal as |m|}}
+        {{#m.body}}
+          body
+        {{/m.body}}
+        {{#m.footer}}
+          footer
+        {{/m.footer}}
+      {{/nypr-account-modal}}
+    `);
 
-  assert.equal(this.$().siblings().find('.nypr-account-modal-body').text().trim(), 'body');
-  assert.equal(this.$().siblings().find('.nypr-account-modal-footer').text().trim(), 'footer');
-});
+    assert.equal(find('.nypr-account-modal-body').textContent.trim(), 'body');
+    assert.equal(find('.nypr-account-modal-footer').textContent.trim(), 'footer');
+  });
 
-test('it accepts other params', function(assert) {
-  assert.expect(2);
-  
-  this.set('close', () => assert.ok('close was called'));
-  this.render(hbs`
-    {{#nypr-account-modal closeAction=(action close) title="foo" as |m|}}
-      {{#m.body}}
-        body
-      {{/m.body}}
-      {{#m.footer}}
-        footer
-      {{/m.footer}}
-    {{/nypr-account-modal}}
-  `);
+  test('it accepts other params', async function(assert) {
+    assert.expect(2);
 
-  assert.equal(this.$().siblings().find('.nypr-account-modal-title').text().trim(), 'foo');
-  
-  this.$().siblings().find('.nypr-account-modal-close').click();
+    this.set('close', () => assert.ok('close was called'));
+    await render(hbs`
+      {{#nypr-account-modal closeAction=(action close) title="foo" as |m|}}
+        {{#m.body}}
+          body
+        {{/m.body}}
+        {{#m.footer}}
+          footer
+        {{/m.footer}}
+      {{/nypr-account-modal}}
+    `);
+
+    assert.equal(find('.nypr-account-modal-title').textContent.trim(), 'foo');
+
+    await click('.nypr-account-modal-close');
+  });
 });

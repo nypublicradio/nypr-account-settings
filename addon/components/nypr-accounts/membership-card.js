@@ -1,10 +1,10 @@
-import Ember from "ember";
+import Component from '@ember/component';
 import layout from "../../templates/components/nypr-accounts/membership-card";
-import computed from "ember-computed";
+import { computed } from '@ember/object';
 import moment from "moment";
-import service from "ember-service/inject";
+import { inject as service } from '@ember/service';
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   session: service(),
   previousYear: computed(function() {

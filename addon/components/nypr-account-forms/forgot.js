@@ -1,8 +1,7 @@
 import layout from '../../templates/components/nypr-account-forms/forgot';
-import Component from 'ember-component';
-import get from 'ember-metal/get';
-import set from 'ember-metal/set';
-import computed from 'ember-computed';
+import Component from '@ember/component';
+import { get, set } from '@ember/object';
+import { computed } from '@ember/object';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
 import EmailValidations from 'nypr-account-settings/validations/nypr-accounts/email';
@@ -16,12 +15,13 @@ export default Component.extend({
   resendUrl: computed('authAPI', function() {
     return `${get(this, 'authAPI')}/v1/password/forgot`;
   }),
-  allowedKeys: ['email'],
+  allowedKeys: null,
   init() {
     this._super(...arguments);
     set(this, 'fields', {
       email: ''
     });
+    set(this, 'allowedKeys', ['email']);
     set(this, 'changeset', new Changeset(get(this, 'fields'), lookupValidator(EmailValidations), EmailValidations));
     get(this, 'changeset').validate();
   },

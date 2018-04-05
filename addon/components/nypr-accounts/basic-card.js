@@ -1,5 +1,4 @@
-import Ember from 'ember';
-import Component from 'ember-component';
+import Component from '@ember/component';
 import layout from '../../templates/components/nypr-accounts/basic-card';
 import RSVP from 'rsvp';
 import Changeset from 'ember-changeset';
@@ -7,30 +6,29 @@ import lookupValidator from 'ember-changeset-validations';
 import validations from 'nypr-account-settings/validations/nypr-accounts/basic-card';
 import emailValidations from 'nypr-account-settings/validations/nypr-accounts/confirmed-email';
 import messages from 'nypr-account-settings/validations/nypr-accounts/custom-messages';
-import getOwner from 'ember-owner/get';
-import get from 'ember-metal/get';
-import set from 'ember-metal/set';
+import { getOwner } from '@ember/application';
+import { get, set } from '@ember/object';
 import fetch from 'fetch';
-import computed from 'ember-computed';
-import { decamelize } from 'ember-string';
+import { computed } from '@ember/object';
+import { decamelize } from '@ember/string';
 import { task, timeout, all, waitForEvent } from 'ember-concurrency';
 
 export default Component.extend({
   layout,
   tagName: '',
-  user: {},
-  connectEmail: {},
-  debounceMs: Ember.testing ? 10 : 250,
+  user: null,
+  connectEmail: null,
+  debounceMs: 250,
 
   init() {
     this._super(...arguments);
     this.config = getOwner(this).resolveRegistration('config:environment');
 
-    let user = get(this, 'user');
+    let user = get(this, 'user') || {};
     let changeset = new Changeset(user, lookupValidator(validations), validations);
     this.changeset = changeset;
 
-    let connectEmail = get(this, 'connectEmail');
+    let connectEmail = get(this, 'connectEmail') || {};
     let connectEmailChangeset = new Changeset(connectEmail, lookupValidator(emailValidations), emailValidations);
     this.connectEmailChangeset = connectEmailChangeset;
   },
@@ -54,7 +52,7 @@ export default Component.extend({
   onEmailUpdate() {
     let newEmail = this.changeset.get('email');
     if (newEmail && get(this, 'emailWasChanged')) {
-      get(this,'checkForExistingEmail').perform(newEmail);
+      return get(this,'checkForExistingEmail').perform(newEmail);
     }
   },
 
@@ -127,8 +125,8 @@ export default Component.extend({
       // save
       yield changeset.save();
       set(this, 'isEditing', false);
-      if (notifyEmail && this.attrs.emailUpdated) {
-        this.attrs.emailUpdated();
+      if (notifyEmail && this.emailUpdated) {
+        this.emailUpdated();
       }
     } catch(error) {
       // handle  server errors
@@ -188,11 +186,11 @@ export default Component.extend({
   }).drop(),
 
   promptForPassword: task(function * () {
-    Ember.$('body').addClass('has-nypr-account-modal-open');
+    document.querySelector('body').classList.add('has-nypr-account-modal-open');
     try {
       yield waitForEvent(this, 'passwordVerified');
     } finally {
-      Ember.$('body').removeClass('has-nypr-account-modal-open');
+      document.querySelector('body').classList.remove('has-nypr-account-modal-open');
       set(this, 'password', null);
     }
   }).drop(),
@@ -203,7 +201,7 @@ export default Component.extend({
       set(this, 'passwordError', ["Password can't be blank."]);
     } else {
       try {
-        yield this.attrs.authenticate(password);
+        yield this.authenticate(password);
         this.trigger('passwordVerified');
       } catch(e) {
         if (e && get(e, 'error.message')) {
@@ -220,18 +218,18 @@ export default Component.extend({
   },
 
   promptForEmail: task(function * () {
-    Ember.$('body').addClass('has-nypr-account-modal-open');
+    document.querySelector('body').classList.add('has-nypr-account-modal-open');
     try {
       yield waitForEvent(this, 'emailVerified');
     } finally {
-      Ember.$('body').removeClass('has-nypr-account-modal-open');
+      document.querySelector('body').classList.remove('has-nypr-account-modal-open');
       set(this, 'connectEmailChangeset.confirmEmail', null);
     }
   }).drop(),
 
   verifyEmail: task(function * () {
     try {
-      yield this.attrs.requestTempPassword(get(this, 'connectEmailChangeset.email'));
+      yield this.requestTempPassword(get(this, 'connectEmailChangeset.email'));
       this.get('connectEmailChangeset').validate();
       this.trigger('emailVerified');
       get(this, 'showCheckEmailModal').perform();
@@ -239,11 +237,11 @@ export default Component.extend({
   }),
 
   showCheckEmailModal: task(function * () {
-    Ember.$('body').addClass('has-nypr-account-modal-open');
+    document.querySelector('body').classList.add('has-nypr-account-modal-open');
     try {
       yield waitForEvent(this, 'gotIt');
     } finally {
-      Ember.$('body').removeClass('has-nypr-account-modal-open');
+      document.querySelector('body').classList.remove('has-nypr-account-modal-open');
       set(this, 'connectEmailChangeset.email', null);
       set(this, 'connectEmailChangeset.confirmEmail', null);
     }

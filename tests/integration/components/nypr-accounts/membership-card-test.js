@@ -1,300 +1,260 @@
 import DS from 'ember-data';
-import { moduleForComponent, test } from 'ember-qunit';
-import wait from 'ember-test-helpers/wait';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import {
+  render,
+  find,
+  click,
+  findAll
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { startMirage } from 'dummy/initializers/ember-cli-mirage';
-import run from 'ember-runloop';
 import moment from 'moment';
 import RSVP from 'rsvp';
-import testSelector from 'ember-test-selectors';
+import sinon from 'sinon';
 
+module('Integration | Component | nypr accounts/membership card', function(hooks) {
+  setupRenderingTest(hooks);
 
-moduleForComponent(
-  'nypr-accounts/membership-card',
-  'Integration | Component | nypr accounts/membership card',
-  {
-    integration: true,
-    beforeEach() {
-      if (typeof server !== 'undefined') {
-        server.shutdown();
-      }
-      this.server = startMirage();
-    },
-    afterEach() {
-      this.server.shutdown();
-      if (typeof server !== 'undefined') {
-        server.shutdown();
-      }
-    }
-  }
-);
+  test('it renders', async function(assert) {
+    let pledges = server.createList('pledge', 8);
+    let pledgePromise = DS.PromiseArray.create({
+      promise: RSVP.Promise.resolve(pledges)
+    });
+    this.set('pledges', pledgePromise);
 
-test('it renders', function(assert) {
-  let pledges = server.createList('pledge', 8);
-  let pledgePromise = DS.PromiseArray.create({
-    promise: RSVP.Promise.resolve(pledges)
-  });
-  this.set('pledges', pledgePromise);
+    await render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
 
-  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
-
-  return wait().then(() => {
-    assert.ok(
-      this.$().text().trim().match(/My Donation Status/),
+    assert.equal(
+      find('.nypr-card-header').textContent.trim(), 'My Donation Status',
       'has membership header'
     );
-    assert.ok(this.$('span').text().trim().match(/Help/), 'has help link');
-  });
-});
-
-// Active sustaining member tests
-
-test('displays correct number of sustaining pledges', function(assert) {
-  let pledges = server.createList('pledge', 8, {
-    isActiveMember: true,
-    orderType: 'sustainer'
-  });
-  let pledgePromise = DS.PromiseArray.create({
-    promise: RSVP.Promise.resolve(pledges)
+    assert.ok(find('.pledge-help-link'), 'has help link');
   });
 
-  // Determine number of unique order codes in all active sustaining donations
-  let allPledgeOrderCodes = [];
-  let activePledges = pledges.filter((item) => item.isSustainer === true);
-  activePledges.forEach(pledge => allPledgeOrderCodes.push(pledge.orderCode));
-  let uniquePledgeOrders = Array.from(new Set(allPledgeOrderCodes));
+  // Active sustaining member tests
 
-  this.set('promise', pledgePromise);
+  test('displays correct number of sustaining pledges', async function(assert) {
+    let pledges = server.createList('pledge', 8, {
+      isActiveMember: true,
+      orderType: 'sustainer'
+    });
+    let pledgePromise = DS.PromiseArray.create({
+      promise: RSVP.Promise.resolve(pledges)
+    });
 
-  this.render(hbs`{{nypr-accounts/membership-card pledges=promise}}`);
+    // Determine number of unique order codes in all active sustaining donations
+    let allPledgeOrderCodes = [];
+    let activePledges = pledges.filter((item) => item.isSustainer === true);
+    activePledges.forEach(pledge => allPledgeOrderCodes.push(pledge.orderCode));
+    let uniquePledgeOrders = Array.from(new Set(allPledgeOrderCodes));
 
-  return wait().then(() => {
+    this.set('promise', pledgePromise);
+
+    await render(hbs`{{nypr-accounts/membership-card pledges=promise}}`);
+
     assert.equal(
-      this.$('.pledge-container').length,
+      findAll('.pledge-container').length,
       uniquePledgeOrders.length,
       'displays correct num of pledges'
     );
   });
-});
 
-test('displays sustaining pledge details', function(assert) {
-  assert.expect(4);
+  test('displays sustaining pledge details', async function(assert) {
+    assert.expect(4);
 
-  let pledges = server.createList('pledge', 1, {
-    isActiveMember: true,
-    isSustainer: true,
-    orderType: 'sustainer'
-  });
-  let pledgePromise = DS.PromiseArray.create({
-    promise: RSVP.Promise.resolve(pledges)
-  });
-  this.set('pledges', pledgePromise);
+    let pledges = server.createList('pledge', 1, {
+      isActiveMember: true,
+      isSustainer: true,
+      orderType: 'sustainer'
+    });
+    let pledgePromise = DS.PromiseArray.create({
+      promise: RSVP.Promise.resolve(pledges)
+    });
+    this.set('pledges', pledgePromise);
 
-  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
+    await render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
 
-  return wait().then(() => {
     assert.equal(
-      this.$('.pledge-order-price').text(),
+      find('.pledge-order-price').textContent,
       `$${pledges[0].orderPrice} / month`,
       'displays monthly amount'
     );
     assert.equal(
-      this.$('.pledge-fund').text(),
+      find('.pledge-fund').textContent,
       pledges[0].fund,
       'displays fund'
     );
     assert.equal(
-      this.$('.pledge-order-cc-type').text(),
+      find('.pledge-order-cc-type').textContent,
       `${pledges[0].creditCardType} ${pledges[0].creditCardLast4Digits}`,
       'displays credit card details'
     );
     assert.ok(
-      this.$(testSelector('giving-history-button')).text().trim().match(/Giving History/),
+      find('[data-test-giving-history-button]').textContent.trim(), 'Giving History',
       'has giving history link'
     );
   });
-});
 
-test('update link contains order id, aka order key', function(assert) {
-  let pledges = server.createList('pledge', 1, {
-    isActiveMember: true,
-    isSustainer: true,
-    orderType: 'sustainer'
-  });
-  let pledgePromise = DS.PromiseArray.create({
-    promise: RSVP.Promise.resolve(pledges)
-  });
-  this.set('pledges', pledgePromise);
+  test('update link contains order id, aka order key', async function(assert) {
+    let pledges = server.createList('pledge', 1, {
+      isActiveMember: true,
+      isSustainer: true,
+      orderType: 'sustainer'
+    });
+    let pledgePromise = DS.PromiseArray.create({
+      promise: RSVP.Promise.resolve(pledges)
+    });
+    this.set('pledges', pledgePromise);
 
-  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
+    await render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
 
-  return wait().then(() => {
     assert.notEqual(
-      this.$('.pledge-update-link')
-        .find('a')
-        .attr('href')
-        .indexOf(pledges[0].orderKey),
-      -1
+      find('.pledge-update-link a').getAttribute('href').indexOf(pledges[0].orderKey), -1
     );
   });
-});
 
-// Active one-time member tests
+  // Active one-time member tests
 
-test('displays most recent active pledge details if active onetime member', function(assert) {
-  assert.expect(3);
+  test('displays most recent active pledge details if active onetime member', async function(assert) {
+    assert.expect(3);
 
-  let pledges = server.createList('pledge', 1, {
-    isActiveMember: true,
-    orderType: 'onetime'
-  });
-  let pledgePromise = DS.PromiseArray.create({
-    promise: RSVP.Promise.resolve(pledges)
-  });
-  this.set('pledges', pledgePromise);
+    let pledges = server.createList('pledge', 1, {
+      isActiveMember: true,
+      orderType: 'onetime'
+    });
+    let pledgePromise = DS.PromiseArray.create({
+      promise: RSVP.Promise.resolve(pledges)
+    });
+    this.set('pledges', pledgePromise);
 
-  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges siteDomain='wnyc'}}`);
+    await render(hbs`{{nypr-accounts/membership-card pledges=pledges siteDomain='wnyc'}}`);
 
-  return wait().then(() => {
     assert.equal(
-      this.$('.pledge-date').text().trim(),
+      find('.pledge-date').textContent.trim(),
       moment(pledges[0].orderDate).format('MMMM D, YYYY'),
       'date is displayed'
     );
     assert.equal(
-      this.$('.pledge-donate-button').attr('href'),
+      find('.pledge-donate-button').getAttribute('href'),
       `https://pledge3.wnyc.org/donate/mc-main/`,
       'donate links to correct sustainer form'
     );
     assert.ok(
-      this.$('span').text().trim().match(/Giving History/),
+      find('[data-test-giving-history-button]').textContent.trim().match(/Giving History/),
       'has giving history link'
     );
   });
-});
 
-test('displays renewal message if recent member', function(assert) {
-  assert.expect(2);
-  let pledges = server.createList('pledge', 1, {
-    isActiveMember: false,
-    orderType: 'onetime'
-  });
-  let pledgePromise = DS.PromiseArray.create({
-    promise: RSVP.Promise.resolve(pledges)
-  });
-  this.set('pledges', pledgePromise);
-  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges siteDomain='wnyc'}}`);
+  test('displays renewal message if recent member', async function(assert) {
+    assert.expect(2);
+    let pledges = server.createList('pledge', 1, {
+      isActiveMember: false,
+      orderType: 'onetime'
+    });
+    let pledgePromise = DS.PromiseArray.create({
+      promise: RSVP.Promise.resolve(pledges)
+    });
+    this.set('pledges', pledgePromise);
+    await render(hbs`{{nypr-accounts/membership-card pledges=pledges siteDomain='wnyc'}}`);
 
-  return wait().then(() => {
     assert.equal(
-      this.$('.pledge-donate-button').text().trim(),
+      find('.pledge-donate-button').textContent.trim(),
       'Donate to renew',
       'Button callout  for renewal'
     );
     assert.equal(
-      this.$('.pledge-donate-button').attr('href'),
+      find('.pledge-donate-button').getAttribute('href'),
       `https://pledge3.wnyc.org/donate/mc-main/`,
       'donate links to correct recap form'
     );
   });
-});
 
-test('displays donation callout for non-members', function(assert) {
-  let pledges = server.createList('pledge', 0);
-  let pledgePromise = DS.PromiseArray.create({
-    promise: RSVP.Promise.resolve(pledges)
-  });
-  this.set('pledges', pledgePromise);
-  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges siteDomain='wnyc'}}`);
+  test('displays donation callout for non-members', async function(assert) {
+    let pledges = server.createList('pledge', 0);
+    let pledgePromise = DS.PromiseArray.create({
+      promise: RSVP.Promise.resolve(pledges)
+    });
+    this.set('pledges', pledgePromise);
+    await render(hbs`{{nypr-accounts/membership-card pledges=pledges siteDomain='wnyc'}}`);
 
-  return wait().then(() => {
     assert.equal(
-      this.$('.pledge-donate-button').text().trim(),
+      find('.pledge-donate-button').textContent.trim(),
       'Become a member',
       'Button callout for non-member'
     );
     assert.equal(
-      this.$('.pledge-donate-button').attr('href'),
+      find('.pledge-donate-button').getAttribute('href'),
       `https://pledge3.wnyc.org/donate/mc-main/`,
       'donate button links to non sustainer version'
     );
+    // payment history link does NOT exist
   });
-  // payment history link does NOT exist
-});
 
-test('clicking help displays modal', function(assert) {
-  let pledges = server.createList('pledge', 0);
-  let pledgePromise = DS.PromiseArray.create({
-    promise: RSVP.Promise.resolve(pledges)
-  });
-  this.set('pledges', pledgePromise);
-  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
+  test('clicking help displays modal', async function(assert) {
+    let pledges = server.createList('pledge', 0);
+    let pledgePromise = DS.PromiseArray.create({
+      promise: RSVP.Promise.resolve(pledges)
+    });
+    this.set('pledges', pledgePromise);
+    await render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
 
-  return wait().then(() => {
-    this.$('.pledge-help-link span').click();
+    await click('.pledge-help-link span');
     assert.ok(
-      this.$().siblings().find('.nypr-account-modal-title').text().trim().match(/Membership Help/),
+      find('.nypr-account-modal-title').textContent.trim().match(/Membership Help/),
       'displays membership modal'
     );
   });
-});
 
-test('displays pending email notification and it works', function(assert) {
-  let pledges = server.createList('pledge', 8);
-  let user = server.create('user');
-  let pledgePromise = DS.PromiseArray.create({
-    promise: RSVP.Promise.resolve(pledges)
-  });
-  this.set('pledges', pledgePromise);
-  this.set('user', user);
-  let resendCalled = 0;
-  let resend = () => {
-    resendCalled++;
-    return(RSVP.resolve());
-  };
-  this.set('resendVerificationEmail', resend);
+  test('displays pending email notification and it works', async function(assert) {
+    let pledges = server.createList('pledge', 8);
+    let user = server.create('user');
+    let pledgePromise = DS.PromiseArray.create({
+      promise: RSVP.Promise.resolve(pledges)
+    });
+    this.set('pledges', pledgePromise);
+    this.set('user', user);
+    let resend = sinon.stub().resolves();
+    this.set('resendVerificationEmail', resend);
 
-  this.render(hbs`{{nypr-accounts/membership-card pledges=pledges emailIsPendingVerification=true user=user resendVerificationEmail=resendVerificationEmail}}`);
+    await render(
+      hbs`{{nypr-accounts/membership-card pledges=pledges emailIsPendingVerification=true user=user resendVerificationEmail=resendVerificationEmail resetDelay=0 autoReset=false}}`
+    );
 
-  wait().then(() => {
-    assert.equal(this.$('.nypr-card-alert').length, 1, 'alert should exists');
+    assert.equal(findAll('.nypr-card-alert').length, 1, 'alert should exists');
     assert.ok(
-      this.$('.nypr-card-alert').text().includes('A verification email has been sent'),
+      find('.nypr-card-alert').textContent.includes('A verification email has been sent'),
       'alert should contain verification message'
     );
     assert.ok(
-      this.$('.nypr-card-alert').text().includes(user.email),
+      find('.nypr-card-alert').textContent.includes(user.email),
       'alert should contain user email address'
     );
-    assert.equal(this.$('.nypr-card-alert .resend-button').length, 1, 'resend button should exist');
+    assert.equal(findAll('.nypr-card-alert .resend-button').length, 1, 'resend button should exist');
 
-    this.$('.nypr-card-alert .resend-button').click();
-    run.cancelTimers();
+    await click('.nypr-card-alert .resend-button');
+
+    assert.ok(resend.calledOnce, 'clicking on resend button should call resend once');
+    assert.ok(find('.nypr-card-alert .resend-success'), 'resend success message should exist');
   });
 
-  return wait().then(() => {
-    assert.equal(resendCalled, 1, 'clicking on resend button should call resend once');
-    assert.equal(this.$('.nypr-card-alert .resend-success').length, 1, 'resend success message should exist');
-  });
+
+  // test('displays expiring warning on near-expired membership', function(assert) {
+
+  // });
+
+  // test('pledge update link is populated with order_id', function(assert) {
+
+  // });
+
+  // test('payment history link works', function(assert) {
+
+  // });
+
+  // test('displays full payment history', function(assert) {
+
+  // });
+
+  // test('displays help modal when clicked on', function(assert) {
+
+  // });
 });
-
-
-// test('displays expiring warning on near-expired membership', function(assert) {
-
-// });
-
-// test('pledge update link is populated with order_id', function(assert) {
-
-// });
-
-// test('payment history link works', function(assert) {
-
-// });
-
-// test('displays full payment history', function(assert) {
-
-// });
-
-// test('displays help modal when clicked on', function(assert) {
-
-// });

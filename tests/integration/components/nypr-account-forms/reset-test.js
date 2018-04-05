@@ -1,80 +1,73 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, find, fillIn, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { startMirage }  from 'dummy/initializers/ember-cli-mirage';
-import wait from 'ember-test-helpers/wait';
 
-moduleForComponent('nypr-account-forms/reset', 'Integration | Component | account reset password form', {
-  integration: true,
-  beforeEach() {
-    this.server = startMirage();
-  },
-  afterEach() {
-    this.server.shutdown();
-  }
-});
+module('Integration | Component | account reset password form', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function(assert) {
-  let testEmail = 'test@example.com';
-  let testConfirmation = 'QWERTYUIOP';
-  this.set('email', testEmail);
-  this.set('confirmation', testConfirmation);  this.render(hbs`{{nypr-account-forms/reset email=email confirmation=confirmation}}`);
-  assert.equal(this.$('.account-form').length, 1);
-});
+  test('it renders', async function(assert) {
+    let testEmail = 'test@example.com';
+    let testConfirmation = 'QWERTYUIOP';
+    this.set('email', testEmail);
+    this.set('confirmation', testConfirmation);
 
-test('submitting the form sends the correct values to the correct endpoint', function(assert) {
-  let testEmail = 'test@example.com';
-  let testConfirmation = 'QWERTYUIOP';
-  let authAPI = 'http://example.com';
-  this.set('authAPI', authAPI);
-  this.set('email', testEmail);
-  this.set('confirmation', testConfirmation);
-  this.render(hbs`{{nypr-account-forms/reset email=email confirmation=confirmation authAPI=authAPI}}`);
+    await render(hbs`{{nypr-account-forms/reset email=email confirmation=confirmation}}`);
+    assert.ok(find('.account-form'));
+  });
 
-  let requests = [];
-  let url = `${authAPI}/v1/confirm/password-reset`;
-  this.server.post(url, (schema, request) => {
-    requests.push(request);
-    return {};
-  }, 200);
-  let testPassword = 'password123';
-  this.$('label:contains(New Password) + input').val(testPassword);
-  this.$('label:contains(New Password) + input').blur();
-  this.$('button:contains(Reset password)').click();
+  test('submitting the form sends the correct values to the correct endpoint', async function(assert) {
+    let testEmail = 'test@example.com';
+    let testConfirmation = 'QWERTYUIOP';
+    let authAPI = 'http://example.com';
+    this.set('authAPI', authAPI);
+    this.set('email', testEmail);
+    this.set('confirmation', testConfirmation);
 
-  return wait().then(() => {
+    await render(hbs`{{nypr-account-forms/reset email=email confirmation=confirmation authAPI=authAPI}}`);
+
+    let requests = [];
+    let url = `${authAPI}/v1/confirm/password-reset`;
+    this.server.post(url, (schema, request) => {
+      requests.push(request);
+      return {};
+    }, 200);
+    let testPassword = 'password123';
+
+    await fillIn('input[name="password"]', testPassword);
+    await click('button[type="submit"]');
+
     assert.equal(requests.length, 1);
     assert.deepEqual(JSON.parse(requests[0].requestBody), {email: testEmail, confirmation: testConfirmation, new_password: testPassword});
   });
-});
 
-test("it shows the 'oops' page when api returns an expired error", function(assert) {
-  let testEmail = 'test@example.com';
-  let testConfirmation = 'QWERTYUIOP';
-  let authAPI = 'http://example.com';
-  this.set('authAPI', authAPI);
-  this.set('email', testEmail);
-  this.set('confirmation', testConfirmation);
-  this.render(hbs`{{nypr-account-forms/reset email=email confirmation=confirmation authAPI=authAPI}}`);
+  test("it shows the 'oops' page when api returns an expired error", async function(assert) {
+    let testEmail = 'test@example.com';
+    let testConfirmation = 'QWERTYUIOP';
+    let authAPI = 'http://example.com';
+    this.set('authAPI', authAPI);
+    this.set('email', testEmail);
+    this.set('confirmation', testConfirmation);
 
-  let requests = [];
-  let url = `${authAPI}/v1/confirm/password-reset`;
-  this.server.post(url, (schema, request) => {
-    requests.push(request);
-    return {
-      "errors": {
-        "code": "ExpiredCodeException",
-        "message": "Invalid code provided, please request a code again."
-      }
-    };
-  }, 400);
+    await render(hbs`{{nypr-account-forms/reset email=email confirmation=confirmation authAPI=authAPI}}`);
 
-  let testPassword = 'password123';
-  this.$('label:contains(New Password) + input').val(testPassword);
-  this.$('label:contains(New Password) + input').blur();
-  this.$('button:contains(Reset password)').click();
+    let requests = [];
+    let url = `${authAPI}/v1/confirm/password-reset`;
+    this.server.post(url, (schema, request) => {
+      requests.push(request);
+      return {
+        "errors": {
+          "code": "ExpiredCodeException",
+          "message": "Invalid code provided, please request a code again."
+        }
+      };
+    }, 400);
 
-  return wait().then(() => {
+    let testPassword = 'password123';
+    await fillIn('input[name="password"]', testPassword);
+    await click('button[type="submit"]');
+
     assert.equal(requests.length, 1, 'it should call the api reset url');
-    assert.equal(this.$('.account-form-heading:contains(Oops!)').length, 1, 'the heading should say oops');
+    assert.equal(find('.account-form-heading').textContent.trim(), 'Oops!', 'the heading should say oops');
   });
 });

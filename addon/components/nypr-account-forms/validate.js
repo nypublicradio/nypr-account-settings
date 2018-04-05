@@ -1,8 +1,7 @@
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from '../../templates/components/nypr-account-forms/validate';
-import service from 'ember-service/inject';
-import get from 'ember-metal/get';
-import set from 'ember-metal/set';
+import { inject as service } from '@ember/service';
+import { get, set } from '@ember/object';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
 import EmailValidations from 'nypr-account-settings/validations/nypr-accounts/email';
@@ -13,19 +12,20 @@ const FLASH_MESSAGES = {
   validated: 'Your email has been verified and your online account is now active.'
 };
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   flashMessages: service(),
   session: service(),
   authAPI: null,
   accountValidated: false,
   codeExpired: false,
-  allowedKeys: ['email'],
+  allowedKeys: null,
   init() {
     this._super(...arguments);
     set(this, 'fields', {
       email: ''
     });
+    set(this, 'allowedKeys', ['email']);
     set(this, 'changeset', new Changeset(get(this, 'fields'), lookupValidator(EmailValidations), EmailValidations));
     get(this, 'changeset').validate();
   },

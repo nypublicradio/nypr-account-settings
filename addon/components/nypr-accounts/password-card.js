@@ -1,11 +1,11 @@
-import Ember from 'ember';
-import get from 'ember-metal/get';
+import Component from '@ember/component';
+import { get } from '@ember/object';
 import layout from '../../templates/components/nypr-accounts/password-card';
 import validations from 'nypr-account-settings/validations/nypr-accounts/password-change';
 import lookupValidator from 'ember-changeset-validations';
 import Changeset from 'ember-changeset';
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   tagName: '',
 
@@ -23,7 +23,7 @@ export default Ember.Component.extend({
         .validate()
         .then(() => {
           if (changeset.get('isValid')) {
-            this.attrs.changePassword(changeset)
+            this.changePassword(changeset)
             .then(() => {
               changeset.rollback();
               this.set('isEditing', false);

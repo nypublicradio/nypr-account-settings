@@ -1,97 +1,85 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { startMirage }  from 'dummy/initializers/ember-cli-mirage';
-import wait from 'ember-test-helpers/wait';
 
-moduleForComponent('nypr-account-forms/validate', 'Integration | Component | account validation form', {
-  integration: true,
-  beforeEach() {
-    this.server = startMirage();
-  },
-  afterEach() {
-    this.server.shutdown();
-  }
-});
+module('Integration | Component | account validation form', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it renders', function(assert) {
-  let authAPI = 'http://example.com';
-  this.set('authAPI', authAPI);
-  this.server.get(`${authAPI}/v1/confirm/sign-up`, {}, 200);
+  test('it renders', async function(assert) {
+    let authAPI = 'http://example.com';
+    this.set('authAPI', authAPI);
+    this.server.get(`${authAPI}/v1/confirm/sign-up`, {}, 200);
 
-  this.render(hbs`{{nypr-account-forms/validate authAPI=authAPI}}`);
-  assert.equal(this.$('.account-form').length, 1);
-});
+    await render(hbs`{{nypr-account-forms/validate authAPI=authAPI}}`);
+    assert.ok(find('.account-form'));
+  });
 
-test('it sends the correct values to the endpoint to verify the account', function(assert) {
-  const testUser = 'UserName';
-  const testConfirmation = 'QWERTYUIOP';
-  let authAPI = 'http://example.com';
-  this.set('username', testUser);
-  this.set('confirmation', testConfirmation);
-  this.set('authAPI', authAPI);
+  test('it sends the correct values to the endpoint to verify the account', async function(assert) {
+    const testUser = 'UserName';
+    const testConfirmation = 'QWERTYUIOP';
+    let authAPI = 'http://example.com';
+    this.set('username', testUser);
+    this.set('confirmation', testConfirmation);
+    this.set('authAPI', authAPI);
 
-  let requests = [];
-  let url = `${authAPI}/v1/confirm/sign-up`;
-  this.server.get(url, (schema, request) => {
-    requests.push(request);
-    return {};
-  }, 200);
+    let requests = [];
+    let url = `${authAPI}/v1/confirm/sign-up`;
+    this.server.get(url, (schema, request) => {
+      requests.push(request);
+      return {};
+    }, 200);
 
-  this.render(hbs`{{nypr-account-forms/validate username=username confirmation=confirmation authAPI=authAPI}}`);
+    await render(hbs`{{nypr-account-forms/validate username=username confirmation=confirmation authAPI=authAPI}}`);
 
-  return wait().then(() => {
     assert.equal(requests.length, 1);
     assert.deepEqual(requests[0].queryParams, {confirmation: testConfirmation, username: testUser});
   });
-});
 
-test('it shows the login form when verification succeeds', function(assert) {
-  const testUser = 'UserName';
-  const testConfirmation = 'QWERTYUIOP';
-  let authAPI = 'http://example.com';
-  this.set('username', testUser);
-  this.set('confirmation', testConfirmation);
-  this.set('authAPI', authAPI);
+  test('it shows the login form when verification succeeds', async function(assert) {
+    const testUser = 'UserName';
+    const testConfirmation = 'QWERTYUIOP';
+    let authAPI = 'http://example.com';
+    this.set('username', testUser);
+    this.set('confirmation', testConfirmation);
+    this.set('authAPI', authAPI);
 
-  let requests = [];
-  let url = `${authAPI}/v1/confirm/sign-up`;
-  this.server.get(url, (schema, request) => {
-    requests.push(request);
-    return {};
-  }, 200);
+    let requests = [];
+    let url = `${authAPI}/v1/confirm/sign-up`;
+    this.server.get(url, (schema, request) => {
+      requests.push(request);
+      return {};
+    }, 200);
 
-  this.render(hbs`{{nypr-account-forms/validate username=username confirmation=confirmation authAPI=authAPI}}`);
+    await render(hbs`{{nypr-account-forms/validate username=username confirmation=confirmation authAPI=authAPI}}`);
 
-  return wait().then(() => {
-    assert.equal(this.$('.account-form').length, 1, 'it should show an account form');
-    assert.equal(this.$('button:contains(Log in)').length, 1, 'it should show a login button');
+    assert.ok(find('.account-form'), 'it should show an account form');
+    assert.ok(find('button[type="submit"]').textContent.trim(), 'it should show a login button');
   });
-});
 
-test("it shows the 'oops' page when api returns an expired error", function(assert) {
-  const testUser = 'UserName';
-  const testConfirmation = 'QWERTYUIOP';
-  let authAPI = 'http://example.com';
-  this.set('username', testUser);
-  this.set('confirmation', testConfirmation);
-  this.set('authAPI', authAPI);
+  test("it shows the 'oops' page when api returns an expired error", async function(assert) {
+    const testUser = 'UserName';
+    const testConfirmation = 'QWERTYUIOP';
+    let authAPI = 'http://example.com';
+    this.set('username', testUser);
+    this.set('confirmation', testConfirmation);
+    this.set('authAPI', authAPI);
 
-  let requests = [];
-  let url = `${authAPI}/v1/confirm/sign-up`;
-  this.server.get(url, (schema, request) => {
-    requests.push(request);
-    return {
-      "errors": {
-        "code": "ExpiredCodeException",
-        "message": "Invalid code provided, please request a code again."
-      }
-    };
-  }, 400);
+    let requests = [];
+    let url = `${authAPI}/v1/confirm/sign-up`;
+    this.server.get(url, (schema, request) => {
+      requests.push(request);
+      return {
+        "errors": {
+          "code": "ExpiredCodeException",
+          "message": "Invalid code provided, please request a code again."
+        }
+      };
+    }, 400);
 
-  this.render(hbs`{{nypr-account-forms/validate username=username confirmation=confirmation authAPI=authAPI}}`);
+    await render(hbs`{{nypr-account-forms/validate username=username confirmation=confirmation authAPI=authAPI}}`);
 
-  return wait().then(() => {
     assert.equal(requests.length, 1, 'it should call the api reset url');
-    assert.equal(this.$('.account-form-heading:contains(Oops!)').length, 1, 'the heading should say oops');
+    assert.equal(find('.account-form-heading').textContent.trim(), 'Oops!', 'the heading should say oops');
   });
 });
