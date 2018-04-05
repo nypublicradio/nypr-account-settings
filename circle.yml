@@ -30,7 +30,7 @@ jobs:
           key: node-deps-{{ checksum "yarn.lock" }}
       - run:
           name: Test
-          command: npm test
+          command: ./node_modules/ember-cli/bin/ember test
 
 workflows:
   version: 2
