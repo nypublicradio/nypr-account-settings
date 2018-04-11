@@ -41,14 +41,10 @@ jobs:
           name: Test
           environment:
             CIRCLE_TEST_REPORTS: test-results
-          command: ember test
+          command: ./node_modules/ember-cli/bin/ember test
       - run:
           name: greenkeeper-lockfile-upload
           command: greenkeeper-lockfile-upload
-      - save_cache:
-          key: node-deps-{{ checksum "yarn.lock" }}
-          paths:
-            - ./node_modules
       - store_test_results:
           path: test-results/
 
