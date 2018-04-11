@@ -4,16 +4,15 @@ jobs:
   install:
     docker:
       - image: circleci/node:8.7
-
     steps:
       - checkout
       - restore_cache:
-          key: node-deps-{{ checksum "package-lock.json" }}
+          key: node-deps-{{ checksum "yarn.lock" }}
       - run:
           name: Install node dependencies
           command: yarn --pure-lockfile
       - save_cache:
-          key: node-deps-{{ checksum "package-lock.json" }}
+          key: node-deps-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
 
@@ -26,7 +25,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: node-deps-{{ checksum "package-lock.json" }}
+          key: node-deps-{{ checksum "yarn.lock" }}
       - run:
           name: greenkeeper-lockfile
           command: yarn global add greenkeeper-lockfile@1
@@ -46,6 +45,10 @@ jobs:
       - run:
           name: greenkeeper-lockfile-upload
           command: greenkeeper-lockfile-upload
+      - save_cache:
+          key: node-deps-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
       - store_test_results:
           path: test-results/
 
