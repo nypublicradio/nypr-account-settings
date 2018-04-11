@@ -28,7 +28,7 @@
     "ember-concurrency": "^0.8.17",
     "ember-cookies": "^0.3.0",
     "ember-modal-dialog": "^2.4.3",
-    "nypr-auth": ">=0.1.0"
+    "nypr-auth": ">=0.2.0"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.5",

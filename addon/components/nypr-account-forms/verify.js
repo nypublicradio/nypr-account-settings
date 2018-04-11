@@ -29,9 +29,7 @@ export default Component.extend({
       }
     }});
     let headers = {'Content-Type': 'application/vnd.api+json'};
-    this.get('session').authorize('authorizer:nypr', (header, value) => {
-        headers[header] = value;
-    });
+    headers = this.get('session').authorize(headers);
     try {
       let response = yield fetch(url, {method, headers, body});
       if (response && response.ok) {

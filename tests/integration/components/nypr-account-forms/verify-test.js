@@ -8,7 +8,11 @@ module('Integration | Component | nypr account forms/verify', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
-    this.session = { authorize(_, callback) { callback('authorization', 'foo'); } };
+    this.session = { authorize(headers) {
+                        headers['authorization'] = 'foo';
+                        return headers;
+                      }
+                    };
   });
 
   test('it sends the correct values to the endpoint to verify the account', async function(assert) {

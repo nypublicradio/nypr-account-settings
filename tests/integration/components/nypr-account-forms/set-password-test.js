@@ -7,7 +7,11 @@ module('Integration | Component | account set password form', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
-    this.session = { authorize(_, cb) { cb('authorization', 'foo');} };
+    this.session = { authorize(headers) {
+                        headers['authorization'] = 'foo';
+                        return headers;
+                      }
+                    };
   });
 
   const testEmail = 'test@example.com';

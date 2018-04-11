@@ -20,11 +20,10 @@ export default Component.extend({
     // https://stackoverflow.com/questions/16086162/handle-file-download-from-ajax-post
     var xhr = new XMLHttpRequest();
     xhr.open('GET', taxLetterUrl, true);
-
-    this.get('session').authorize('authorizer:nypr', (header, value) => {
-      xhr.setRequestHeader(header, value);
-    });
-
+    let headers = this.get('session').authorize({});
+    for (var h in headers) {
+      xhr.setRequestHeader(h, headers[h]);
+    }
     xhr.responseType = 'arraybuffer';
     run(() => {
       xhr.onload = function() {
