@@ -7,12 +7,11 @@ jobs:
 
     steps:
       - checkout
-
       - restore_cache:
           key: node-deps-{{ checksum "package-lock.json" }}
       - run:
           name: Install node dependencies
-          command: npm i --no-package-lock
+          command: yarn --pure-lockfile
       - save_cache:
           key: node-deps-{{ checksum "package-lock.json" }}
           paths:
@@ -29,8 +28,26 @@ jobs:
       - restore_cache:
           key: node-deps-{{ checksum "package-lock.json" }}
       - run:
+          name: greenkeeper-lockfile
+          command: yarn global add greenkeeper-lockfile@1
+      - run:
+          name: Add Yarn global bin to path
+          command: echo 'export PATH=$PATH:`yarn global bin`' >> $BASH_ENV
+      - run:
+          name: greenkeeper-lockfile-update
+          command: greenkeeper-lockfile-update
+      - run:
+          command: yarn --pure-lockfile
+      - run:
           name: Test
-          command: ./node_modules/ember-cli/bin/ember test
+          environment:
+            CIRCLE_TEST_REPORTS: test-results
+          command: ember test
+      - run:
+          name: greenkeeper-lockfile-upload
+          command: greenkeeper-lockfile-upload
+      - store_test_results:
+          path: test-results/
 
 workflows:
   version: 2
