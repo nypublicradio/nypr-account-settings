@@ -13,9 +13,9 @@ jobs:
       - run:
           name: Install node dependencies
           command: |
-          if [ ! -d ./node_modules ]; then
-            yarn --pure-lockfile
-          fi
+            if [ ! -d ./node_modules ]; then
+              yarn --pure-lockfile
+            fi
       - save_cache:
           key: v2-node8-yarn-deps-{{ arch }}-{{ checksum "yarn.lock" }}
           paths:
