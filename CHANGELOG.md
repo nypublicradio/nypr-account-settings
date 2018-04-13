@@ -1,5 +1,8 @@
 # nypr-account-settings Changelog
 
+## 0.1.3
+- [BUGFIX] use bubbling actions for setPassword
+
 ## 0.1.2
 - [CHORE] upgrade to avoid use of deprecated authorizers (ember-simple-auth)
 
