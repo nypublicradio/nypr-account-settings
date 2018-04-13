@@ -92,10 +92,7 @@ export default Component.extend({
     },
     onSuccess() {
       this.set('passwordWasSet', true);
-      let afterSetPassword = this.afterSetPassword;
-      if (afterSetPassword) {
-        return afterSetPassword();
-      }
+      this.sendAction('afterSetPassword'); // eslint-disable-line ember/closure-actions
     }
   },
 });
