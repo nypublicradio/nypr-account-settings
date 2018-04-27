@@ -39,7 +39,11 @@
         submitted=form.status.tried
       }}
 
-      <button type="submit" class="account-form-btn" disabled={{form.status.processing}}>Submit</button>
+      <button
+        type="submit"
+        class="account-form-btn gtm__click-tracking-text"
+        data-action="Authentication"
+        disabled={{form.status.processing}}>Submit</button>
 
     {{/if}}
   {{/nypr-form}}

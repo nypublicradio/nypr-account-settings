@@ -18,7 +18,11 @@
         A verification email has been sent to {{user.email}}. To view any membership info associated with this email address, you must click the button in your email.
         <div>
         {{#nypr-accounts/resend-button resetDelay=resetDelay autoReset=autoReset
-          resendAction=resendVerificationEmail}}
+          resendAction=resendVerificationEmail
+          classNames="gtm__click-tracking"
+          data-action="Authentication"
+          data-label="Resend Verification Email"
+        }}
           Resend email
         {{/nypr-accounts/resend-button}}
         </div>

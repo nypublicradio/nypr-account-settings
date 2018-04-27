@@ -1,8 +1,18 @@
 {{#if ready}}
   {{#if resendAction}}
-    <button class='resend-button' {{action (perform tryResend resendAction)}}>{{yield}}</button>
+    <button
+      class={{concat 'resend-button ' classNames}}
+      data-category={{data-category}}
+      data-action={{data-action}}
+      data-label={{data-label}}
+      {{action (perform tryResend resendAction)}}>{{yield}}</button>
   {{else}}
-    <button class='resend-button' {{action "resend" target email}}>{{yield}}</button>
+    <button
+      class={{concat 'resend-button ' classNames}}
+      data-category={{data-category}}
+      data-action={{data-action}}
+      data-label={{data-label}}
+      {{action "resend" target email}}>{{yield}}</button>
   {{/if}}
 {{else if success}}
   <span class='resend-success'>{{successMessage}}</span>
