@@ -5,9 +5,11 @@
   <p>The link in your email will be valid for 24 hours. Once you click the link in your email, your account will be all set up.</p>
 
   <p>If you don't see an email after 5 minutes, you can {{#nypr-accounts/resend-button
+    classNames="gtm__click-tracking"
+    data-action="Authentication"
+    data-label="Resend Verification Email"
     target=resendUrl
     email=email}}
     Resend the email
-  {{/nypr-accounts/resend-button }}.</p>
+  {{/nypr-accounts/resend-button}}.</p>
 </div>
-

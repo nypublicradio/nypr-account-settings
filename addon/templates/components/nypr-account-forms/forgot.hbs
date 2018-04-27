@@ -10,6 +10,9 @@
     <h2 class="account-form-heading">Oops!</h2>
     <p class="account-form-description">The account for {{changeset.email}} hasn’t been verified yet.<br>But don’t worry — verification is easy. Once you click the link in the verification email, your account will be all set up.
     {{#nypr-accounts/resend-button
+      classNames="gtm__click-tracking"
+      data-action="Authentication"
+      data-label="Resend Forgot Password Request"
       target=resendUrl
       email=changeset.email}}
       Resend the email
@@ -23,6 +26,9 @@
         <p>Usually, the email is sent very quickly, but in rare circumstances it could take a minute or two.</p>
         <p>This link will be valid for 1 hour.</p>
         {{#nypr-accounts/resend-button
+          classNames="gtm__click-tracking"
+          data-action="Authentication"
+          data-label="Resend Forgot Password Request"
           target=resendUrl
           email=changeset.email}}
           Resend the email
@@ -43,7 +49,12 @@
         submitted=form.status.tried
       }}
 
-      <button type="submit" class="account-form-btn" disabled={{form.status.processing}}>Submit</button>
+      <button
+        type="submit"
+        class="account-form-btn gtm__click-tracking"
+        data-action="Authentication"
+        data-label="Forgot Password Request"
+        disabled={{form.status.processing}}>Submit</button>
     {{/if}}
   {{/if}}
 {{/nypr-form}}
