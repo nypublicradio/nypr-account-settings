@@ -1,6 +1,12 @@
 {{#if connected}}
 
-  <a class="nypr-social-connect__link" href={{manageUrl}} target="_blank" rel="noopener noreferrer">Manage {{providerName}} connection</a>
+  <a
+    class="nypr-social-connect__link gtm__click-tracking"
+    data-action="Personal Info"
+    data-label="Manage Facebook Connection"
+    href={{manageUrl}}
+    target="_blank"
+    rel="noopener noreferrer">Manage {{providerName}} connection</a>
 
 {{else}}
 

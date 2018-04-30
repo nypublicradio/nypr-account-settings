@@ -52,23 +52,28 @@
 
     <div class="pledge-tools">
       {{#if pledges}}
-      {{#card.button classNames="giving-history-link"}}
-        <span data-test-giving-history-button>Giving History</span>
+      {{#card.button
+        data-test-giving-history-button
+        data-action="Member Center"
+        classNames="giving-history-link gtm__click-tracking-text"}}
+        Giving History
       {{/card.button}}
       {{/if}}
       {{#if hasPledgesInPastTaxYear}}
         <div
           class="gtm__click-tracking tax-letter-link"
-          data-category="Account"
           data-action="Member Center"
           data-label="Tax Document"
-          {{action (action (mut enableDownloadModal) true)}} >
+          {{action (action (mut enableDownloadModal) true)}}>
           <span>
             {{nypr-svg className="tax-letter__download-icon" icon="download-arrow"}} <span>{{previousYear}} Tax Receipt</span>
           </span>
         </div>
       {{/if}}
-      <div class="pledge-help-link"><span {{action (action (mut enableModal) true)}}>Help</span></div>
+      <div
+        class="pledge-help-link gtm__click-tracking-text"
+        data-action="Member Center"
+        {{action (action (mut enableModal) true)}}>Help</div>
     </div>
   {{/m.panel}}
 

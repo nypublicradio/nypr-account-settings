@@ -3,7 +3,9 @@
   {{#card.header as |header|}}
     {{header.title text="My Online Account"}}
     {{header.button
-      class="nypr-card-edit-btn"
+      class="nypr-card-edit-btn gtm__click-tracking"
+      data-action="Personal Info"
+      data-label=(if isEditing 'Cancel Edit Info' 'Edit Info')
       click=(action 'toggleEdit')
       text=(if isEditing 'Cancel' 'Edit')}}
   {{/card.header}}
@@ -75,13 +77,16 @@
   <div class="nypr-account-footer">
     <div class="nypr-account-footer-wrapper">
       <button
-        class="nypr-account-cancel"
+        class="nypr-account-cancel gtm__click-tracking"
+        data-action="Personal Info"
+        data-label="Cancel Edit Info"
         data-test-selector="rollback"
         type="button"
         {{action 'rollback' changeset}}>Cancel</button>
 
       <button
-        class="nypr-account-confirm"
+        class="nypr-account-confirm gtm__click-tracking-text"
+        data-action="Personal Info"
         data-test-selector="save"
         disabled={{or changeset.isPristine changeset.isInvalid}}
         type="submit">Save</button>
@@ -113,7 +118,9 @@
 
     {{#m.footer}}
       <button
-        class="nypr-account-confirm"
+        class="nypr-account-confirm gtm__click-tracking"
+        data-action="Personal Info"
+        data-label="Confirm Email Change"
         data-test-selector="check-pw"
         >Submit</button>
     {{/m.footer}}
