@@ -198,7 +198,7 @@ module('Integration | Component | nypr accounts/membership card', function(hooks
     this.set('pledges', pledgePromise);
     await render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
 
-    await click('.pledge-help-link span');
+    await click('.pledge-help-link');
     assert.ok(
       find('.nypr-account-modal-title').textContent.trim().match(/Membership Help/),
       'displays membership modal'
