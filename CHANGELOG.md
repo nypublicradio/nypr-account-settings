@@ -1,5 +1,8 @@
 # nypr-account-settings Changelog
 
+## 0.2.0 beta
+- [FEATURE] analytics upgrade
+
 ## 0.1.3
 - [BUGFIX] use bubbling actions for setPassword
 
