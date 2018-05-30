@@ -249,7 +249,7 @@ workflows:
             - install
   test-all-clients:
     jobs:
-      - install
+      - install:
           filters:
             branches:
               only: qa-build
