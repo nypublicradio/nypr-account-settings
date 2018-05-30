@@ -270,6 +270,7 @@ workflows:
       - test_wqxr:
           requires:
             - setup_test_clients
+# studios and new sounds do not use account settings
 #      - test_wnyc_studios_ember:
 #          requires:
 #            - setup_test_clients
