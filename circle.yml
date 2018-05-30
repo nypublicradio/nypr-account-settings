@@ -54,7 +54,7 @@ run_client_tests: &run_client_tests
   run:
     name: link and test
     command: |
-      yarn link nypr-accounts-settings
+      yarn link nypr-account-settings
       npx ember test
 
 container_defaults: &defaults
