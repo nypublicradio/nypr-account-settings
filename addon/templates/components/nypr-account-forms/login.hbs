@@ -23,7 +23,7 @@
     <h2 class="account-form-heading">Log in to {{siteName}}</h2>
     {{#if showSocialLogin}}
       <button type="button"
-        class="account-form-btn account-form-btn--facebook gtm__click-tracking-text"
+        class="account-form-btn account-form-btn--facebook gtm__click-tracking"
         title="Log in with Facebook"
         data-action="Authentication"
         {{action 'loginWithFacebook'}}>
@@ -53,7 +53,7 @@
       helplinkUrl='/forgot'
       helplinkText='Forgot Password?'
       submitted=form.status.tried
-      classNames='gtm__click-tracking-container-text'
+      classNames='gtm__click-tracking-container'
       data-action="Authentication"
     }}
     {{#if loginError}}
