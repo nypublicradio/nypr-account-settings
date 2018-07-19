@@ -80,6 +80,10 @@
       submitted=form.status.tried
     }}
 
+    <!-- <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" data-callback="myCallback"></div> -->
+
+    {{google-recaptcha reCaptchaResponse=(action 'hasCompletedCaptcha')}}
+
     {{#if signupError}}
       <div class='account-form-error'>
         {{{signupError}}}
@@ -95,6 +99,6 @@
       class="account-form-btn gtm__click-tracking"
       data-action="Authentication"
       data-label="Submit sign up"
-      disabled={{form.status.processing}}>Sign up</button>
+      disabled={{or form.status.processing (not captchaFilled)}}>Sign up</button>
   {{/if}}
 {{/nypr-form}}

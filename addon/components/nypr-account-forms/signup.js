@@ -67,6 +67,9 @@ export default Component.extend({
           return this.onFacebookLoginFailure(messages.socialAuthCancelled);
         }
       });
+    },
+    hasCompletedCaptcha() {
+      this.set('captchaComplete', true);
     }
   },
   onFacebookLoginFailure(message) {
