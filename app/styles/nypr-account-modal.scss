@@ -63,6 +63,10 @@
   @include blank-button;
   width: 15px;
   height: 15px;
+
+  > * {
+    pointer-events: none;
+  }
 }
 
 body.has-nypr-account-modal-open {
