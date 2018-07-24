@@ -97,7 +97,14 @@
 {{/nypr-card}}
 
 {{#if promptForPassword.isRunning}}
-  {{#nypr-account-modal title="Re-enter Your Password" closeAction=(action 'endTask' 'promptForPassword') as |m|}}
+  {{#nypr-account-modal closeAction=(action 'endTask' 'promptForPassword') as |m|}}
+    {{#m.header as |header|}}
+      {{header.title "Re-enter Your Password"}}
+      {{#header.button}}
+        {{nypr-svg icon="close"}}
+      {{/header.button}}
+    {{/m.header}}
+
     <form {{action (perform verifyPassword) on='submit'}}>
     {{#m.body}}
     <p>
@@ -129,7 +136,14 @@
 {{/if}}
 
 {{#if promptForEmail.isRunning}}
-  {{#nypr-account-modal title="Enter Your Email" closeAction=(action 'endTask' 'promptForEmail') as |m|}}
+  {{#nypr-account-modal closeAction=(action 'endTask' 'promptForEmail') as |m|}}
+    {{#m.header as |header|}}
+      {{header.title "Enter Your Email"}}
+      {{#header.button}}
+        {{nypr-svg icon="close"}}
+      {{/header.button}}
+    {{/m.header}}
+
     <form {{action (perform verifyEmail) on='submit'}}>
     {{#m.body}}
     <p>
@@ -167,7 +181,14 @@
 {{/if}}
 
 {{#if showCheckEmailModal.isRunning}}
-  {{#nypr-account-modal title="Check Your Email" closeAction=(action 'endTask' 'showCheckEmailModal') as |m|}}
+  {{#nypr-account-modal closeAction=(action 'endTask' 'showCheckEmailModal') as |m|}}
+    {{#m.header as |header|}}
+      {{header.title "Check Your Email"}}
+      {{#header.button}}
+        {{nypr-svg icon="close"}}
+      {{/header.button}}
+    {{/m.header}}
+
     <form {{action 'endTask' 'showCheckEmailModal' on='submit'}}>
     {{#m.body}}
       <p>

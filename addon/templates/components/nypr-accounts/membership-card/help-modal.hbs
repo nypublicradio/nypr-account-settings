@@ -1,7 +1,14 @@
 {{#if hasBlock}}
   {{yield}}
 {{else}}
-  {{#nypr-account-modal title="Membership Help" closeAction=(action (mut enableModal) false) as |m|}}
+  {{#nypr-account-modal closeAction=(action (mut enableModal) false) as |m|}}
+    {{#m.header as |header|}}
+      {{header.title "Membership Help"}}
+      {{#header.button}}
+        {{nypr-svg icon="close"}}
+      {{/header.button}}
+    {{/m.header}}
+
     {{#m.body}}
     <p>
       If you've donated but don't see your donation info here, it may be because you've donated with a different email. You can change your donation email in your Personal Info section.
