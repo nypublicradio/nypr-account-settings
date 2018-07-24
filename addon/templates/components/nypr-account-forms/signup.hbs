@@ -80,8 +80,6 @@
       submitted=form.status.tried
     }}
 
-    <!-- <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" data-callback="myCallback"></div> -->
-
     {{google-recaptcha reCaptchaResponse=(action 'hasCompletedCaptcha')}}
 
     {{#if signupError}}

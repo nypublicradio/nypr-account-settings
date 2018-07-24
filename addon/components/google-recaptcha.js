@@ -12,7 +12,7 @@ export default Component.extend({
 
   classNames: ["g-recaptcha"],
 
-  sitekey: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
+  sitekey: "6LdElGQUAAAAAFIba0ubXAg8eRUKYMcJrXTyxU03",
 
   tabindex: alias("tabIndex"),
 
@@ -22,22 +22,24 @@ export default Component.extend({
         this.renderReCaptcha();
       }, 500);
     } else {
-      let container = this.$()[0];
-      let properties = this.getProperties(
-        "sitekey",
-        "theme",
-        "type",
-        "size",
-        "tabindex",
-        "hl"
-      );
-      let parameters = merge(properties, {
-        callback: this.get("successCallback").bind(this),
-        "expired-callback": this.get("expiredCallback").bind(this)
-      });
-      let widgetId = window.grecaptcha.render(container, parameters);
-      this.set("widgetId", widgetId);
-      this.set("ref", this);
+      let container = this.element;
+      if (container) {
+        let properties = this.getProperties(
+          "sitekey",
+          "theme",
+          "type",
+          "size",
+          "tabindex",
+          "hl"
+        );
+        let parameters = merge(properties, {
+          callback: this.get("successCallback").bind(this),
+          "expired-callback": this.get("expiredCallback").bind(this)
+        });
+        let widgetId = window.grecaptcha.render(container, parameters);
+        this.set("widgetId", widgetId);
+        this.set("ref", this);
+      }
     }
   },
 
@@ -87,7 +89,7 @@ export default Component.extend({
       script.src = source;
       prior.parentNode.insertBefore(script, prior);
     }
-    getScript("https://www.google.com/recaptcha/api.js", () => {
+    getScript("https://www.google.com/recaptcha/api.js?render=explicit", () => {
       this._super(...arguments);
       next(() => {
         this.renderReCaptcha();
