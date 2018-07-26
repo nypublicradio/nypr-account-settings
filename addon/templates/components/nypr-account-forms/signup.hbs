@@ -97,6 +97,6 @@
       class="account-form-btn gtm__click-tracking"
       data-action="Authentication"
       data-label="Submit sign up"
-      disabled={{or form.status.processing (not captchaFilled)}}>Sign up</button>
+      disabled={{or form.status.processing (not newUser.captchaKey)}}>Sign up</button>
   {{/if}}
 {{/nypr-form}}

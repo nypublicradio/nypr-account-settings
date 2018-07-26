@@ -12,7 +12,7 @@ export default Component.extend({
 
   classNames: ["g-recaptcha"],
 
-  sitekey: "6LdElGQUAAAAAFIba0ubXAg8eRUKYMcJrXTyxU03",
+  sitekey: "6LeJomQUAAAAABVGp6Xk3PUZGXNWaHo3t1D7mwF3",
 
   tabindex: alias("tabIndex"),
 
@@ -49,8 +49,8 @@ export default Component.extend({
     }
   },
 
-  successCallback() {
-    this.get('reCaptchaResponse')();
+  successCallback(recaptchaKey) {
+    this.get('reCaptchaResponse')(recaptchaKey);
   },
 
   expiredCallback() {

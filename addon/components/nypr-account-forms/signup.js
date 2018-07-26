@@ -75,8 +75,8 @@ export default Component.extend({
         }
       });
     },
-    hasCompletedCaptcha() {
-      this.set('captchaComplete', true);
+    hasCompletedCaptcha(reCaptchaResponse) {
+      set(this, 'newUser.captchaKey', reCaptchaResponse);
     }
   },
   onFacebookLoginFailure(message) {
