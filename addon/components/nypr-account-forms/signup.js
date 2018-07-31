@@ -37,7 +37,7 @@ export default Component.extend({
     // Ignore the captcha during testing
     let config = getOwner(this).resolveRegistration('config:environment');
     if (config.environment.indexOf("test") > -1) {
-      set(this, 'captchaComplete', true);
+      set(this, 'newUser.captchaKey', true);
     }
   },
   click() {
