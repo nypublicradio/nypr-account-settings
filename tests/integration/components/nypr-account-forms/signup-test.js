@@ -27,6 +27,7 @@ module('Integration | Component | account signup form', function(hooks) {
     let testLastName = 'User';
     let testEmail = 'test@email.com';
     let testPassword = 'password123';
+    let testCaptchaKey = 'test_captcha_key';
 
     await fillIn('input[name="given_name"]', testFirstName);
     await fillIn('input[name="family_name"]', testLastName);
@@ -39,6 +40,7 @@ module('Integration | Component | account signup form', function(hooks) {
     assert.equal(createRecord.callCount, 1);
     assert.equal(save.callCount, 1);
     assert.deepEqual(fakeUser, {
+      captchaKey: testCaptchaKey,
       givenName: testFirstName,
       familyName: testLastName,
       email: testEmail,
