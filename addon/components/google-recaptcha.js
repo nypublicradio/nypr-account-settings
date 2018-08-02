@@ -6,6 +6,9 @@ import { bind, later } from "@ember/runloop";
 import { merge } from "@ember/polyfills";
 import { isPresent } from "@ember/utils";
 import { next } from "@ember/runloop";
+import { getOwner } from '@ember/application';
+import { computed } from '@ember/object';
+
 
 export default Component.extend({
   /**
@@ -14,7 +17,12 @@ export default Component.extend({
   */
   layout,
   classNames: ["g-recaptcha"],
-  sitekey: "6LeJomQUAAAAABVGp6Xk3PUZGXNWaHo3t1D7mwF3", // public captcha key
+  sitekey: computed(function() {
+    let appConfig = getOwner(this).resolveRegistration("config:environment");
+    return (
+      appConfig.googleCaptchaKey || "6LeJomQUAAAAABVGp6Xk3PUZGXNWaHo3t1D7mwF3"
+    );
+  }),
   tabindex: alias("tabIndex"),
 
   renderReCaptcha() {
