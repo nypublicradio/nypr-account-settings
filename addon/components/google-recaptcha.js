@@ -1,9 +1,7 @@
 import Component from "@ember/component";
 import layout from "../templates/components/google-recaptcha";
-import { alias } from "@ember/object/computed";
 import { isNone } from "@ember/utils";
 import { bind, later } from "@ember/runloop";
-import { merge } from "@ember/polyfills";
 import { next } from "@ember/runloop";
 import { getOwner } from '@ember/application';
 import { computed } from '@ember/object';
@@ -22,7 +20,6 @@ export default Component.extend({
       appConfig.googleCaptchaKey || "6LeJomQUAAAAABVGp6Xk3PUZGXNWaHo3t1D7mwF3"
     );
   }),
-  tabindex: alias("tabIndex"),
 
   renderReCaptcha() {
     if (isNone(window.grecaptcha) || isNone(window.grecaptcha.render)) {
@@ -32,19 +29,11 @@ export default Component.extend({
     } else {
       let container = this.element;
       if (container) {
-        let properties = this.getProperties(
-          "sitekey",
-          "theme",
-          "type",
-          "size",
-          "tabindex",
-          "hl"
-        );
-        let parameters = merge(properties, {
+        let widgetId = window.grecaptcha.render(container, {
+          sitekey: this.get("sitekey"),
           callback: bind(this, "successCallback"),
           "expired-callback": bind(this, "expiredCallback")
         });
-        let widgetId = window.grecaptcha.render(container, parameters);
         this.set("widgetId", widgetId);
       }
     }
