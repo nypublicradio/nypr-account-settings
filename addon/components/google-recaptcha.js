@@ -27,7 +27,9 @@ export default Component.extend({
 
   renderReCaptcha() {
     if (isNone(window.grecaptcha) || isNone(window.grecaptcha.render)) {
-      later(this, 'renderRecaptcha', 500);
+      later(() => {
+        this.renderReCaptcha();
+      }, 500);
     } else {
       let container = this.element;
       if (container) {
