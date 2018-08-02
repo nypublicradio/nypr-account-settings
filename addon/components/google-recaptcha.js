@@ -4,7 +4,6 @@ import { alias } from "@ember/object/computed";
 import { isNone } from "@ember/utils";
 import { bind, later } from "@ember/runloop";
 import { merge } from "@ember/polyfills";
-import { isPresent } from "@ember/utils";
 import { next } from "@ember/runloop";
 import { getOwner } from '@ember/application';
 import { computed } from '@ember/object';
