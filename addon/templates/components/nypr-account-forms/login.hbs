@@ -10,6 +10,9 @@
     <h2 class="account-form-heading">Oops!</h2>
     <p class="account-form-description">The account for {{changeset.email}} hasn’t been verified yet.<br>But don’t worry — verification is easy. Once you click the link in the verification email, your account will be all set up.
     {{#nypr-accounts/resend-button
+      classNames="gtm__click-tracking"
+      data-action="Authentication"
+      data-label="Resend Verification Email"
       target=resendUrl
       email=changeset.email}}
       Resend the email
@@ -20,8 +23,9 @@
     <h2 class="account-form-heading">Log in to {{siteName}}</h2>
     {{#if showSocialLogin}}
       <button type="button"
-        class="account-form-btn account-form-btn--facebook"
+        class="account-form-btn account-form-btn--facebook gtm__click-tracking"
         title="Log in with Facebook"
+        data-action="Authentication"
         {{action 'loginWithFacebook'}}>
         <i class="fa fa-facebook-official"></i>Log in with Facebook
       </button>
@@ -49,12 +53,19 @@
       helplinkUrl='/forgot'
       helplinkText='Forgot Password?'
       submitted=form.status.tried
+      classNames='gtm__click-tracking-container'
+      data-action="Authentication"
     }}
     {{#if loginError}}
       <div class='account-form-error'>
         {{{loginError}}}
       </div>
     {{/if}}
-    <button type="submit" class="account-form-btn" disabled={{form.status.processing}}>Log in</button>
+    <button
+      type="submit"
+      class="account-form-btn gtm__click-tracking"
+      data-action="Authentication"
+      data-label="Submit log in"
+      disabled={{form.status.processing}}>Log in</button>
   {{/if}}
 {{/nypr-form}}

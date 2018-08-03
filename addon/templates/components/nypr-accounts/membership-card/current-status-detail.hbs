@@ -30,7 +30,10 @@ Possible user states to handle:
         </div>
       </div>
       <div class="pledge-update-link">
-        <a href="{{pledge.updateLink}}/{{pledge.orderType}}/?order_id={{pledge.orderKey}}">Update</a>
+        <a
+          class="gtm__click-tracking"
+          data-action="Member Center"
+          href="{{pledge.updateLink}}/{{pledge.orderType}}/?order_id={{pledge.orderKey}}">Update</a>
       </div>
     </div>
   {{/each}}

@@ -90,7 +90,7 @@ module('Integration | Component | nypr accounts/membership card', function(hooks
       'displays credit card details'
     );
     assert.ok(
-      find('[data-test-giving-history-button]').textContent.trim(), 'Giving History',
+      find('[data-test-selector="nypr-card-button"]').textContent.trim(), 'Giving History',
       'has giving history link'
     );
   });
@@ -140,7 +140,7 @@ module('Integration | Component | nypr accounts/membership card', function(hooks
       'donate links to correct sustainer form'
     );
     assert.ok(
-      find('[data-test-giving-history-button]').textContent.trim().match(/Giving History/),
+      find('[data-test-selector="nypr-card-button"]').textContent.trim().match(/Giving History/),
       'has giving history link'
     );
   });
@@ -198,7 +198,7 @@ module('Integration | Component | nypr accounts/membership card', function(hooks
     this.set('pledges', pledgePromise);
     await render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
 
-    await click('.pledge-help-link span');
+    await click('.pledge-help-link');
     assert.ok(
       find('.nypr-account-modal-title').textContent.trim().match(/Membership Help/),
       'displays membership modal'

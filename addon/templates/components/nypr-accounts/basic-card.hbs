@@ -3,7 +3,9 @@
   {{#card.header as |header|}}
     {{header.title text="My Online Account"}}
     {{header.button
-      class="nypr-card-edit-btn"
+      class="nypr-card-edit-btn gtm__click-tracking"
+      data-action="Personal Info"
+      data-label=(if isEditing 'Cancel Edit Info' 'Edit Info')
       click=(action 'toggleEdit')
       text=(if isEditing 'Cancel' 'Edit')}}
   {{/card.header}}
@@ -75,13 +77,16 @@
   <div class="nypr-account-footer">
     <div class="nypr-account-footer-wrapper">
       <button
-        class="nypr-account-cancel"
+        class="nypr-account-cancel gtm__click-tracking"
+        data-action="Personal Info"
+        data-label="Cancel Edit Info"
         data-test-selector="rollback"
         type="button"
         {{action 'rollback' changeset}}>Cancel</button>
 
       <button
-        class="nypr-account-confirm"
+        class="nypr-account-confirm gtm__click-tracking"
+        data-action="Personal Info"
         data-test-selector="save"
         disabled={{or changeset.isPristine changeset.isInvalid}}
         type="submit">Save</button>
@@ -92,7 +97,14 @@
 {{/nypr-card}}
 
 {{#if promptForPassword.isRunning}}
-  {{#nypr-account-modal title="Re-enter Your Password" closeAction=(action 'endTask' 'promptForPassword') as |m|}}
+  {{#nypr-account-modal closeAction=(action 'endTask' 'promptForPassword') as |m|}}
+    {{#m.header as |header|}}
+      {{header.title "Re-enter Your Password"}}
+      {{#header.button}}
+        {{nypr-svg icon="close"}}
+      {{/header.button}}
+    {{/m.header}}
+
     <form {{action (perform verifyPassword) on='submit'}}>
     {{#m.body}}
     <p>
@@ -113,7 +125,9 @@
 
     {{#m.footer}}
       <button
-        class="nypr-account-confirm"
+        class="nypr-account-confirm gtm__click-tracking"
+        data-action="Personal Info"
+        data-label="Confirm Email Change"
         data-test-selector="check-pw"
         >Submit</button>
     {{/m.footer}}
@@ -122,7 +136,14 @@
 {{/if}}
 
 {{#if promptForEmail.isRunning}}
-  {{#nypr-account-modal title="Enter Your Email" closeAction=(action 'endTask' 'promptForEmail') as |m|}}
+  {{#nypr-account-modal closeAction=(action 'endTask' 'promptForEmail') as |m|}}
+    {{#m.header as |header|}}
+      {{header.title "Enter Your Email"}}
+      {{#header.button}}
+        {{nypr-svg icon="close"}}
+      {{/header.button}}
+    {{/m.header}}
+
     <form {{action (perform verifyEmail) on='submit'}}>
     {{#m.body}}
     <p>
@@ -160,7 +181,14 @@
 {{/if}}
 
 {{#if showCheckEmailModal.isRunning}}
-  {{#nypr-account-modal title="Check Your Email" closeAction=(action 'endTask' 'showCheckEmailModal') as |m|}}
+  {{#nypr-account-modal closeAction=(action 'endTask' 'showCheckEmailModal') as |m|}}
+    {{#m.header as |header|}}
+      {{header.title "Check Your Email"}}
+      {{#header.button}}
+        {{nypr-svg icon="close"}}
+      {{/header.button}}
+    {{/m.header}}
+
     <form {{action 'endTask' 'showCheckEmailModal' on='submit'}}>
     {{#m.body}}
       <p>

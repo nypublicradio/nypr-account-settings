@@ -1,5 +1,9 @@
 # nypr-account-settings Changelog
 
+## 0.2.0
+- [FEATURE] analytics upgrade
+- [FEATURE] nypr-account-modal is a contextual component
+
 ## 0.1.3
 - [BUGFIX] use bubbling actions for setPassword
 

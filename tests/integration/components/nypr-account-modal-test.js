@@ -36,7 +36,11 @@ module('Integration | Component | account modal', function(hooks) {
 
     this.set('close', () => assert.ok('close was called'));
     await render(hbs`
-      {{#nypr-account-modal closeAction=(action close) title="foo" as |m|}}
+      {{#nypr-account-modal closeAction=(action close) as |m|}}
+        {{#m.header as |header|}}
+          {{header.title 'foo'}}
+          {{header.button 'close'}}
+        {{/m.header}}
         {{#m.body}}
           body
         {{/m.body}}
@@ -46,7 +50,7 @@ module('Integration | Component | account modal', function(hooks) {
       {{/nypr-account-modal}}
     `);
 
-    assert.equal(find('.nypr-account-modal-title').textContent.trim(), 'foo');
+    assert.equal(find('.nypr-account-modal-title span').textContent.trim(), 'foo');
 
     await click('.nypr-account-modal-close');
   });
