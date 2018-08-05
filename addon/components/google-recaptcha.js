@@ -1,26 +1,17 @@
 import Component from "@ember/component";
-import layout from "../templates/components/google-recaptcha";
 import { isNone } from "@ember/utils";
 import { bind, later } from "@ember/runloop";
 import { next } from "@ember/runloop";
-import { getOwner } from '@ember/application';
-import { computed } from '@ember/object';
-
+import config from "ember-get-config";
+import getScript from "../utils/get-script";
 
 export default Component.extend({
   /**
    * Component based off ember-g-recaptcha ember component:
    * https://github.com/algonauti/ember-g-recaptcha
-  */
-  layout,
+   */
   classNames: ["g-recaptcha"],
-  sitekey: computed(function() {
-    let appConfig = getOwner(this).resolveRegistration("config:environment");
-    return (
-      appConfig.googleCaptchaKey || "6LeJomQUAAAAABVGp6Xk3PUZGXNWaHo3t1D7mwF3"
-    );
-  }),
-
+  sitekey: config.googleCaptchaKey,
   renderReCaptcha() {
     if (isNone(window.grecaptcha) || isNone(window.grecaptcha.render)) {
       later(() => {
@@ -44,7 +35,7 @@ export default Component.extend({
   },
 
   successCallback(recaptchaKey) {
-    this.get('reCaptchaResponse')(recaptchaKey);
+    this.get("reCaptchaResponse")(recaptchaKey);
   },
 
   expiredCallback() {
@@ -52,41 +43,20 @@ export default Component.extend({
   },
 
   didInsertElement() {
-    function getScript(source, callback) {
-      /**
-       * Loads and executes a script asynchronously; using this here so the
-       * reCaptcha script isn't executed on every page, but only when the user
-       * hits the sign up page.
-       *
-       * getScript snippet taken from https://stackoverflow.com/a/28002292
-      */
-      var script = document.createElement("script");
-      var prior = document.getElementsByTagName("script")[0];
-      script.async = 1;
-
-      script.onload = script.onreadystatechange = function(_, isAbort) {
-        if (
-          isAbort ||
-          !script.readyState ||
-          /loaded|complete/.test(script.readyState)
-        ) {
-          script.onload = script.onreadystatechange = null;
-          script = undefined;
-
-          if (!isAbort && callback) {
-            callback();
-          }
-        }
-      };
-
-      script.src = source;
-      prior.parentNode.insertBefore(script, prior);
-    }
-    getScript("https://www.google.com/recaptcha/api.js?render=explicit", () => {
+    // If testing, bypass the getScript call to avoid pulling a live file on
+    // each test run. This jumps straight to the successCallback.
+    if (config.googleCaptchaEndpoint) {
+      getScript(config.googleCaptchaEndpoint, () => {
+        this._super(...arguments);
+        next(() => {
+          this.renderReCaptcha();
+        });
+      });
+    } else {
       this._super(...arguments);
       next(() => {
-        this.renderReCaptcha();
+        this.successCallback("non-working key");
       });
-    });
+    }
   }
 });

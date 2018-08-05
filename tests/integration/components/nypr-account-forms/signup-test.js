@@ -27,7 +27,7 @@ module('Integration | Component | account signup form', function(hooks) {
     let testLastName = 'User';
     let testEmail = 'test@email.com';
     let testPassword = 'password123';
-    let testCaptchaKey = 'test_captcha_key';
+    let testCaptchaKey = 'non-working key';
 
     await fillIn('input[name="given_name"]', testFirstName);
     await fillIn('input[name="family_name"]', testLastName);
