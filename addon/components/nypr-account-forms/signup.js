@@ -9,7 +9,7 @@ import lookupValidator from 'ember-changeset-validations';
 import { inject as service } from '@ember/service';
 import fetch from 'fetch';
 import { rejectUnsuccessfulResponses } from 'nypr-account-settings/utils/fetch-utils';
-import { getOwner } from '@ember/application';
+import config from "ember-get-config";
 
 export default Component.extend({
   layout,
@@ -35,8 +35,7 @@ export default Component.extend({
     set(this, 'changeset.emailConfirmation', get(this, 'email'));
 
     // Ignore the captcha during testing
-    let config = getOwner(this).resolveRegistration('config:environment');
-    if (config.environment.indexOf("test") > -1) {
+    if (config.environment === "test") {
       set(this, 'newUser.captchaKey', "test_captcha_key");
     }
   },
