@@ -23,7 +23,7 @@ export default Component.extend({
         let widgetId = window.grecaptcha.render(container, {
           sitekey: this.get("sitekey"),
           callback: bind(this, "successCallback"),
-          "expired-callback": bind(this, "expiredCallback")
+          "expired-callback": bind(this, "resetReCaptcha")
         });
         this.set("widgetId", widgetId);
       }
@@ -36,10 +36,6 @@ export default Component.extend({
 
   successCallback(recaptchaKey) {
     this.get("reCaptchaResponse")(recaptchaKey);
-  },
-
-  expiredCallback() {
-    this.resetReCaptcha();
   },
 
   didInsertElement() {
