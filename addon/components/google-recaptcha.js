@@ -41,15 +41,14 @@ export default Component.extend({
   didInsertElement() {
     // If testing, bypass the getScript call to avoid pulling a live file on
     // each test run. This jumps straight to the successCallback.
+    this._super(...arguments);
     if (config.googleCaptchaEndpoint) {
       getScript(config.googleCaptchaEndpoint, () => {
-        this._super(...arguments);
         next(() => {
           this.renderReCaptcha();
         });
       });
     } else {
-      this._super(...arguments);
       next(() => {
         this.successCallback("non-working key");
       });
