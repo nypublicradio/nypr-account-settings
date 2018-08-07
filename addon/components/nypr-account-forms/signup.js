@@ -51,6 +51,8 @@ export default Component.extend({
       if (e) {
         if (e.errors && e.errors.code === 'UserNoPassword') {
           set(this, 'signupError', messages.signupNoPassword);
+        } else if (e.errors && e.errors.code === 'BadAccess') {
+          set(this, 'signupError', messages.badAccess);
         } else {
           this.applyErrorToChangeset(e.errors, get(this, 'changeset'));
         }

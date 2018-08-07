@@ -24,4 +24,5 @@ export default {
   socialAuthCancelled:    "We're sorry, but we weren't able to log you in through Facebook.",
   socialAuthNoEmail:      "Unfortunately, we can't authorize your account without permission to view your email address.",
   passwordIncorrect:      "This password is incorrect.",
+  badAccess:              "There was a problem with your signup. Please refresh the page and try again.",
 };
