@@ -1,5 +1,8 @@
 # nypr-account-settings Changelog
 
+## 0.2.2
+- [ENHANCEMENT] Namespace recaptcha.scss as nypr-account-recaptcha.scss
+
 ## 0.2.1
 - [FEATURE] #56 Add reCaptcha to sign-up form
 
