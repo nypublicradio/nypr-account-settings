@@ -1,5 +1,8 @@
 # nypr-account-settings Changelog
 
+## 0.2.1
+- [FEATURE] #56 Add reCaptcha to sign-up form
+
 ## 0.2.0
 - [FEATURE] analytics upgrade
 - [FEATURE] nypr-account-modal is a contextual component
