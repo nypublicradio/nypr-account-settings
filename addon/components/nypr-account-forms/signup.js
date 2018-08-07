@@ -9,6 +9,7 @@ import lookupValidator from 'ember-changeset-validations';
 import { inject as service } from '@ember/service';
 import fetch from 'fetch';
 import { rejectUnsuccessfulResponses } from 'nypr-account-settings/utils/fetch-utils';
+import config from "ember-get-config";
 
 export default Component.extend({
   layout,
@@ -32,6 +33,11 @@ export default Component.extend({
     get(this, 'changeset').validate();
     set(this, 'changeset.email', get(this, 'email'));
     set(this, 'changeset.emailConfirmation', get(this, 'email'));
+
+    // Ignore the captcha during testing
+    if (config.environment === "test") {
+      set(this, 'newUser.captchaKey', "test_captcha_key");
+    }
   },
   click() {
     get(this, 'flashMessages').clearMessages();
@@ -45,6 +51,8 @@ export default Component.extend({
       if (e) {
         if (e.errors && e.errors.code === 'UserNoPassword') {
           set(this, 'signupError', messages.signupNoPassword);
+        } else if (e.errors && e.errors.code === 'BadAccess') {
+          set(this, 'signupError', messages.badAccess);
         } else {
           this.applyErrorToChangeset(e.errors, get(this, 'changeset'));
         }
@@ -67,6 +75,9 @@ export default Component.extend({
           return this.onFacebookLoginFailure(messages.socialAuthCancelled);
         }
       });
+    },
+    hasCompletedCaptcha(reCaptchaResponse) {
+      set(this, 'newUser.captchaKey', reCaptchaResponse);
     }
   },
   onFacebookLoginFailure(message) {

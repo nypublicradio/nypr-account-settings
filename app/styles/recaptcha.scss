@@ -1,0 +1,13 @@
+// Recaptcha creates an unnamed/un-classed div within the DOM, which - because
+// it's not ember - is hidden via `display: none` by the web clients. We need
+// to override this hidden rule, so we show all divs within the .signup route:
+body.signup > div {
+  display: block !important;
+}
+
+.g-recaptcha {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
