@@ -13,9 +13,7 @@ export default Component.extend({
   sortedSustainingPledges: computed.filterBy(
     "sortedPledges",
     "orderType",
-    "sustainer",
-    "isPayment",
-    true
+    "sustainer"
   ),
   sortedOneTimePledges: computed.filterBy(
     "sortedPledges",
