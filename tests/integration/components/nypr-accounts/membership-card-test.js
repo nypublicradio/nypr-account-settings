@@ -113,6 +113,77 @@ module('Integration | Component | nypr accounts/membership card', function(hooks
     );
   });
 
+  test('sustaining pledge but no payments received so far', async function(assert) {
+    let pledges = server.createList('pledge', 1, {
+      isActiveMember: true,
+      isSustainer: true,
+      orderType: 'sustainer',
+      isPayment: false
+    });
+    let pledgePromise = DS.PromiseArray.create({
+      promise: RSVP.Promise.resolve(pledges)
+    });
+    this.set('pledges', pledgePromise);
+
+    await render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
+
+    await click('[data-test-selector="nypr-card-button"]');
+
+    // Should not display the pledge record
+    assert.equal(
+      findAll('.pledge-history-container'),
+      0,
+      'Does not display giving-history tabs'
+    );
+  });
+
+  test('only one sustaining payment, no onetime', async function(assert) {
+    let pledges = server.createList('pledge', 1, {
+      isActiveMember: true,
+      isSustainer: true,
+      orderType: 'sustainer',
+      isPayment: true
+    });
+    let pledgePromise = DS.PromiseArray.create({
+      promise: RSVP.Promise.resolve(pledges)
+    });
+    this.set('pledges', pledgePromise);
+
+    await render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
+
+    await click('[data-test-selector="nypr-card-button"]');
+
+    // Should not display the pledge record
+    assert.equal(
+      findAll('div.nypr-tabs-tablist a').length,
+      1,
+      'shows only one tab - the Sustaining Dontations tab'
+    );
+  });
+
+  test('only onetime pledges, no sustaining payments', async function(assert) {
+    let pledges = server.createList('pledge', 1, {
+      isActiveMember: true,
+      orderType: 'onetime',
+      isPayment: true
+    });
+    let pledgePromise = DS.PromiseArray.create({
+      promise: RSVP.Promise.resolve(pledges)
+    });
+    this.set('pledges', pledgePromise);
+
+    await render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
+
+    await click('[data-test-selector="nypr-card-button"]');
+
+    // Should not display the pledge record
+    assert.equal(
+      findAll('div.nypr-tabs-tablist a').length,
+      1,
+      'shows only one tab - the One-time donations tab'
+    );
+  });
+
   // Active one-time member tests
 
   test('displays most recent active pledge details if active onetime member', async function(assert) {

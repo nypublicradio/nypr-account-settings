@@ -12,4 +12,5 @@ export default Factory.extend({
   creditCardLast4Digits: '0302',
   isActiveMember: faker.random.boolean,
   isSustainer: faker.random.boolean,
+  isPayment: faker.random.boolean,
 });
