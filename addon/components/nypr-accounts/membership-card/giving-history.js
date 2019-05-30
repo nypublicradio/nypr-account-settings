@@ -16,7 +16,7 @@ export default Component.extend({
     "sustainer"
   ),
   sortedSustainingPayments: computed.filterBy(
-    "sortedSustainingPledges"
+    "sortedSustainingPledges",
     "isPayment",
     true
   ),
