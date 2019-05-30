@@ -9,7 +9,9 @@ module("Acceptance | download tax letter", function(hooks) {
   test("tax letter link is visible", async function(assert) {
     let lastYear = moment().subtract(1, "year").year();
     server.create("user");
-    server.createList("pledge", 20);
+    server.createList("pledge", 1, {
+      orderDate: lastYear + "-03-26T11:57:22.139Z"
+    });
     await visit("/");
 
     assert.equal(
