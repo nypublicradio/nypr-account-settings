@@ -1,6 +1,6 @@
   {{#nypr-tabs selection=selection as |tabs|}}
     {{#tabs.tablist as |tablist|}}
-      {{#if sortedSustainingPledges}}
+      {{#if sortedSustainingPayments}}
         {{#tablist.tab "TabA" on-select=(action (mut selection))}}Sustaining donations{{/tablist.tab}}
       {{/if}}
       {{#if sortedOneTimePledges}}
@@ -9,7 +9,7 @@
     {{/tabs.tablist}}
 
     {{#tabs.tabpanel "TabA"}}
-      {{#each sortedSustainingPledges as |pledge|}}
+      {{#each sortedSustainingPayments as |pledge|}}
       <div class="pledge-container pledge-history-container">
         <div class="pledge-date">{{moment-format pledge.orderDate 'MMM D, YYYY'}}</div>
         <div class="pledge-fund-and-premium">
