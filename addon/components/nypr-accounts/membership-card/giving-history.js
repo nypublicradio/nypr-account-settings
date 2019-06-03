@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import layout from '../../../templates/components/nypr-accounts/membership-card/giving-history';
-import { get } from '@ember/object';
+//import { get } from '@ember/object';
 import { computed } from '@ember/object';
 
 export default Component.extend({
@@ -16,16 +16,15 @@ export default Component.extend({
     "orderType",
     "sustainer"
   ),
+/*
   sustainingPayments: computed("sortedSustainerPledges", function() {
     return this.get("pledges").filter(pledge => {
       return (get(pledge, "orderType") === "sustainer" &&
               get(pledge, "isPayment") === true);
     });
   }),
+*/
+  sustainingPayments: computed.filterBy("sortedSustainingPledges", "isPayment", true),
   sortedSustainingPayments: computed.sort("sustainingPayments", "orderDateSorting"),
-  sortedOneTimePledges: computed.filterBy(
-    "sortedPledges",
-    "orderType",
-    "onetime"
-  ),
+  sortedOneTimePledges: computed.filterBy( "sortedPledges", "orderType", "onetime"),
 });
