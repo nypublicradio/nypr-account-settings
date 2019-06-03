@@ -16,12 +16,13 @@ export default Component.extend({
     "orderType",
     "sustainer"
   ),
-  sortedSustainingPayments: computed("sortedSustainerPledges", function() {
+  sustainingPayments: computed("sortedSustainerPledges", function() {
     return this.get("pledges").filter(pledge => {
       return (get(pledge, "orderType") === "sustainer" &&
               get(pledge, "isPayment") === true);
     });
   }),
+  sortedSustainingPayments: computed.sort("sustainingPayments", "orderDateSorting"),
   sortedOneTimePledges: computed.filterBy(
     "sortedPledges",
     "orderType",
