@@ -1,5 +1,8 @@
 # nypr-account-settings Changelog
 
+## 0.2.4
+- [ENHANCEMENT] Handles is_payment on the account giving history card
+
 ## 0.2.2
 - [ENHANCEMENT] Namespace recaptcha.scss as nypr-account-recaptcha.scss
 
