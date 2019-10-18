@@ -1,5 +1,8 @@
 # nypr-account-settings Changelog
 
+## 0.2.5
+- [CHORE] Upgrade ember-changeset-validations to 2.1.0
+
 ## 0.2.4
 - [ENHANCEMENT] Handles is_payment on the account giving history card
 
