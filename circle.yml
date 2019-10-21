@@ -29,6 +29,15 @@ save_node: &save_node
     <<: *node_key
     paths:
       - node_modules
+      - ../codeclimate
+
+install_codeclimate: &install_codeclimate
+  run:
+    name: Install CodeClimate
+    command: |
+      mkdir -p ../codeclimate
+      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ../codeclimate/cc-test-reporter
+      chmod +x ../codeclimate/cc-test-reporter
 
 restore_bower: &restore_bower
   restore_cache:
@@ -76,6 +85,7 @@ jobs:
 
       - <<: *restore_node
       - <<: *install_node
+      - <<: *install_codeclimate
       - <<: *save_node
 
       - persist_to_workspace:
@@ -92,14 +102,17 @@ jobs:
     steps:
       - checkout
       - <<: *restore_node
-
+      - run:
+          name: Set up CodeClimate
+          command: ../codeclimate/cc-test-reporter before-build
       - run:
           name: Run addon tests
           command: |
-            sudo yarn global add greenkeeper-lockfile@1
-            greenkeeper-lockfile-update
-            npx ember test
-            greenkeeper-lockfile-upload
+            COVERAGE=true npx ember test
+      - run:
+          name: Upload coverate reports to CodeClimate
+          command: ../codeclimate/cc-test-reporter after-build --exit-code $?
+
 
       - store_test_results:
           path: test-results/
