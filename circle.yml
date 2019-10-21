@@ -108,7 +108,7 @@ jobs:
       - run:
           name: Run addon tests
           command: |
-            npx ember test
+            COVERAGE=true npx ember test
       - run:
           name: Upload coverate reports to CodeClimate
           command: ../codeclimate/cc-test-reporter after-build --exit-code $?
