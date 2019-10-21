@@ -20,7 +20,7 @@
     "upgrade-nypr": "yarn upgrade nypr-ui nypr-auth"
   },
   "dependencies": {
-    "ember-changeset": "^1.4.1",
+    "ember-changeset": "^2.0.0",
     "ember-changeset-validations": "^2.1.0",
     "ember-cli-babel": "^6.6.0",
     "ember-cli-htmlbars": "^2.0.1",
