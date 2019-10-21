@@ -1,5 +1,8 @@
 # nypr-account-settings Changelog
 
+## 0.2.6
+- [CHORE] Upgrade ember-changeset to 2.0.0
+
 ## 0.2.5
 - [CHORE] Upgrade ember-changeset-validations to 2.1.0
 
