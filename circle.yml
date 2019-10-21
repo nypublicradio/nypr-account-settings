@@ -29,6 +29,7 @@ save_node: &save_node
     <<: *node_key
     paths:
       - node_modules
+      - ../codeclimate
 
 install_codeclimate: &install_codeclimate
   run:
@@ -91,7 +92,6 @@ jobs:
           root: /home/circleci
           paths:
             - nypr-account-settings
-            - codeclimate
 
   test:
     <<: *defaults
