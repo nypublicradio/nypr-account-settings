@@ -1,6 +1,6 @@
 {
   "name": "nypr-account-settings",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A set of components to create an Account Settings section in an NYPR web client.",
   "keywords": [
     "ember-addon"
