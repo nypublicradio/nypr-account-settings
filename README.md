@@ -1,5 +1,7 @@
 # nypr-account-settings
 [![CircleCI](https://img.shields.io/circleci/project/github/nypublicradio/nypr-account-settings.svg?style=flat-square-blue)](https://circleci.com/gh/nypublicradio/nypr-account-settings) [![GitHub release](https://img.shields.io/github/release/nypublicradio/nypr-account-settings.svg?style=flat-square)](https://github.com/nypublicradio/nypr-account-settings/releases/latest) [![GitHub pull requests](https://img.shields.io/github/issues-pr/nypublicradio/nypr-account-settings.svg?style=flat-square)](https://github.com/nypublicradio/nypr-account-settings/pulls) [![GitHub contributors](https://img.shields.io/github/contributors/nypublicradio/nypr-account-settings.svg?style=flat-square)](https://github.com/nypublicradio/nypr-account-settings/graphs/contributors)
+[![Maintainability](https://api.codeclimate.com/v1/badges/9df703e9a2f30c83f382/maintainability)](https://codeclimate.com/github/nypublicradio/nypr-account-settings/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/9df703e9a2f30c83f382/test_coverage)](https://codeclimate.com/github/nypublicradio/nypr-account-settings/test_coverage)
 
 [Short description of the addon.]
 
