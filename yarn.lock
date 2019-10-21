@@ -4718,7 +4718,7 @@ ember-cookies@^0.3.0:
     ember-cli-babel "^7.1.0"
     ember-getowner-polyfill "^1.1.0 || ^2.0.0"
 
-ember-data@^3.1.1:
+ember-data@^3.4.0:
   version "3.13.1"
   resolved "https://registry.yarnpkg.com/ember-data/-/ember-data-3.13.1.tgz#a6b31703de9feaae19f2a0fccfc72185808174dd"
   integrity sha512-1mxmnvwWXjqfjGXwukHhArJvH829pEdWXiOnZXIDLC2K1PfFHkXxBjONlssGRBPI2rS4Oaa2M6/47uAyZ4mkEA==
