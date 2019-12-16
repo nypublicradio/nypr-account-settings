@@ -1,4 +1,6 @@
 # nypr-account-settings Changelog
+## 0.2.7
+- [CHORE] Upgrade ember-modal-dialog to ^3.0.0-beta.4
 
 ## 0.2.6
 - [CHORE] Upgrade ember-changeset to 2.0.0
