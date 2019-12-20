@@ -11,7 +11,17 @@
   {{/nypr-floating-banner}}
 
   {{#m.panel to=1 classNames="nypr-membership-info" title="My Donation Status" as |card|}}
-    {{card.header title="My Donation Status"}}
+
+    {{#card.header as |header|}}
+      {{header.title text="Donation Status & Address"}}
+      {{header.button 
+        text="Edit"
+        class="nypr-card-edit-btn gtm__click-tracking"
+        data-action="Member Center"
+        click=(action (mut enableLoginNoticeModal) true)
+      }}
+    {{/card.header}}
+
 
     {{#if emailIsPendingVerification}}
       {{#card.alert}}
@@ -91,6 +101,10 @@
 
 {{#if enableModal}}
   {{nypr-accounts/membership-card/help-modal siteDomain=siteDomain enableModal=enableModal}}
+{{/if}}
+
+{{#if enableLoginNoticeModal}}
+  {{nypr-accounts/membership-card/login-notice-modal siteDomain=siteDomain enableModal=enableLoginNoticeModal}}
 {{/if}}
 
 {{#if enableDownloadModal}}

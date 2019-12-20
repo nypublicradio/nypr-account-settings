@@ -1,0 +1,27 @@
+{{#if hasBlock}}
+  {{yield}}
+{{else}}
+  {{#nypr-account-modal closeAction=(action (mut enableModal) false) as |m|}}
+  <div class="login-notice">
+    {{#m.header as |header|}}
+      {{header.title "Login Notice"}}
+      {{#header.button}}
+        {{nypr-svg icon="close"}}
+      {{/header.button}}
+    {{/m.header}}
+
+    {{#m.body}}
+    <h2>One more thing...</h2>
+    <p>
+      For security reasons, you'll need to login one more time on the next page. After logging in, you'll be able to update your donation. 
+    </p>
+    {{/m.body}}
+    {{#m.footer}}
+      <button
+        class="nypr-account-confirm"
+        data-test-selector="confirm-disable"
+        {{action "goToLogin"}}>Okay, let's go!</button>
+    {{/m.footer}}
+  </div>
+  {{/nypr-account-modal}}
+{{/if}}
