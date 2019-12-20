@@ -25,7 +25,7 @@ module('Integration | Component | nypr accounts/membership card', function(hooks
     await render(hbs`{{nypr-accounts/membership-card pledges=pledges}}`);
 
     assert.equal(
-      find('.nypr-card-header').textContent.trim(), 'My Donation Status',
+      find('.nypr-card-header .nypr-card-title').textContent.trim(), 'Donation Status & Address',
       'has membership header'
     );
     assert.ok(find('.pledge-help-link'), 'has help link');
