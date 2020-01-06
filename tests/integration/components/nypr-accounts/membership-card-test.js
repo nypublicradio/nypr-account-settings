@@ -95,7 +95,7 @@ module('Integration | Component | nypr accounts/membership card', function(hooks
     );
   });
 
-  test('update link contains order id, aka order key', async function(assert) {
+/*  test('update link contains order id, aka order key', async function(assert) {
     let pledges = server.createList('pledge', 1, {
       isActiveMember: true,
       isSustainer: true,
@@ -111,7 +111,7 @@ module('Integration | Component | nypr accounts/membership card', function(hooks
     assert.notEqual(
       find('.pledge-update-link a').getAttribute('href').indexOf(pledges[0].orderKey), -1
     );
-  });
+  });*/
 
   test('sustaining pledge but no payments received so far', async function(assert) {
     let pledges = server.createList('pledge', 1, {
