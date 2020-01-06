@@ -6,14 +6,14 @@ import layout from '../../../templates/components/nypr-accounts/membership-card/
 export default Component.extend({
   classNames: ["login-notice"],
   layout,
-  pledgePrefix: computed(function() {
+  pledgeEnv: computed(function() {
     let { environment } = getOwner(this).resolveRegistration('config:environment');
     return environment === 'development' ? 'pledge-demo' : 'pledge3';
   }),
   pledgeLocation: computed(function(){
     let siteDomain= this.get("siteDomain")
-    let pledgePrefix = this.get("pledgePrefix")
-    return `https://${pledgePrefix}.${siteDomain}.org/campaign/mc-${siteDomain}/sustainer#login`;
+    let pledgeEnv = this.get("pledgeEnv")
+    return `https://${pledgeEnv}.${siteDomain}.org/campaign/mc-${siteDomain}/sustainer#login`;
   }),
   actions: {
     goToLogin() {
