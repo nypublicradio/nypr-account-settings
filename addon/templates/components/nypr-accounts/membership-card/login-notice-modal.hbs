@@ -17,10 +17,14 @@
     </p>
     {{/m.body}}
     {{#m.footer}}
-      <button
+        <a
         class="nypr-account-confirm"
         data-test-selector="confirm-disable"
-        {{action "goToLogin"}}>Okay, let's go!</button>
+        data-action="Pledge Client"
+        data-label="Okay, let's go!"
+        href="{{pledgeLocation}}">
+        Okay, let's go!
+      </a>
     {{/m.footer}}
   </div>
   {{/nypr-account-modal}}
