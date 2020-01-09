@@ -41,6 +41,12 @@
 .nypr-account-modal-body {
   padding: 27px;
   line-height: 1.6;
+
+  h2 {
+    font-weight: 600;
+    font-size: 1.3em;
+    line-height: 1em;
+  }
 }
 
 .nypr-account-modal-title + .nypr-account-modal-body {

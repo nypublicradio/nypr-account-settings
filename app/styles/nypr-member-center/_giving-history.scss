@@ -48,8 +48,8 @@
   }
 }
 
-.giving-history-link {
-  @include small-gray-font;
+.giving-history-link, .pledge-help-link {
+  @include extra-small-blue-link;
 
   border: none;
   background: none;
@@ -70,7 +70,7 @@
 }
 
 .tax-letter__download-icon {
-  fill: #8f8f8f;
+  fill: $blue;
   height: 15px;
   margin-right: 3px;
   pointer-events: none;

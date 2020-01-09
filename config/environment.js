@@ -4,6 +4,7 @@ module.exports = function(environment, appConfig) {
   let ENV = {
     environment: environment,
     authService: appConfig.authAPI,
+    pledgeDomain: appConfig.pledgeDomain,
     googleCaptchaKey:
       appConfig.googleCaptchaKey || "6LeJomQUAAAAABVGp6Xk3PUZGXNWaHo3t1D7mwF3",
     googleCaptchaEndpoint:
