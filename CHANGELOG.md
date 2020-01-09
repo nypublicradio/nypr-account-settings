@@ -1,4 +1,7 @@
 # nypr-account-settings Changelog
+## 0.3.0
+- [FEATURE] Login Notice modal point to new pledge client
+
 ## 0.2.7
 - [CHORE] Upgrade ember-modal-dialog to ^3.0.0-beta.4
 
