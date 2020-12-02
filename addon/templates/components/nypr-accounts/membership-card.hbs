@@ -14,7 +14,7 @@
 
     {{#card.header as |header|}}
       {{header.title text="Donation Status & Address"}}
-      {{header.button 
+      {{header.button
         text="Edit"
         class="nypr-card-edit-btn gtm__click-tracking"
         data-action="Member Center"
@@ -58,6 +58,11 @@
         pledges=pledges
         siteDomain=siteDomain
         siteName=siteName}}
+    {{/if}}
+
+    {{#if pledges.isRejected}}
+      <p>Your membership details could not be retrieved at this time. Please
+      try again later. We apologize for this inconvenience.</p>
     {{/if}}
 
     <div class="pledge-tools">
