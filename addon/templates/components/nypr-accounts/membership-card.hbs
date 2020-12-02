@@ -50,6 +50,11 @@
         siteName=siteName}}
     {{/if}}
 
+    {{#if pledges.isRejected}}
+      <p>Your membership details could not be retrieved at this time. Please
+      try again later. We apologize for this inconvenience.</p>
+    {{/if}}
+
     <div class="pledge-tools">
       {{#if pledges}}
       {{#card.button
