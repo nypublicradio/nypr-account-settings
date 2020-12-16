@@ -1,4 +1,7 @@
 # nypr-account-settings Changelog
+## 0.3.1
+- [FEATURE] Gracefully handle failed NetForum API in member center
+
 ## 0.3.0
 - [FEATURE] Login Notice modal point to new pledge client
 
