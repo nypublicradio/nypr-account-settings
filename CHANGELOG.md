@@ -1,4 +1,7 @@
 # nypr-account-settings Changelog
+## 0.2.8
+- [FEATURE] Gracefully handle failed NetForum API in member center
+
 ## 0.2.7
 - [CHORE] Upgrade ember-modal-dialog to ^3.0.0-beta.4
 
