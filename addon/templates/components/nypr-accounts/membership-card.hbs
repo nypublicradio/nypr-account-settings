@@ -1,101 +1,101 @@
 {{#nypr-multi-card as |m|}}
 
-  {{#nypr-floating-banner}}
-    <div class="nypr-survey">
-      {{nypr-svg className="nypr-survey__icon" icon="people-in-circles"}}
+{{#m.panel to=1 classNames="nypr-membership-info" title="My Donation Status" as |card|}}
+  {{card.header title="My Donation Status"}}
 
-      <div class="nypr-survey__text">
-        We’re introducing a new way for you to manage current or future donations to New York Public Radio. <a href="https://wnyc.typeform.com/to/aoSJfN" target="_blank" rel="noopener noreferrer">Tell us what you think &gt;</a>
-      </div>
-    </div>
-  {{/nypr-floating-banner}}
+  {{#unless pledgeManagerEnabled}}
+    <p>Manage your account and find your tax documents in a new place.</p>
+    <a
+      class="nypr"
+      href="https://pledge.wnyc.org/user"
+      target="_blank" rel="noopener"
+      aria-label="Manage My Account (Opens in new window)">Manage My Account</a>
+  {{/unless}}
 
-  {{#m.panel to=1 classNames="nypr-membership-info" title="My Donation Status" as |card|}}
-    {{card.header title="My Donation Status"}}
-
-    {{#if emailIsPendingVerification}}
-      {{#card.alert}}
-        A verification email has been sent to {{user.email}}. To view any membership info associated with this email address, you must click the button in your email.
-        <div>
+  {{#if emailIsPendingVerification}}
+    {{#card.alert}}
+      A verification email has been sent to {{user.email}}. To view any membership info associated with this email address,
+      you must click the button in your email.
+      <div>
         {{#nypr-accounts/resend-button resetDelay=resetDelay autoReset=autoReset
-          resendAction=resendVerificationEmail
-          classNames="gtm__click-tracking"
-          data-action="Authentication"
-          data-label="Resend Verification Email"
+        resendAction=resendVerificationEmail
+        classNames="gtm__click-tracking"
+        data-action="Authentication"
+        data-label="Resend Verification Email"
         }}
-          Resend email
+        Resend email
         {{/nypr-accounts/resend-button}}
-        </div>
-      {{/card.alert}}
-    {{/if}}
+      </div>
+    {{/card.alert}}
+  {{/if}}
 
+  {{#if pledgeManagerEnabled}}
     {{#if pledges.isPending}}
       {{animated-loading-icon
-        color='#CCC'
-        width=34
-        height=34
-        outerScale=12
-        innerScale=6
-        radius=0.0025
-        dotRadius=2
-        lineWidth=4
-        classNames="membership-loading-animation"
+      color='#CCC'
+      width=34
+      height=34
+      outerScale=12
+      innerScale=6
+      radius=0.0025
+      dotRadius=2
+      lineWidth=4
+      classNames="membership-loading-animation"
       }}
     {{/if}}
 
     {{#if pledges.isFulfilled}}
-      {{nypr-accounts/membership-card/current-status-detail
-        pledges=pledges
-        siteDomain=siteDomain
-        siteName=siteName}}
+    {{nypr-accounts/membership-card/current-status-detail
+    pledges=pledges
+    siteDomain=siteDomain
+    siteName=siteName}}
     {{/if}}
 
     {{#if pledges.isRejected}}
       <p>Your membership details could not be retrieved at this time. Please
-      try again later. We apologize for this inconvenience.</p>
+        try again later. We apologize for this inconvenience.</p>
     {{/if}}
 
     <div class="pledge-tools">
       {{#if pledges}}
       {{#card.button
-        data-test-giving-history-button
-        data-action="Member Center"
-        classNames="giving-history-link gtm__click-tracking"}}
-        Giving History
+      data-test-giving-history-button
+      data-action="Member Center"
+      classNames="giving-history-link gtm__click-tracking"}}
+      Giving History
       {{/card.button}}
       {{/if}}
       {{#if hasPledgesInPastTaxYear}}
-        <div
-          class="gtm__click-tracking tax-letter-link"
-          data-action="Member Center"
-          data-label="Tax Document"
-          {{action (action (mut enableDownloadModal) true)}}>
-          <span>
-            {{nypr-svg className="tax-letter__download-icon" icon="download-arrow"}} <span>{{previousYear}} Tax Receipt</span>
-          </span>
-        </div>
+      <div class="gtm__click-tracking tax-letter-link" data-action="Member Center" data-label="Tax Document" {{action
+        (action (mut enableDownloadModal) true)}}>
+        <span>
+          {{nypr-svg className="tax-letter__download-icon" icon="download-arrow"}} <span>{{previousYear}} Tax Receipt</span>
+        </span>
+      </div>
       {{/if}}
-      <div
-        class="pledge-help-link gtm__click-tracking"
-        data-action="Member Center"
-        {{action (action (mut enableModal) true)}}>Help</div>
+      <div class="pledge-help-link gtm__click-tracking" data-action="Member Center" {{action (action (mut enableModal)
+        true)}}>Help</div>
     </div>
-  {{/m.panel}}
+  {{/if}}
+{{/m.panel}}
 
+{{#if pledgeManagerEnabled}}
   {{#m.panel to=0 title="Giving History" as |card|}}
     {{#card.header class="giving-history-header" as |header|}}
-      {{card.button text="< Back" class="nypr-card-edit-btn pledge-payment-history-back-button"}}
-      {{header.title class="giving-history-title"}}
-    {{/card.header}}
+    {{card.button text="< Back" class="nypr-card-edit-btn pledge-payment-history-back-button" }}
+    {{header.title class="giving-history-title" }} {{/card.header}}
     {{nypr-accounts/membership-card/giving-history
       pledges=pledges
       showPaymentHistory=showPaymentHistory
       enableModal=enableModal}}
   {{/m.panel}}
+{{/if}}
 {{/nypr-multi-card}}
 
 {{#if enableModal}}
-  {{nypr-accounts/membership-card/help-modal siteDomain=siteDomain enableModal=enableModal}}
+  {{nypr-accounts/membership-card/help-modal
+    siteDomain=siteDomain
+    enableModal=enableModal}}
 {{/if}}
 
 {{#if enableDownloadModal}}

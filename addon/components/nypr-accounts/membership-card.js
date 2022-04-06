@@ -7,6 +7,7 @@ import { inject as service } from '@ember/service';
 export default Component.extend({
   layout,
   session: service(),
+  pledgeManagerEnabled: true,
   previousYear: computed(function() {
     return moment()
       .subtract(1, "year")
