@@ -4,9 +4,9 @@
   {{card.header title="My Donation Status"}}
 
   {{#unless pledgeManagerEnabled}}
-    <p>{{pledgeRedirectMessage}}</p>
+    <p class="membership-redirect-message">{{pledgeRedirectMessage}}</p>
     <a
-      class="nypr"
+      class="nypr membership-redirect-link"
       href={{pledgeRedirectUrl}}
       target="_blank" rel="noopener"
       aria-label="Manage My Account (Opens in new window)">Manage My Account</a>

@@ -31,6 +31,18 @@ module('Integration | Component | nypr accounts/membership card', function(hooks
     assert.ok(find('.pledge-help-link'), 'has help link');
   });
 
+  test('it displays the redirect message when the pledge manager is disabled', async function(assert) {
+    await render(hbs`{{nypr-accounts/membership-card pledgeManagerEnabled=false}}`);
+
+    assert.equal(
+      find('.nypr-card-header').textContent.trim(), 'My Donation Status',
+      'has membership header'
+    );
+
+    assert.ok(find('.membership-redirect-message'), 'has redirect message');
+    assert.ok(find('.membership-redirect-link'), 'has redirect link');
+  });
+
   // Active sustaining member tests
 
   test('displays correct number of sustaining pledges', async function(assert) {
