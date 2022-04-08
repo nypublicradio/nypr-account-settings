@@ -4,17 +4,17 @@
   {{card.header title="My Donation Status"}}
 
   {{#unless pledgeManagerEnabled}}
-    <p>Manage your account and find your tax documents in a new place.</p>
+    <p>{{pledgeRedirectMessage}}</p>
     <a
       class="nypr"
-      href="https://pledge.wnyc.org/user"
+      href={{pledgeRedirectUrl}}
       target="_blank" rel="noopener"
       aria-label="Manage My Account (Opens in new window)">Manage My Account</a>
   {{/unless}}
 
   {{#if emailIsPendingVerification}}
     {{#card.alert}}
-      A verification email has been sent to {{user.email}}. To view any membership info associated with this email address,
+      A verification email has been sent to {{user.email}}. To finish signing up
       you must click the button in your email.
       <div>
         {{#nypr-accounts/resend-button resetDelay=resetDelay autoReset=autoReset
