@@ -1,4 +1,7 @@
 # nypr-account-settings Changelog
+## 0.2.9
+- [FEATURE] Add option to disable pledge info / pledge manager in member center
+
 ## 0.2.8
 - [FEATURE] Gracefully handle failed NetForum API in member center
 
