@@ -9,7 +9,7 @@
       class="nypr membership-redirect-link"
       href={{pledgeRedirectUrl}}
       target="_blank" rel="noopener"
-      aria-label="Manage My Account (Opens in new window)">Manage My Account</a>
+      aria-label={{concat pledgeRedirectUrlText ' (Opens in new window)' }} >{{pledgeRedirectUrlText}}</a>
   {{/unless}}
 
   {{#if emailIsPendingVerification}}
