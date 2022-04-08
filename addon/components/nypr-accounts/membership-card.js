@@ -7,6 +7,9 @@ import { inject as service } from '@ember/service';
 export default Component.extend({
   layout,
   session: service(),
+  pledgeManagerEnabled: true,
+  pledgeRedirectMessage: "Manage your account and find your tax documents in a new place.",
+  pledgeRedirectUrl: "https://pledge.wnyc.org/user",
   previousYear: computed(function() {
     return moment()
       .subtract(1, "year")
