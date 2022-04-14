@@ -3,14 +3,16 @@
 {{#m.panel to=1 classNames="nypr-membership-info" title="My Donation Status" as |card|}}
   {{card.header title="My Donation Status"}}
 
-  {{#unless pledgeManagerEnabled}}
-    <p class="membership-redirect-message">{{pledgeRedirectMessage}}</p>
+  {{#if customStatusMessage}}
+    <p class="membership-redirect-message">{{{customStatusMessage}}}</p>
+  {{/if}}
+  {{#if customStatusUrl}}
     <a
       class="nypr membership-redirect-link"
       href={{pledgeRedirectUrl}}
       target="_blank" rel="noopener"
-      aria-label={{concat pledgeRedirectUrlText ' (Opens in new window)' }} >{{pledgeRedirectUrlText}}</a>
-  {{/unless}}
+      aria-label={{concat customStatusUrlText ' (Opens in new window)' }} >{{customStatusUrl}}</a>
+  {{/if}}
 
   {{#if emailIsPendingVerification}}
     {{#card.alert}}

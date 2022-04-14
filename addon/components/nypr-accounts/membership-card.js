@@ -8,9 +8,9 @@ export default Component.extend({
   layout,
   session: service(),
   pledgeManagerEnabled: true,
-  pledgeRedirectMessage: "Manage your account and find your tax documents in a new place.",
-  pledgeRedirectUrl: "https://pledge.wnyc.org/user",
-  pledgeRedirectUrlText: "Manage My Account",
+  customStatusMessage: null,
+  customStatusUrl: null,
+  customStatusUrlText: null,
   previousYear: computed(function() {
     return moment()
       .subtract(1, "year")
