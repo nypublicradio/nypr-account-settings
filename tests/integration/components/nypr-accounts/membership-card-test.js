@@ -32,9 +32,9 @@ module('Integration | Component | nypr accounts/membership card', function(hooks
   });
 
   test('it displays the custom message and link', async function(assert) {
-    let message = "Test 123"
-    let link = "http://example.com"
-    let linkText = "Go to another page"
+    const message = "Test 123"
+    const link = "http://example.com"
+    const linkText = "Go to another page"
     this.set('message', message);
     this.set('link', link);
     this.set('linkText', linkText);
@@ -42,18 +42,37 @@ module('Integration | Component | nypr accounts/membership card', function(hooks
     await render(hbs`{{nypr-accounts/membership-card pledgeManagerEnabled=false customStatusMessage=message customStatusLinkUrl=link customStatusLinkText=linkText}}`);
 
     assert.equal(
-      find('.nypr-card-header').textContent.trim(), 'My Donation Status',
+      find('.nypr-card-header').textContent.trim(),
+      'My Donation Status',
       'has membership header'
     );
 
     assert.equal(
-      find('.membership-custom-message').textContent.trim(), message,
+      find('.membership-custom-message').textContent.trim(),
+      message,
       'has custom message'
     );
 
     assert.equal(
-      find('.membership-custom-link').textContent.trim(), linkText,
+      find('.membership-custom-link').textContent.trim(),
+      linkText,
       'has custom link'
+    );
+  });
+
+  test('it does not display the custom message and link when unset', async function(assert) {
+    await render(hbs`{{nypr-accounts/membership-card pledgeManagerEnabled=false}}`);
+
+    assert.equal(
+      findAll('.membership-custom-message'),
+      0,
+      'has no custom message'
+    );
+
+    assert.equal(
+      findAll('.membership-custom-link'),
+      0,
+      'has no custom link'
     );
   });
 

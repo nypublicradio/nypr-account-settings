@@ -8,9 +8,9 @@ export default Component.extend({
   layout,
   session: service(),
   pledgeManagerEnabled: true,
-  customStatusMessage: null,
-  customStatusUrl: null,
-  customStatusUrlText: null,
+  customStatusMessage: "",
+  customStatusUrl: "",
+  customStatusUrlText: "",
   previousYear: computed(function() {
     return moment()
       .subtract(1, "year")
