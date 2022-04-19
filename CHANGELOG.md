@@ -1,4 +1,8 @@
 # nypr-account-settings Changelog
+
+## 0.2.10
+- [FEATURE] Make custom pledge manager message more generic / flexible
+
 ## 0.2.9
 - [FEATURE] Add option to disable pledge info / pledge manager in member center
 
