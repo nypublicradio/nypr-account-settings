@@ -31,16 +31,49 @@ module('Integration | Component | nypr accounts/membership card', function(hooks
     assert.ok(find('.pledge-help-link'), 'has help link');
   });
 
-  test('it displays the redirect message when the pledge manager is disabled', async function(assert) {
-    await render(hbs`{{nypr-accounts/membership-card pledgeManagerEnabled=false}}`);
+  test('it displays the custom message and link', async function(assert) {
+    const message = "Test 123"
+    const link = "http://example.com"
+    const linkText = "Go to another page"
+    this.set('message', message);
+    this.set('link', link);
+    this.set('linkText', linkText);
+
+    await render(hbs`{{nypr-accounts/membership-card pledgeManagerEnabled=false customStatusMessage=message customStatusLinkUrl=link customStatusLinkText=linkText}}`);
 
     assert.equal(
-      find('.nypr-card-header').textContent.trim(), 'My Donation Status',
+      find('.nypr-card-header').textContent.trim(),
+      'My Donation Status',
       'has membership header'
     );
 
-    assert.ok(find('.membership-redirect-message'), 'has redirect message');
-    assert.ok(find('.membership-redirect-link'), 'has redirect link');
+    assert.equal(
+      find('.membership-custom-message').textContent.trim(),
+      message,
+      'has custom message'
+    );
+
+    assert.equal(
+      find('.membership-custom-link').textContent.trim(),
+      linkText,
+      'has custom link'
+    );
+  });
+
+  test('it does not display the custom message and link when unset', async function(assert) {
+    await render(hbs`{{nypr-accounts/membership-card pledgeManagerEnabled=false}}`);
+
+    assert.equal(
+      findAll('.membership-custom-message'),
+      0,
+      'has no custom message'
+    );
+
+    assert.equal(
+      findAll('.membership-custom-link'),
+      0,
+      'has no custom link'
+    );
   });
 
   // Active sustaining member tests
