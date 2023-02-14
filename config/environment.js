@@ -1,13 +1,13 @@
 "use strict";
 
-module.exports = function(environment, appConfig) {
+module.exports = function (environment, appConfig) {
   let ENV = {
     environment: environment,
     authService: appConfig.authAPI,
     googleCaptchaKey:
-      appConfig.googleCaptchaKey || "6LeJomQUAAAAABVGp6Xk3PUZGXNWaHo3t1D7mwF3",
+      appConfig.googleCaptchaKey || "6Ld23V8kAAAAAC33lAWBrqN7TsPz_o7M4q8I-2MS",
     googleCaptchaEndpoint:
-      "https://www.google.com/recaptcha/api.js?render=explicit"
+      "https://www.google.com/recaptcha/api.js?render=explicit",
   };
 
   if (environment === "development") {
