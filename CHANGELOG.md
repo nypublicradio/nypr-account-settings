@@ -1,5 +1,8 @@
 # nypr-account-settings Changelog
 
+## 0.2.11
+- [CHORE] Upgrade test dependencies
+
 ## 0.2.10
 - [FEATURE] Make custom pledge manager message more generic / flexible
 
