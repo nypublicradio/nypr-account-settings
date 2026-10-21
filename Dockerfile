@@ -1,4 +1,4 @@
-FROM node:6
+FROM node:22.23.4
 RUN apt-get update && apt-get install -y locales
 
 RUN localedef -i en_US -f UTF-8 en_US.UTF-8
